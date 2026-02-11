@@ -5,15 +5,17 @@ interface CardProp {
   label: string;
   Icon?: LucideIcon | string;
   value: string | number;
-  description: string;
+  description?: string;
   color?: string;
+  bgColor?: string;
 }
-export function InvestorCard({
+export function StatCard({
   label,
   Icon,
   value,
   description,
   color,
+  bgColor,
 }: CardProp) {
   return (
     <div className=" border  rounded-md lg:p-6 p-2 space-y-5 w-full">
@@ -22,7 +24,9 @@ export function InvestorCard({
         {typeof Icon === 'string' ? (
           <div className=" font-bold text-2xl text-gray-400">{Icon}</div>
         ) : Icon ? (
-          <Icon className={cn(' text-gray-400', color)} />
+          <span className={cn('text-gray-400', bgColor)}>
+            <Icon className={cn(' ', color)} />
+          </span>
         ) : null}
       </div>
       <div className={cn('text-2xl font-bold', color)}>{value}</div>

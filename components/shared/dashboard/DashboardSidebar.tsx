@@ -218,7 +218,7 @@ export function DashboardSidebar({
       </nav>
 
       {/* Account Menu Items */}
-      <div className="p-3 pb-6 flex lg:hidden">
+      <div className="p-3 pb-6 flex lg:hidden border-t">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -242,7 +242,7 @@ export function DashboardSidebar({
           <DropdownMenuContent
             align={isCollapsed && !isMobile ? 'end' : 'start'}
             side={isCollapsed && !isMobile ? 'right' : 'top'}
-            className="w-56 border-none shadow-lg"
+            className="w-56 border-none shadow-lg "
           >
             {accountMenuItems &&
               accountMenuItems.map((item) => {

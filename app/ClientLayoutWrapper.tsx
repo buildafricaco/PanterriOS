@@ -5,7 +5,6 @@ import { DashboardLayout } from '@/components/shared';
 import { DashboardUser } from '@/interface/dashboard';
 import { useAuthStore } from '@/store/authStore';
 import { ProtectedRoute } from '@/hook/protectedRoute';
-import { UserRoles } from '@/types';
 
 export default function ClientLayoutWrapper({
   children,

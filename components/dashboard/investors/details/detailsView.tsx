@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import ProfilePic from '@/assets/images/ahmed.png';
 import { CircleCheckBig } from 'lucide-react';
-import { InvestorCard } from '../investorCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { AccountInfoAndSummary } from './account-info-and-summary';
@@ -11,9 +10,10 @@ import { InvestmentsTable } from './investmentsTable';
 import { Button } from '@/components/ui/button';
 import { TransactionTable } from './transactionTable';
 import { KycDetail } from './kyc-detail';
+import { StatCard } from '@/components/shared';
 
 interface DetailsViewProp {
-  id: string;
+  id: string | number;
 }
 export function DetailsView({ id }: DetailsViewProp) {
   const [tab, setTab] = useState('overview');
@@ -142,7 +142,7 @@ export function DetailsView({ id }: DetailsViewProp) {
       </div>
       <div className="grid lg:grid-cols-4 grid-cols-2 gap-1.5">
         {profile.portfolio_overview.map((overView, i) => (
-          <InvestorCard
+          <StatCard
             label={overView.label}
             value={overView.formatted}
             description={overView.scope}

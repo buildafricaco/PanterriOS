@@ -1,6 +1,6 @@
 'use client';
-import { DetailsView, InvestorCard } from '@/components/dashboard/investors';
-import { PageHead } from '@/components/shared';
+import { DetailsView } from '@/components/dashboard/investors';
+import { PageHead, StatCard } from '@/components/shared';
 import { ReUseAbleTable } from '@/components/shared/reUseAbleTable';
 import { Button } from '@/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -20,7 +20,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -338,12 +337,12 @@ export default function Investorspage() {
           variant={'outline'}
           className="flex items-center gap-2 rounded-sm"
         >
-          <Share /> <span> Export CSV</span>
+          <Share /> <span className="hidden lg:block"> Export CSV</span>
         </Button>
       </PageHead>
       <div className="grid lg:grid-cols-4 grid-cols-2 flex-wrap lg:gap-6 gap-3 my-8 ">
         {metrics.map((stat, i) => (
-          <InvestorCard
+          <StatCard
             label={stat.label}
             description={stat.description}
             value={stat.value}
