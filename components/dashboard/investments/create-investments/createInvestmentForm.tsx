@@ -116,7 +116,7 @@ interface Prop {
 
 export function CreateInvestmentForm({ id, step, setStep }: Prop) {
   const [featureInput, setFeatureInput] = useState('');
-  const isLastStep = step === 4;
+  const isLastStep = step === 5;
 
   const form = useForm<CreateInvestmentFormData>({
     resolver: zodResolver(createInvestmentSchema),

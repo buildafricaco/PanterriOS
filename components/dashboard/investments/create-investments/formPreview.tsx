@@ -1,5 +1,4 @@
 'use client';
-import { formatPrice } from '@/utils/formatPrice';
 import { CircleCheck, FileText, TriangleAlert } from 'lucide-react';
 import Image from 'next/image';
 
@@ -43,8 +42,11 @@ export default function FormPreview({ previewData }: { previewData: any }) {
           <div>
             <h2 className="font-semibold">Key Higlight</h2>
             <div className="flex flex-col">
-              {previewData.features.map((feature, i) => (
-                <div key={i} className="px-2 py-2 flex items-center gap-2">
+              {previewData.features.map((feature: string) => (
+                <div
+                  key={feature}
+                  className="px-2 py-2 flex items-center gap-2"
+                >
                   <CircleCheck className="w-4 h-4 text-green-500" />
                   <span> {feature}</span>
                 </div>
@@ -94,7 +96,7 @@ export default function FormPreview({ previewData }: { previewData: any }) {
       <div>
         <h2 className="font-semibold mb-2">Cover Image</h2>
         <div className="flex gap-4 flex-wrap">
-          {previewData.coverimage?.map((file, index) => (
+          {previewData.coverimage?.map((file: File, index: number) => (
             <Image
               key={index}
               src={URL.createObjectURL(file)}
@@ -111,7 +113,7 @@ export default function FormPreview({ previewData }: { previewData: any }) {
       <div>
         <h2 className="font-semibold mb-2">Property Images</h2>
         <div className="flex gap-4 flex-wrap">
-          {previewData.propertyImages?.map((file, index) => (
+          {previewData.propertyImages?.map((file: File, index: number) => (
             <Image
               key={index}
               alt="img"
@@ -128,7 +130,7 @@ export default function FormPreview({ previewData }: { previewData: any }) {
       <div>
         <h2 className="font-semibold mb-2">Legal Documents</h2>
         <ul className="space-y-1">
-          {previewData.legalDocuments?.map((file, index) => (
+          {previewData.legalDocuments?.map((file: File, index: number) => (
             <li key={index} className="text-sm flex gap-1">
               <FileText className="w-4 h-4 text-red-500" /> {file.name}
             </li>
