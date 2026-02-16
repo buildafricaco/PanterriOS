@@ -1,23 +1,22 @@
-import { UserRole } from '@/types'
-
-import { IconType } from 'react-icons/lib'
+import { UserRoles } from '@/types';
+import { LucideIcon } from 'lucide-react';
 
 export interface NavigationItem {
-  title: string
-  href?: string
-  icon: IconType
-  roles: UserRole[]
-  children?: NavigationItem[]
+  title: string;
+  href?: string;
+  icon: LucideIcon;
+  roles: UserRoles[];
+  children?: NavigationItem[];
 }
 
 export interface AccountMenuItem {
-  title: string
-  href: string
-  icon: IconType
+  title: string;
+  href: string;
+  icon: LucideIcon;
 }
 
 export interface DashboardConfig {
-  navigationItems: NavigationItem[]
-  accountMenuItems: AccountMenuItem[]
-  baseRoute: string
+  navigationItems: NavigationItem[];
+  accountMenuItems: AccountMenuItem[];
+  baseRoute: string;
 }

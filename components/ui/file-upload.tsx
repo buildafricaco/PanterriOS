@@ -153,6 +153,7 @@ export function FileUpload({
     onChange(updated);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
