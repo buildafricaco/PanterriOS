@@ -92,9 +92,9 @@ export default function InvestmentPage() {
   return (
     <div>
       <PageHead
-        pageTitle="Investor Management"
-        subTitle="View and manage all investor accounts"
-        className=" [&_h2]:text-green-700"
+        pageTitle="Investment Management"
+        subTitle="Create and manage investment opportunities"
+        // className=" [&_h2]:text-green-700"
       >
         <Link href={'/investments/create-investment'}>
           <Button className="flex items-center gap-2 rounded-sm">
@@ -142,7 +142,7 @@ export default function InvestmentPage() {
               </Button>
               <Input className=" text-black " placeholder="search..." />
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex lg:flex-row flex-col gap-2">
               {filterSelection.map((filter, i) => {
                 return (
                   <Select key={i}>

@@ -2,21 +2,10 @@
 import { ReUseAbleTable } from '@/components/shared/reUseAbleTable';
 import { Button } from '@/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
-import { Eye, MapPin, X } from 'lucide-react';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import { Eye, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
 import { InvestmentDetailsView } from './details/investmentDetailsView';
 interface PropertiesTableData {
   id: string;
@@ -47,34 +36,6 @@ interface PropertiesTableData {
 }
 
 export function AllInvestments() {
-  const [tab, setTab] = useState('overview');
-  const tabs = [
-    {
-      title: 'Overview',
-      value: 'overview',
-      content: '',
-    },
-    {
-      title: 'Financial Details',
-      value: 'financial-details',
-      content: '',
-    },
-    {
-      title: 'Property Info',
-      value: 'property-info',
-      content: '',
-    },
-    {
-      title: 'Documents',
-      value: 'documents',
-      content: '',
-    },
-    {
-      title: 'Investors',
-      value: 'investors',
-      content: '',
-    },
-  ];
   const properties = [
     {
       id: '200',
@@ -317,69 +278,6 @@ export function AllInvestments() {
                 <Eye className="w-5 h-5" />
               </Button>
             </InvestmentDetailsView>
-            {/* <div className="lg:flex hidden ">
-              <Drawer direction="right">
-                <DrawerTrigger asChild>
-                  <Button variant={'outline'}>
-                    <Eye className="w-5 h-5" />
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent
-                  className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-3xl
-            lg:data-[vaul-drawer-direction=right]:sm:max-w-3xl overflow-y-auto
-            "
-                >
-                  <DrawerHeader>
-                    <DrawerTitle className="flex justify-between">
-                      <div className=" w-full">
-                        <div className="flex gap-14 items-center">
-                          <div className="text-xl font-bold">
-                            Lekki Phase 1 Apartments
-                          </div>
-                          {'funded' === 'funded' ? (
-                            <div className="text-center capitalize bg-green-50 text-green-500 flex  items-center gap-1.5 border border-green-300 whitespace-nowrap p-1 rounded-sm w-fit ">
-                              <span> funded</span>
-                            </div>
-                          ) : (
-                            <div className="text-center capitalize bg-blue-50 text-blue-500 flex  items-center gap-1.5 border border-blue-300 whitespace-nowrap p-1 rounded-sm w-fit ">
-                              <span> funded</span>
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-gray-500 flex items-center">
-                          <MapPin className="w-4 h-4" />{' '}
-                          <span>Lekki, Lagos</span>
-                        </p>
-                      </div>
-                      <DrawerClose asChild>
-                        <X />
-                      </DrawerClose>
-                    </DrawerTitle>
-                    <Button className="w-fit">Edit investment</Button>
-                    <DrawerDescription />
-
-                    <Tabs defaultValue={tab} className="space-y-5 w-full">
-                      <TabsList className="flex flex-wrap w-full">
-                        {tabs.map((tab, i) => (
-                          <TabsTrigger
-                            value={tab.value}
-                            key={i}
-                            onClick={() => setTab(tab.value)}
-                          >
-                            {tab.title}
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-                      {tabs.map((tab, i) => (
-                        <TabsContent value={tab.value} key={i}>
-                          {tab.content}
-                        </TabsContent>
-                      ))}
-                    </Tabs>
-                  </DrawerHeader>
-                </DrawerContent>
-              </Drawer>
-            </div> */}
             <Link href={'/investments/' + id} className="flex lg:hidden">
               <Button variant={'outline'}>
                 <Eye className="w-5 h-5" />
@@ -392,7 +290,6 @@ export function AllInvestments() {
   ];
   return (
     <div>
-      {' '}
       <ReUseAbleTable data={properties} columns={columns} />
     </div>
   );

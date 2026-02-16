@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import {
   Select,
   SelectContent,
@@ -29,7 +28,6 @@ import {
 } from '@/components/shared/dashboard/data';
 import { Save } from 'lucide-react';
 import { MultiSelect } from '@/components/ui/multiSelect';
-import { useState } from 'react';
 
 const createUserSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),

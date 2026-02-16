@@ -14,6 +14,9 @@ import { useState } from 'react';
 import { MapPin, X } from 'lucide-react';
 import Overview from './overview';
 import { FinancialDetails } from './financialDetails';
+import PropertyInfo from './propertyInfo';
+import { Documents } from './documents';
+import PropertyInvestors from './propertyInvestors';
 
 interface DetailsPageViewProp {
   children?: React.ReactNode;
@@ -34,17 +37,17 @@ export function InvestmentDetailsView({ children }: DetailsPageViewProp) {
     {
       title: 'Property Info',
       value: 'property-info',
-      content: '',
+      content: <PropertyInfo />,
     },
     {
       title: 'Documents',
       value: 'documents',
-      content: '',
+      content: <Documents />,
     },
     {
       title: 'Investors',
       value: 'investors',
-      content: '',
+      content: <PropertyInvestors />,
     },
   ];
   return (
@@ -53,8 +56,8 @@ export function InvestmentDetailsView({ children }: DetailsPageViewProp) {
         <Drawer direction="right">
           <DrawerTrigger asChild>{children}</DrawerTrigger>
           <DrawerContent
-            className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-3xl
-            lg:data-[vaul-drawer-direction=right]:sm:max-w-3xl overflow-y-auto
+            className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-xl
+            lg:data-[vaul-drawer-direction=right]:sm:max-w-xl  overflow-hidden overflow-y-auto
             "
           >
             <DrawerHeader>

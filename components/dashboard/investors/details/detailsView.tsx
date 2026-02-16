@@ -57,7 +57,7 @@ export function DetailsView({ id }: DetailsViewProp) {
         value: 375000,
         formatted: '₦375,000',
         scope: 'All time',
-        color: 'text-green-500',
+        color: 'text-green-500 text-lg',
       },
       {
         label: 'Avg ROI',

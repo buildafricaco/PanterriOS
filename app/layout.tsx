@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ClientLayoutWrapper from './ClientLayoutWrapper';
+import { Providers } from '@/components/providers/providers';
 
 const gistInter = Inter({
   variable: '--font-inter',
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` ${gistInter.variable} antialiased `}>
-        <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+        <Providers>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+        </Providers>
       </body>
     </html>
   );

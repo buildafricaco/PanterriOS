@@ -1,5 +1,4 @@
 'use client';
-import { InvestorCard } from '@/components/dashboard/investors';
 import { PageHead, StatCard } from '@/components/shared';
 import { ReUseAbleTable } from '@/components/shared/reUseAbleTable';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,6 @@ import {
   CircleCheckBig,
   CircleX,
   Eye,
-  Pen,
   Plus,
   Shield,
   SquarePen,
@@ -190,9 +188,9 @@ export default function UsersPage() {
                     </Button>
                   </DrawerTrigger>
                   <DrawerContent
-                  //       className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-3xl
-                  // lg:data-[vaul-drawer-direction=right]:sm:max-w-3xl overflow-y-auto
-                  // "
+                    className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-xl
+            lg:data-[vaul-drawer-direction=right]:sm:max-w-xl  overflow-hiddenoverflow-hidden overflow-y-auto
+            "
                   >
                     <DrawerHeader>
                       <DrawerTitle className="flex justify-between">

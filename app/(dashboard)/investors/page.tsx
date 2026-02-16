@@ -291,8 +291,8 @@ export default function Investorspage() {
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent
-                  className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-3xl
-            lg:data-[vaul-drawer-direction=right]:sm:max-w-3xl overflow-y-auto
+                  className=" lg:data-[vaul-drawer-direction=left]:sm:max-w-xl
+            lg:data-[vaul-drawer-direction=right]:sm:max-w-xl overflow-hidden overflow-y-auto
             "
                 >
                   <DrawerHeader>
