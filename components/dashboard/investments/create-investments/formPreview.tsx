@@ -13,31 +13,29 @@ export default function FormPreview({ previewData }: { previewData: any }) {
           <h2 className="font-semibold border-b-2 py-4">Basic Information</h2>
           <div className="flex justify-between">
             <p className="flex flex-col space-y-1.5">
-              <small>Name:</small>{' '}
+              <small>Name</small>{' '}
               <span className="font-semibold capitalize">
                 {' '}
                 {previewData.propertyName}
               </span>
             </p>
             <p className="flex flex-col space-y-1.5">
-              <small>Type:</small>{' '}
+              <small>Type</small>{' '}
               <span className="font-semibold capitalize">
                 {previewData.propertyType}{' '}
               </span>
             </p>{' '}
           </div>
           <p className="flex flex-col ">
-            <small>Location:</small>{' '}
+            <small>Location</small>{' '}
             <span className="font-semibold capitalize">
               {' '}
               {previewData.state}
             </span>
           </p>
           <p className="flex flex-col space-y-1.5">
-            <small>Description:</small>{' '}
-            <span className="font-semibold capitalize">
-              {previewData.description}{' '}
-            </span>
+            <small>Description</small>{' '}
+            <span className="">{previewData.description} </span>
           </p>{' '}
           <div>
             <h2 className="font-semibold">Key Higlight</h2>

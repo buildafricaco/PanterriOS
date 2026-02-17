@@ -28,6 +28,11 @@ import { useState } from 'react';
 import { CircleCheck, FileText, Share } from 'lucide-react';
 import { formatPrice } from '@/utils/formatPrice';
 import FormPreview from './formPreview';
+interface Prop {
+  id?: number | string;
+  step: number;
+  setStep: (step: number) => void;
+}
 
 const createInvestmentSchema = z.object({
   propertyName: z.string().min(1, 'Property Name is required'),
@@ -107,12 +112,6 @@ const requiredDoc = [
   '• Developer Information',
   '• Financial Projections',
 ];
-
-interface Prop {
-  id?: number | string;
-  step: number;
-  setStep: (step: number) => void;
-}
 
 export function CreateInvestmentForm({ id, step, setStep }: Prop) {
   const [featureInput, setFeatureInput] = useState('');
@@ -366,7 +365,7 @@ export function CreateInvestmentForm({ id, step, setStep }: Prop) {
                   <FormField
                     control={form.control}
                     name="propertySize"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 ">
                           <span className="font-bold"> PropertySize (Sqm)</span>{' '}
@@ -389,7 +388,7 @@ export function CreateInvestmentForm({ id, step, setStep }: Prop) {
                   <FormField
                     control={form.control}
                     name="units"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 ">
                           <span className="font-bold">Total Units</span>
@@ -825,6 +824,7 @@ export function CreateInvestmentForm({ id, step, setStep }: Prop) {
               </>
             )}
             {step === 4 && <FormPreview previewData={form.getValues()} />}
+
             {/* Buttons */}
             <div className="space-y-3 flex gap-4 justify-between w-full">
               <Button

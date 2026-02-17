@@ -5,6 +5,7 @@ import { ReUseAbleTable } from '@/components/shared/reUseAbleTable';
 import { Button } from '@/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
 import {
+  Banknote,
   CircleAlert,
   CircleCheckBig,
   CircleX,
@@ -65,7 +66,7 @@ export default function Investorspage() {
       // value: 190000000,
       value: '₦190M',
       description: 'Across all investors',
-      icon: '₦',
+      icon: Banknote,
     },
     {
       label: 'Avg Portfolio',
