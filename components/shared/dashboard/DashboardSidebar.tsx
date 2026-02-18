@@ -179,7 +179,7 @@ export function DashboardSidebar({
           <Link href="/" className="cursor-pointer text-lg font-bold">
             <Image
               src={dashboardLogo}
-              alt="Lisavue Logo"
+              alt="PanterriOS Logo"
               width={100}
               height={100}
               className="w-32"
@@ -189,12 +189,12 @@ export function DashboardSidebar({
           <Link
             href="/"
             className="cursor-pointer text-lg font-bold"
-            title="Lisavue"
+            title="PanterriOS"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg">
               <Image
                 src={collapsLogo}
-                alt="Lisavue Logo"
+                alt="PanterriOS Logo"
                 width={24}
                 height={24}
               />

@@ -28,7 +28,6 @@ export default function ClientLayoutWrapper({
   const isAuthRoute = noDashboardRoutes.includes(pathname);
   const { user } = useAuthStore();
 
-  if (!user) return;
   const currentUser: DashboardUser = {
     // firstName: user.firstName,
     // lastName: user.lastName,
@@ -43,13 +42,13 @@ export default function ClientLayoutWrapper({
     initials: `${user?.firstName.charAt(0)}${user?.lastName.charAt(0)}`,
   };
 
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
+
   return (
     <ProtectedRoute>
-      {isAuthRoute ? (
-        children
-      ) : (
-        <DashboardLayout currentUser={currentUser}>{children}</DashboardLayout>
-      )}
+      <DashboardLayout currentUser={currentUser}>{children}</DashboardLayout>
     </ProtectedRoute>
   );
 }
