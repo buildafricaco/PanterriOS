@@ -19,15 +19,21 @@ export function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  function getMenuByRoles(roles: [] | undefined): MenuItem[] {
-    if (!roles || roles.length === 0) {
+  function getMenuByRoles(roles: string | string[] | undefined): MenuItem[] {
+    const normalizedRoles = Array.isArray(roles)
+      ? roles
+      : roles
+        ? [roles]
+        : [];
+
+    if (normalizedRoles.length === 0) {
       console.warn('Invalid or missing roles:', roles);
       return [];
     }
 
     const menuSet = new Set<MenuItem>();
 
-    roles.forEach((role) => {
+    normalizedRoles.forEach((role) => {
       if (role in SIDE_BAR_MENU) {
         SIDE_BAR_MENU[role as keyof typeof SIDE_BAR_MENU].forEach((menu) =>
           menuSet.add(menu),
