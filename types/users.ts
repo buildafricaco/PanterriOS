@@ -13,7 +13,7 @@ export enum UserRoles {
 
 export interface Tokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
 }
 
 export interface User {

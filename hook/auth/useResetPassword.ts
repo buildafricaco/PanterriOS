@@ -2,6 +2,7 @@
 
 import { ResetPasswordReq } from '@/interface';
 import { resetPassword } from '@/services/auth';
+import { deleteOtp, deleteRegEmail } from '@/services/axios';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -13,8 +14,8 @@ export function useResetPassword() {
     mutationFn: async (payload: ResetPasswordReq) => resetPassword(payload),
     onSuccess: (data) => {
       toast.success(data.message || 'Password reset successful');
-      localStorage.removeItem('passwordResetToken');
-      localStorage.removeItem('resetPasswordEmail');
+      deleteOtp();
+      deleteRegEmail();
       router.push('/login');
     },
   });

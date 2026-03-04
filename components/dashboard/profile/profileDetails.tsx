@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Banner from '@/assets/svg/profile-header.svg';
-import ProfilePic from '@/assets/images/ahmed.png';
+import ProfilePic from '@/assets/images/profile-pic.webp';
 import { Calendar, Camera, Mail, Phone, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,31 +27,29 @@ export function ProfileDetails() {
 
   const fullName = useMemo(() => {
     if (!profile) return 'Administrator';
-    return `${profile.firstName} ${profile.lastName}`.trim();
+    return `${profile.data.firstName} ${profile.data.lastName}`.trim();
   }, [profile]);
 
   const userDetails = useMemo(
     () => [
       {
         holder: 'Email Address',
-        details: profile?.email || '-',
+        details: profile?.data?.email || '-',
         icon: Mail,
       },
       {
         holder: 'Phone Number',
-        details: profile?.phoneNumber || '-',
+        details: profile?.data?.phoneNumber || '-',
         icon: Phone,
       },
       {
         holder: 'Gender',
-        details: profile?.gender || '-',
+        details: profile?.data?.gender || '-',
         icon: User,
       },
       {
         holder: 'Member Since',
-        details: profile?.joinedAt
-          ? new Date(profile.joinedAt).toLocaleDateString()
-          : '-',
+        details: profile?.data?.joinedAt || '-',
         icon: Calendar,
       },
     ],
@@ -77,13 +75,13 @@ export function ProfileDetails() {
         <div className="flex lg:flex-row flex-col gap-2 justify-between w-full lg:items-end items-center ">
           <div className=" flex items-end gap-6 ">
             <div className=" w-35 h-35  object-cover object-center items-center rounded-md overflow-hidden">
-              {profile?.profileImage ? (
+              {profile?.data?.profileImage ? (
                 <Image
-                  src={profile.profileImage}
+                  src={profile.data.profileImage}
                   alt="Profile"
-                  width={140}
-                  height={140}
-                  className="object-center w-full h-full"
+                  width={100}
+                  height={100}
+                  className="object-center w-full"
                 />
               ) : (
                 <Image
@@ -98,8 +96,9 @@ export function ProfileDetails() {
 
             <div className="space-y-2">
               <h2 className="lg:text-3xl text-xl font-bold ">{fullName}</h2>
+
               <p className="bg-black text-white px-4 rounded-sm whitespace-nowrap w-fit">
-                {profile?.roles?.[0] || 'Admin.Officer'}
+                {profile?.data.roles[0].split('.').join(' ') || '-'}
               </p>
             </div>
           </div>
@@ -110,14 +109,15 @@ export function ProfileDetails() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Update Profile Photo</DialogTitle>
-                <DialogDescription className=" space-y-4 items-center">
+                <DialogDescription className="  hidden" />
+                <div className=" space-y-4 items-center ">
                   <div className=" flex gap-4 bg-gray-100 p-2">
-                    {profile?.profileImage ? (
+                    {profile?.data?.profileImage ? (
                       <Image
-                        src={profile.profileImage}
-                        alt="Profile Preview"
-                        width={96}
-                        height={96}
+                        src={profile.data.profileImage}
+                        alt=""
+                        width={100}
+                        height={100}
                         className=" w-24 h-24 object-cover object-center items-center rounded-md "
                       />
                     ) : (
@@ -131,7 +131,9 @@ export function ProfileDetails() {
                     )}
                     <div className="space-y-1">
                       <div className="text-xl font-bold">Profile Picture</div>
-                      <p className="text-gray-500">JPG, JPEG or PNG. Max 12MB.</p>
+                      <div className="text-gray-500">
+                        JPG, JPEG or PNG. Max 12MB.
+                      </div>
                       <div className="relative">
                         <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition relative">
                           <Camera className=" w-4 h-4" />
@@ -150,7 +152,7 @@ export function ProfileDetails() {
                     </div>
                   </div>
                   <div className=" flex gap-4 ">
-                    <DialogClose>
+                    <DialogClose asChild>
                       <Button className="" variant={'outline'}>
                         Cancel
                       </Button>
@@ -163,7 +165,7 @@ export function ProfileDetails() {
                       Save Change
                     </Button>
                   </div>
-                </DialogDescription>
+                </div>
               </DialogHeader>
             </DialogContent>
           </Dialog>

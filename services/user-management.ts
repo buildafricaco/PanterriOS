@@ -12,11 +12,15 @@ export const uploadMyProfilePicture = async (
   const formData = new FormData();
   formData.append('profilePicture', file);
 
-  const { data } = await API.post('/api/v1/user-management/me/profile-picture', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+  const { data } = await API.post(
+    '/user-management/me/profile-picture',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     },
-  });
+  );
 
   return data;
 };
@@ -24,27 +28,32 @@ export const uploadMyProfilePicture = async (
 export const changeMyPassword = async (
   payload: ChangePasswordReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/api/v1/user-management/me/change-password', payload);
+  const { data } = await API.post(
+    '/user-management/me/change-password',
+    payload,
+  );
   return data;
 };
 
 export const getMyProfileDetails = async (): Promise<UserProfileRes> => {
-  const { data } = await API.get('/api/v1/user-management/me/profile-details');
+  const { data } = await API.get('/user-management/me/profile-details');
   return data;
 };
 
 export const retrieveUsers = async (
   query: RetrieveUsersQuery,
 ): Promise<AdminUsersRes> => {
-  const { data } = await API.get('/api/v1/user-management/admin/retrieve-users', {
+  const { data } = await API.get('/user-management/admin/retrieve-users', {
     params: query,
   });
   return data;
 };
 
-export const retrieveAdminUserProfile = async (
+export const retrieveUserProfile = async (
   userId: number,
 ): Promise<UserProfileRes> => {
-  const { data } = await API.get(`/api/v1/user-management/admin/${userId}/profile-details`);
+  const { data } = await API.get(
+    `/user-management/admin/${userId}/profile-details`,
+  );
   return data;
 };

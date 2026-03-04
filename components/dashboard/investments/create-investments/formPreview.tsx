@@ -3,7 +3,7 @@ import { CircleCheck, FileText, TriangleAlert } from 'lucide-react';
 import Image from 'next/image';
 
 interface FormPreviewProps {
-  previewData: Record<string, unknown>;
+  previewData: any;
 }
 
 export default function FormPreview({ previewData }: FormPreviewProps) {

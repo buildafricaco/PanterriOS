@@ -28,13 +28,13 @@ export default function ClientLayoutWrapper({
 
   const isAuthRoute = noDashboardRoutes.includes(pathname);
   const { user } = useAuthStore();
-
+  const loggedInUser = user?.data;
   const currentUser: DashboardUser = {
-    email: user?.email || '',
-    firstName: user?.firstName || 'Admin',
-    lastName: user?.lastName || 'User',
-    role: user?.roles || ['Admin.Officer'],
-    initials: `${user?.firstName?.charAt(0) || 'A'}${user?.lastName?.charAt(0) || 'U'}`,
+    email: loggedInUser?.email ?? '',
+    firstName: loggedInUser?.firstName ?? '',
+    lastName: loggedInUser?.lastName ?? '',
+    role: loggedInUser?.roles ?? [],
+    initials: `${loggedInUser?.firstName.trim()?.charAt(0) || 'A'}${loggedInUser?.lastName?.charAt(0) || 'U'}`,
   };
 
   if (isAuthRoute) {

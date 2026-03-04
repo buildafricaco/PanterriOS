@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card } from '@/components/ui/card';
@@ -22,16 +22,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Field, FieldLabel } from '@/components/ui/field';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { format } from 'date-fns';
 import {
   ACCOUNT_STATUS,
+  APP_ACCESS,
   DEPARTMENTS,
   USER_ROLES,
 } from '@/components/shared/dashboard/data';
 import { Save } from 'lucide-react';
 import { MultiSelect } from '@/components/ui/multiSelect';
 import { useCreateUser } from '@/hook/user-management/useCreateUser';
-import { useRetrieveAdminUserProfile } from '@/hook/user-management/useRetrieveAdminUserProfile';
+import { useRetrieveUserProfile } from '@/hook/user-management/useRetrieveUserProfile';
 import { useUpdateUser } from '@/hook/user-management/useUpdateUser';
+import { generatePassword } from '@/utils/helpers';
 
 const createUserSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -56,6 +66,7 @@ const genderOptions = [
 const roleOptions = USER_ROLES;
 const departmentOptions = DEPARTMENTS;
 const statusOptions = ACCOUNT_STATUS;
+const appAccess = APP_ACCESS;
 
 interface Prop {
   closeModal: () => void;
@@ -65,8 +76,9 @@ interface Prop {
 export function CreateUserForm({ closeModal, id }: Prop) {
   const userId = id ? Number(id) : undefined;
   const isEditMode = Boolean(userId);
-
-  const { data: editProfile } = useRetrieveAdminUserProfile(userId || 0);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date>();
+  const { data: editProfile } = useRetrieveUserProfile(userId || 0);
   const { mutateAsync: createUserFn, isPending: isCreating } = useCreateUser();
   const { mutateAsync: updateUserFn, isPending: isUpdating } = useUpdateUser();
 
@@ -90,16 +102,16 @@ export function CreateUserForm({ closeModal, id }: Prop) {
     if (!isEditMode || !editProfile) return;
 
     form.reset({
-      firstName: editProfile.firstName,
-      lastName: editProfile.lastName,
-      email: editProfile.email,
-      phoneNumber: editProfile.phoneNumber,
+      firstName: editProfile.data.firstName,
+      lastName: editProfile.data.lastName,
+      email: editProfile.data.email,
+      phoneNumber: editProfile.data.phoneNumber,
       password: '',
-      gender: editProfile.gender,
-      roles: editProfile.roles,
-      department: editProfile.department,
-      userStatus: editProfile.userStatus,
-      appAccess: 'Panterrios',
+      gender: editProfile.data.gender,
+      roles: editProfile.data.roles,
+      department: editProfile.data.department,
+      userStatus: editProfile.data.userStatus,
+      appAccess: editProfile.data.appAccess,
     });
   }, [editProfile, form, isEditMode]);
 
@@ -108,33 +120,26 @@ export function CreateUserForm({ closeModal, id }: Prop) {
       await updateUserFn({
         userId,
         payload: {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phoneNumber: values.phoneNumber,
-          gender: values.gender,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+          phoneNumber: values.phoneNumber.trim(),
+          gender: values.gender.trim(),
           roles: values.roles,
-          department: values.department,
-          userStatus: values.userStatus as
-            | 'activated'
-            | 'deactivated'
-            | 'pending'
-            | 'banned'
-            | 'suspended'
-            | 'archived',
+          department: values.department.trim(),
           appAccess: values.appAccess,
         },
       });
     } else {
       await createUserFn({
-        firstName: values.firstName,
-        lastName: values.lastName,
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
         email: values.email,
-        phoneNumber: values.phoneNumber,
-        password: values.password || 'StrongPass123!',
-        gender: values.gender,
+        phoneNumber: values.phoneNumber.trim(),
+        password: generatePassword(16),
+        gender: values.gender.trim(),
         roles: values.roles,
-        department: values.department,
+        department: values.department.trim(),
         userStatus: values.userStatus as
           | 'activated'
           | 'deactivated'
@@ -143,6 +148,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
           | 'suspended'
           | 'archived',
         appAccess: values.appAccess,
+        dateOfBirth: date,
       });
     }
 
@@ -210,33 +216,13 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                         {...field}
                         placeholder="Enter user's email"
                         className="border-input bg-surface h-10 w-full rounded-md border px-3 text-sm"
+                        disabled={isEditMode}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {!isEditMode && (
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <input
-                          type="password"
-                          {...field}
-                          placeholder="Enter temporary password"
-                          className="border-input bg-surface h-10 w-full rounded-md border px-3 text-sm"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
 
               <FormField
                 control={form.control}
@@ -256,6 +242,36 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                 )}
               />
 
+              <Field className="mx-auto w-44">
+                <FieldLabel htmlFor="date">Date of birth</FieldLabel>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      id="date"
+                      className="justify-start font-normal"
+                    >
+                      {date ? date.toLocaleDateString() : 'Select date'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      defaultMonth={date}
+                      captionLayout="dropdown"
+                      onSelect={(date) => {
+                        setDate(date);
+                        setOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </Field>
+
               <FormField
                 control={form.control}
                 name="gender"
@@ -265,7 +281,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="select gender" />
@@ -314,7 +330,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="select department" />
@@ -335,23 +351,55 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                 )}
               />
 
+              {!isEditMode && (
+                <FormField
+                  control={form.control}
+                  name="userStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="select Status" />
+                          </SelectTrigger>
+                          <SelectContent position={'popper'}>
+                            <SelectGroup>
+                              {statusOptions.map((option, i) => (
+                                <SelectItem value={option.value} key={i}>
+                                  {option.title}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
-                name="userStatus"
+                name="appAccess"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>App Access</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="select Status" />
+                          <SelectValue placeholder="select App access" />
                         </SelectTrigger>
                         <SelectContent position={'popper'}>
                           <SelectGroup>
-                            {statusOptions.map((option, i) => (
+                            {appAccess.map((option, i) => (
                               <SelectItem value={option.value} key={i}>
                                 {option.title}
                               </SelectItem>

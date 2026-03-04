@@ -37,7 +37,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginSchema) => {
     await loginFn({
       ...data,
-      email: data.email.toLowerCase(),
+      email: data.email.toLowerCase().trim(),
       userDevice: navigator.userAgent,
     });
   };

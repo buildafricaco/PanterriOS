@@ -21,12 +21,7 @@ export default function ProfilePage() {
       >
         <div className="flex items-center gap-2">
           <Calendar />{' '}
-          <span>
-            Last Login:{' '}
-            {profile?.lastLogin
-              ? new Date(profile.lastLogin).toLocaleString()
-              : 'N/A'}
-          </span>
+          <span>Last Login: {profile?.data?.lastLogin || '-'}</span>
         </div>
       </PageHead>
       {/* profile head */}

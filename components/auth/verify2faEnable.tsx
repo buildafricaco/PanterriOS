@@ -19,6 +19,7 @@ import {
 import { useVerify2faLogin } from '@/hook/auth/useVerify2faLogin';
 import { Spinner } from '../ui/spinner';
 import { getTwoFactorTemporaryToken } from '@/services/axios';
+import { useEnableTwoFactor } from '@/hook/auth/useEnableTwoFactor';
 
 const FormSchema = z.object({
   token: z.string().min(6, {
@@ -26,8 +27,8 @@ const FormSchema = z.object({
   }),
 });
 
-export function Verify2faOnLogin() {
-  const { verify2faLoginFn, isLoading } = useVerify2faLogin();
+export function Verify2faEnable() {
+  const { mutateAsync: enable2fa, isPending: isLoading } = useEnableTwoFactor();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -40,12 +41,12 @@ export function Verify2faOnLogin() {
     if (!temporaryToken) return;
 
     const payload = {
-      temporaryToken,
-      code: data.token,
+      // temporaryToken,
+      token: data.token,
       userDevice: navigator.userAgent,
     };
 
-    await verify2faLoginFn(payload);
+    await enable2fa(payload);
   }
 
   return (

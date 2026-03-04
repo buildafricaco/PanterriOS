@@ -39,10 +39,14 @@ interface UsersRow {
 }
 
 export default function UsersPage() {
-  const { data: usersRes } = useRetrieveUsers({ search: '', page: 1, limit: 20 });
+  const { data: usersRes } = useRetrieveUsers({
+    search: '',
+    page: 1,
+    limit: 20,
+  });
 
   const tableData: UsersRow[] =
-    usersRes?.data?.map((user, index) => ({
+    usersRes?.data?.data.map((user, index) => ({
       id: user.id || index + 1,
       name: user.fullName,
       email: user.email,
@@ -54,19 +58,19 @@ export default function UsersPage() {
   const summary = [
     {
       label: 'Total Admin Users',
-      value: usersRes?.userStats?.totalUsers || 0,
+      value: usersRes?.data?.userStats?.totalUsers || 0,
       icon: Users,
       bgColor: 'text-blue-500 bg-blue-100 rounded-md p-2',
     },
     {
       label: 'Active Users',
-      value: usersRes?.userStats?.activeUsers || 0,
+      value: usersRes?.data?.userStats?.activeUsers || 0,
       icon: Shield,
       bgColor: 'text-green-500 bg-green-100 rounded-md p-2',
     },
     {
       label: 'Pending Users',
-      value: usersRes?.userStats?.pendingUsers || 0,
+      value: usersRes?.data?.userStats?.pendingUsers || 0,
       icon: Shield,
       bgColor: 'text-orange-500 bg-orange-100 rounded-md p-2',
     },
@@ -81,7 +85,9 @@ export default function UsersPage() {
     {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ row }) => <div className="text-gray-400">{row.original.email}</div>,
+      cell: ({ row }) => (
+        <div className="text-gray-400">{row.original.email}</div>
+      ),
     },
 
     {
@@ -92,7 +98,7 @@ export default function UsersPage() {
         return (
           <div className="text-center capitalize bg-gray-50 text-gray-500 flex items-center gap-1.5 border border-gray-300 whitespace-nowrap p-1 rounded-sm w-fit ">
             <User className="w-3 h-3" />
-            <span>{role}</span>
+            <span>{role.split('.').join(' ')}</span>
           </div>
         );
       },

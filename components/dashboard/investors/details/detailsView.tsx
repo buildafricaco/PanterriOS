@@ -1,94 +1,94 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import ProfilePic from "@/assets/images/ahmed.png";
-import { CircleCheckBig } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import { AccountInfoAndSummary } from "./overviewTab";
-import { InvestmentsTable } from "./investmentsTab";
-import { Button } from "@/components/ui/button";
-import { TransactionTable } from "./transactionsTab";
-import { KycDetail } from "./kyc-detailTab";
-import { StatCard } from "@/components/shared";
+import Image from 'next/image';
+import ProfilePic from '@/assets/images/profile-pic.webp';
+import { CircleCheckBig } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
+import { AccountInfoAndSummary } from './overviewTab';
+import { InvestmentsTable } from './investmentsTab';
+import { Button } from '@/components/ui/button';
+import { TransactionTable } from './transactionsTab';
+import { KycDetail } from './kyc-detailTab';
+import { StatCard } from '@/components/shared';
 
 interface DetailsViewProp {
   id?: string | number;
 }
 export function DetailsView({ id }: DetailsViewProp) {
   // id is available if needed for future implementation
-  const [tab, setTab] = useState("overview");
+  const [tab, setTab] = useState('overview');
   const profile = {
-    name: "Ahmed Faruq",
-    email: "john.doe@example.com",
-    id: "00001",
+    name: 'Ahmed Faruq',
+    email: 'john.doe@example.com',
+    id: '00001',
     profileImg: ProfilePic,
     subPage: [
       {
-        holder: "Member Since",
-        value: "Jan 15, 2023",
+        holder: 'Member Since',
+        value: 'Jan 15, 2023',
       },
       {
-        holder: "Tier Level",
-        value: "Platinum",
+        holder: 'Tier Level',
+        value: 'Platinum',
       },
       {
-        holder: "Total Investments",
-        value: "8 properties",
+        holder: 'Total Investments',
+        value: '8 properties',
       },
     ],
     portfolio_overview: [
       {
-        label: "Total Invested",
-        currency: "NGN",
+        label: 'Total Invested',
+        currency: 'NGN',
         value: 10000000,
-        formatted: "₦10.0M",
-        scope: "Lifetime",
+        formatted: '₦10.0M',
+        scope: 'Lifetime',
       },
       {
-        label: "Wallet Balance",
-        currency: "NGN",
+        label: 'Wallet Balance',
+        currency: 'NGN',
         value: 3000000,
-        formatted: "₦3.0M",
-        scope: "Available",
+        formatted: '₦3.0M',
+        scope: 'Available',
       },
       {
-        label: "Returns Earned",
-        currency: "NGN",
+        label: 'Returns Earned',
+        currency: 'NGN',
         value: 375000,
-        formatted: "₦375,000",
-        scope: "All time",
-        color: "text-green-500 text-lg",
+        formatted: '₦375,000',
+        scope: 'All time',
+        color: 'text-green-500 text-lg',
       },
       {
-        label: "Avg ROI",
+        label: 'Avg ROI',
         value: 15,
-        unit: "percent",
-        formatted: "15%",
-        scope: "Portfolio avg",
-        color: "text-green-500",
+        unit: 'percent',
+        formatted: '15%',
+        scope: 'Portfolio avg',
+        color: 'text-green-500',
       },
     ],
   };
   const tabs = [
     {
-      title: "Overview",
-      value: "overview",
+      title: 'Overview',
+      value: 'overview',
       content: <AccountInfoAndSummary />,
     },
     {
-      title: "Investments",
-      value: "investments",
+      title: 'Investments',
+      value: 'investments',
       content: <InvestmentsTable />,
     },
     {
-      title: "Transactions",
-      value: "transactions",
+      title: 'Transactions',
+      value: 'transactions',
       content: <TransactionTable />,
     },
     {
-      title: "KYC Details",
-      value: "kyc-details",
+      title: 'KYC Details',
+      value: 'kyc-details',
       content: <KycDetail />,
     },
   ];
@@ -97,7 +97,7 @@ export function DetailsView({ id }: DetailsViewProp) {
       {/* Profile Header Section */}
       <div className="border rounded-lg bg-gray-50 overflow-hidden">
         <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-full">
               {profile.profileImg ? (
                 <Image
@@ -109,7 +109,9 @@ export function DetailsView({ id }: DetailsViewProp) {
                 />
               ) : (
                 <div className="bg-black flex items-center justify-center uppercase text-xl sm:text-2xl w-full h-full text-white">
-                  {profile.name.charAt(0)}{profile.name.split(' ')[1]?.charAt(0) || profile.name.charAt(1)}
+                  {profile.name.charAt(0)}
+                  {profile.name.split(' ')[1]?.charAt(0) ||
+                    profile.name.charAt(1)}
                 </div>
               )}
             </div>
@@ -118,10 +120,17 @@ export function DetailsView({ id }: DetailsViewProp) {
           <div className="flex-1 min-w-0 space-y-3">
             <div className="flex flex-col gap-2 min-[430px]:flex-row min-[430px]:items-start min-[430px]:justify-between">
               <div className="min-w-0">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight truncate">{profile.name}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight truncate">
+                  {profile.name}
+                </h2>
                 <div className="text-sm space-y-0.5 mt-1">
                   <p className="text-gray-600 truncate">{profile.email}</p>
-                  <p className="text-gray-600">Investor ID: <span className="font-medium text-gray-900">{profile.id}</span></p>
+                  <p className="text-gray-600">
+                    Investor ID:{' '}
+                    <span className="font-medium text-gray-900">
+                      {profile.id}
+                    </span>
+                  </p>
                 </div>
               </div>
 
@@ -139,9 +148,16 @@ export function DetailsView({ id }: DetailsViewProp) {
             <div className="pt-2 border-t border-gray-200">
               <div className="grid grid-cols-1 min-[360px]:grid-cols-2 min-[430px]:grid-cols-3 gap-2 min-[430px]:gap-0">
                 {profile.subPage.map((p, i) => (
-                  <div key={i} className="flex flex-col min-[430px]:px-4 first:min-[430px]:pl-0 min-[430px]:border-r min-[430px]:last:border-r-0 border-gray-300">
-                    <span className="text-xs text-gray-500 uppercase tracking-wide">{p.holder}</span>
-                    <span className="text-sm sm:text-base font-semibold text-gray-900 mt-1">{p.value}</span>
+                  <div
+                    key={i}
+                    className="flex flex-col min-[430px]:px-4 first:min-[430px]:pl-0 min-[430px]:border-r min-[430px]:last:border-r-0 border-gray-300"
+                  >
+                    <span className="text-xs text-gray-500 uppercase tracking-wide">
+                      {p.holder}
+                    </span>
+                    <span className="text-sm sm:text-base font-semibold text-gray-900 mt-1">
+                      {p.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -182,7 +198,11 @@ export function DetailsView({ id }: DetailsViewProp) {
 
         {/* Tab Content */}
         {tabs.map((tab, i) => (
-          <TabsContent value={tab.value} key={i} className="focus-visible:outline-none">
+          <TabsContent
+            value={tab.value}
+            key={i}
+            className="focus-visible:outline-none"
+          >
             {tab.content}
           </TabsContent>
         ))}

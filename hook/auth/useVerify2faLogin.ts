@@ -1,8 +1,13 @@
 'use client';
 
-import { Login2FaReq, LoginRes } from '@/interface';
+import { Login2FaReq, LoginRes, normalizeLoginRes } from '@/interface';
 import { getCurrentUser, loginWithTwoFactor } from '@/services/auth';
+import {
+  deleteRegEmail,
+  deleteTwoFactorTemporaryToken,
+} from '@/services/axios';
 import { useAuthStore } from '@/store/authStore';
+import { tokenStore } from '@/store/tokenStore';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -13,25 +18,20 @@ export function useVerify2faLogin() {
 
   const { mutateAsync: verify2faLoginFn, isPending: isLoading } = useMutation({
     mutationFn: async (payload: Login2FaReq) => loginWithTwoFactor(payload),
-    onSuccess: async (data: LoginRes) => {
-      if (!data.accessToken || !data.refreshToken) {
-        toast.error('2FA verification did not return tokens.');
+    onSuccess: async (rawData: LoginRes) => {
+      const data = normalizeLoginRes(rawData);
+      if (!data.accessToken) {
+        toast.error('2FA verification did not return an access token.');
         return;
       }
 
       const currentUser = await getCurrentUser(data.accessToken);
+      tokenStore.set(data.accessToken);
+      await setAuth(currentUser);
 
-      await setAuth(
-        currentUser,
-        {
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        },
-      );
-
-      localStorage.removeItem('twoFactorTemporaryToken');
-      localStorage.removeItem('twoFactorUserEmail');
-      toast.success(data.message || 'Login successful');
+      deleteTwoFactorTemporaryToken();
+      deleteRegEmail();
+      toast.success(data.message);
       router.push('/dashboard');
     },
   });

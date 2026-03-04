@@ -10,7 +10,7 @@ import { MoveRight, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import Logo from '@/assets/main-logo.png';
+import Logo from '@/assets/svg/logo.svg';
 import Icon from '@/assets/icon.png';
 
 export function Header() {
@@ -22,7 +22,7 @@ export function Header() {
         <div className="max-w-7xl mx-auto bg-transparent ">
           <div className="flex  items-center justify-between lg:h-16">
             <Link href={'/'}>
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 ">
                 <Image
                   src={Logo}
                   alt="PanterriOS Logo"
@@ -40,6 +40,9 @@ export function Header() {
                   priority
                   className="flex h-auto w-8 lg:hidden"
                 />
+                <p className="text-gray-300 text-xs uppercase text-center lg:flex hidden">
+                  Admin Operating System
+                </p>
               </div>
             </Link>
 

@@ -1,23 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-// import { logout } from '@/service/authApi'
-
-import { deleteTokens, setTokens } from '@/services/axios';
-import { Tokens } from '@/types';
+import { logout } from '@/services/auth';
 import { UserProfileRes } from '@/interface';
 
 interface AuthState {
   user: UserProfileRes | null;
   avatarUrl?: string | null;
-  tokens: Tokens | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   hasHydrated: boolean;
   // Actions
 
-  setAuth: (user: UserProfileRes, tokens: Tokens) => Promise<void>;
+  setAuth: (user: UserProfileRes) => Promise<void>;
   updateUser: (userData: Partial<UserProfileRes>) => Promise<UserProfileRes>;
-  updateToken: (tokens: Partial<Tokens>) => Promise<Tokens>;
   updateUserAvatar: (avatarUrl: string) => void;
   clearAuth: () => Promise<void>;
   loadAuth: () => Promise<void>;
@@ -28,7 +23,6 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
-      tokens: null,
       isAuthenticated: false,
       isLoading: false,
       hasHydrated: false,
@@ -36,15 +30,11 @@ export const useAuthStore = create<AuthState>()(
 
       setHasHydrated: (state) => set({ hasHydrated: state }),
 
-      setAuth: async (user, tokens) => {
+      setAuth: async (user) => {
         try {
           set({ isLoading: true });
-
-          await setTokens(tokens.accessToken, tokens.refreshToken);
-
           set({
             user: user,
-            tokens: tokens,
             isAuthenticated: true,
             isLoading: false,
           });
@@ -63,25 +53,12 @@ export const useAuthStore = create<AuthState>()(
         return updatedUser;
       },
 
-      updateToken: async (tokens) => {
-        const currentTokens = get().tokens;
-        if (!currentTokens) throw new Error('No tokens to update');
-
-        const updatedTokens = { ...currentTokens, ...tokens };
-        await setTokens(updatedTokens.accessToken, updatedTokens.refreshToken);
-
-        set({ tokens: updatedTokens });
-        return updatedTokens;
-      },
-
       clearAuth: async () => {
         try {
           set({ isLoading: true });
-          // await logout()
-          deleteTokens();
+          await logout().catch(() => undefined);
           set({
             user: null,
-            tokens: null,
             isAuthenticated: false,
             isLoading: false,
           });
@@ -108,10 +85,8 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const user = JSON.parse(userData!) as UserProfileRes;
-          const token = JSON.parse(tokens!) as Tokens;
           set({
             user,
-            tokens: token,
             isAuthenticated: true,
             isLoading: false,
           });

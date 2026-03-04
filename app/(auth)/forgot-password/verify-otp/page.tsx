@@ -2,15 +2,20 @@
 import AuthWrapper from '@/components/auth/authWrapper';
 import { VerifyForgetPasswordOTPForm } from '@/components/auth/verifyForgetPasswordOTPForm';
 import { useCountdown } from '@/lib/timeCounter';
-import { useState } from 'react';
+import { getRegEmail } from '@/services/axios';
+import { useState, useEffect } from 'react';
 
 export default function VerifyOtpPage() {
-  const [email] = useState<string | null>(() =>
-    typeof window !== 'undefined'
-      ? localStorage.getItem('resetPasswordEmail')
-      : null,
-  );
+  const [email, setEmail] = useState<string | null>(null);
   const counter = useCountdown(40);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const result = await getRegEmail();
+      setEmail(result);
+    };
+    fetchEmail();
+  }, []);
 
   // Obscure email function
   function obscureEmail(email: string) {

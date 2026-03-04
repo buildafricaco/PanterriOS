@@ -1,22 +1,26 @@
 import { Pagination } from './index';
 
 export interface UserProfileRes {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  roles: string[];
-  gender: string;
-  userStatus: string;
-  department: string;
-  dateOfBirth: string;
-  phoneNumber: string;
-  profileImage: string | null;
-  isTwoSetup: boolean;
-  isTwoEnabled: boolean;
-  joinedAt: string;
-  activeDevice: string | null;
-  lastLogin: string;
+  statusCode: 200;
+  data: {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    roles: string[];
+    gender: string;
+    userStatus: string;
+    department: string;
+    dateOfBirth: string;
+    phoneNumber: string;
+    profileImage: string | null;
+    isTwoSetup: boolean;
+    isTwoEnabled: boolean;
+    joinedAt: string;
+    activeDevice: string | null;
+    lastLogin: string;
+    appAccess: string;
+  };
 }
 
 export interface AdminUsersStats {
@@ -35,12 +39,15 @@ export interface AdminUsersDataItem {
 }
 
 export interface AdminUsersRes {
-  message: string;
-  userStats: AdminUsersStats;
-  data: AdminUsersDataItem[];
-  pagination: Pagination;
-  totalCount: number;
-  filteredCount: number;
+  statusCode: number;
+  data: {
+    message: string;
+    userStats: AdminUsersStats;
+    data: AdminUsersDataItem[];
+    pagination: Pagination;
+    totalCount: number;
+    filteredCount: number;
+  };
 }
 
 export interface RetrieveUsersQuery {

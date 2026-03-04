@@ -20,6 +20,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     '/forgot-password/reset-password',
     '/forgot-password/verify-otp',
     '/not-found',
+    '/investments',
+    '/investors',
   ];
   const isPublic = publicRoutes.includes(pathname);
 

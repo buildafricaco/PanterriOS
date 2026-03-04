@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import Image from 'next/image';
-import logo from '@/assets/main-logo.png';
+import logo from '@/assets/svg/logo.svg';
 
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -51,6 +51,9 @@ export default function AuthWrapper({
             className="w-52"
             priority
           />
+          <p className="text-gray-300 text-xs uppercase text-center">
+            Admin Operating System
+          </p>
         </Link>
         <div></div>
       </div>
@@ -79,7 +82,7 @@ export default function AuthWrapper({
           </Card>
         </div>
       </div>
-      <div className="  items-center justify-between  pt-8 lg:text-sm text-xs md:flex-row text-center text-gray-500   -translate-x-1/2 left-1/2 bottom-5 absolute ">
+      <div className="  items-center justify-between  pt-8 lg:text-sm text-xs md:flex-row text-center text-gray-300   -translate-x-1/2 left-1/2 bottom-5 absolute ">
         <p>&copy; {date} Panterrium. Secure admin infrastructure.</p>
       </div>
     </div>
