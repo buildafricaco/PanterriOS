@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -19,16 +20,16 @@ import {
 } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 
-interface TableProp {
-  data: any;
-  columns: any;
+interface TableProp<TData extends object> {
+  data: TData[];
+  columns: ColumnDef<TData, unknown>[];
   entityName?: string;
 }
-export function ReUseAbleTable({
+export function ReUseAbleTable<TData extends object>({
   data,
   columns,
   entityName = "results",
-}: TableProp) {
+}: TableProp<TData>) {
   const table = useReactTable({
     data,
     columns,

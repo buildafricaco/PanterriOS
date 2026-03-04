@@ -2,8 +2,24 @@
 import { CircleCheck, FileText, TriangleAlert } from 'lucide-react';
 import Image from 'next/image';
 
+interface PreviewData {
+  propertyName: string;
+  propertyType: string;
+  state: string;
+  description: string;
+  features: string[];
+  targetAmount: number;
+  minimumInvestment: number;
+  expectedROI?: number;
+  duration: string;
+  riskRating: string;
+  coverimage?: File[];
+  propertyImages?: File[];
+  legalDocuments?: File[];
+}
+
 interface FormPreviewProps {
-  previewData: any;
+  previewData: PreviewData;
 }
 
 export default function FormPreview({ previewData }: FormPreviewProps) {

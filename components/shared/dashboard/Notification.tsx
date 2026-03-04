@@ -85,7 +85,7 @@ export default function Notification() {
               <BellOff className="mb-2 h-12 w-12 text-[#9CA3AF]" />
               <p className="text-sm text-[#6B7280]">No notifications</p>
               <p className="mt-1 text-xs text-[#9CA3AF]">
-                You're all caught up!
+                You&apos;re all caught up!
               </p>
             </div>
           ) : (

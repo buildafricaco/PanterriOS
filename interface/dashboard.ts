@@ -4,7 +4,7 @@ export interface DashboardUser {
   firstName: string;
   lastName: string;
   email: string;
-  role: any;
+  role: string | string[];
   avatar?: string;
   initials: string;
 }

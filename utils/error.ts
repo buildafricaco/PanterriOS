@@ -1,6 +1,39 @@
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null
+
+const resolveErrorMessage = (
+  responseData: unknown,
+  fallbackMessage: string,
+): string | string[] => {
+  if (!isRecord(responseData)) return fallbackMessage
+
+  const nestedData = isRecord(responseData.data) ? responseData.data : null
+  const candidates: unknown[] = [
+    responseData.message,
+    responseData.error,
+    responseData.detail,
+    nestedData?.message,
+    nestedData?.error,
+    nestedData?.detail,
+  ]
+
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) return candidate
+    if (
+      Array.isArray(candidate) &&
+      candidate.length > 0 &&
+      candidate.every((item) => typeof item === 'string')
+    ) {
+      return candidate as string[]
+    }
+  }
+
+  return fallbackMessage
+}
+
 export const handleAxiosError = async (error: AxiosError): Promise<void> => {
   const { response, code, message: errorMessage } = error
 
@@ -22,15 +55,15 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
   }
 
   const status = response.status
-  const responseData = response.data as Record<string, any>
-  const message = responseData?.message || error.message || 'An error occurred'
+  const fallbackMessage = error.message || 'An error occurred'
+  const message = resolveErrorMessage(response.data, fallbackMessage)
+  const authFallbackMessage =
+    status === 401 ? 'Unauthorized access' : 'Session expired'
+  const authMessage = typeof message === 'string' ? message : authFallbackMessage
 
   // 🔐 Auth/session errors
   if ([401, 403].includes(status)) {
-    const isUnauthorized = status === 401
-    toast.error(
-      message || (isUnauthorized ? 'Unauthorized access' : 'Session expired')
-    )
+    toast.error(authMessage || authFallbackMessage)
     return
   }
 
@@ -42,9 +75,11 @@ export const handleAxiosError = async (error: AxiosError): Promise<void> => {
 
   // Validation or other errors
   if (Array.isArray(message)) {
-    message.forEach((msg) => toast.error(msg))
+    message
+      .filter((msg): msg is string => typeof msg === 'string')
+      .forEach((msg) => toast.error(msg))
   } else {
-    toast.error(message)
+    toast.error(typeof message === 'string' ? message : fallbackMessage)
   }
 }
 

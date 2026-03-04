@@ -44,7 +44,6 @@ export function useLogin() {
       }
 
       if (!data.accessToken) {
-        toast.error('Login did not return an access token.');
         return;
       }
 

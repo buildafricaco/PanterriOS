@@ -11,7 +11,7 @@ export function HomeHero() {
           <span className="text-gray-500"> Operates</span>
         </h1>
         <p className="text-gray-500 text-xl">
-          The command center for Africa's most intelligent real estate
+          The command center for Africa&apos;s most intelligent real estate
           investment platform.
         </p>
         <Link href={'/login'}>
