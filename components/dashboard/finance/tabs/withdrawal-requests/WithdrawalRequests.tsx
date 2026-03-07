@@ -6,9 +6,9 @@ import { withdrawalColumns } from "./withdrawalColumns";
 
 export function WithdrawalRequests() {
   return (
-    <div className="w-full border-t border-l border-r rounded-md space-y-6">
+    <div className="w-full space-y-6">
       {/* Title and Subtitle */}
-      <div className="px-5 pt-3">
+      <div className=" ">
         <h2 className="text-xl font-semibold text-gray-900">
           Pending Withdrawal Approvals
         </h2>
@@ -20,7 +20,7 @@ export function WithdrawalRequests() {
       {/* Table */}
       <ReUseAbleTable
         data={DUMMY_WITHDRAWAL_REQUESTS}
-        columns={withdrawalColumns}
+        columns={withdrawalColumns} 
         entityName="withdrawal requests"
       />
     </div>

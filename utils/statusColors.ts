@@ -12,6 +12,7 @@ export function getStatusColor(status: string): {
     case "approved":
     case "active":
     case "activated":
+    case "balanced":
       return {
         textColor: "text-[#008236]",
         bgColor: "bg-[#F0FDF4]",
@@ -41,12 +42,14 @@ export function getStatusColor(status: string): {
         dotColor: "bg-[#0369A1]",
         borderColor: "border-[#BAE6FD]",
       };
+
     case "rejected":
     case "failed":
     case "cancelled":
     case "error":
     case "suspended":
     case "deactivated":
+    case "mismatch":
       return {
         textColor: "text-[#C10007]",
         bgColor: "bg-[#FEF2F2]",

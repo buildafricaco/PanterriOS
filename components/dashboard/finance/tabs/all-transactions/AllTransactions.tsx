@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { ReUseAbleTable } from "@/components/shared/reusableTable";
-import { DUMMY_TRANSACTIONS } from "../../data";
 import { transactionColumns } from "./transactionColumns";
 import { Transaction } from "../../types";
 import { TableFilters } from "@/components/shared/TableFilters";
@@ -61,7 +60,7 @@ function filterTransactions(
   });
 }
 
-export function AllTransactions() {
+export function AllTransactions({ data }: { data: Transaction[] }) {
   const [searchValue, setSearchValue] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -70,7 +69,7 @@ export function AllTransactions() {
   const filteredData = useMemo(
     () =>
       filterTransactions(
-        DUMMY_TRANSACTIONS,
+        data,
         searchValue,
         filterType,
         filterStatus,
