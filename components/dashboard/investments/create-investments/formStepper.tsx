@@ -5,6 +5,7 @@ import {
   CircleAlert,
   CircleCheck,
   FileText,
+  Flag,
 } from 'lucide-react';
 
 export function FormStepper({
@@ -26,6 +27,10 @@ export function FormStepper({
     {
       title: 'Media & Documents',
       icon: FileText,
+    },
+    {
+      title: 'Project Milestones',
+      icon: Flag,
     },
     {
       title: 'Review & Publish',

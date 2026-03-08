@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,13 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { FileUpload } from '@/components/ui/file-upload';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { CircleCheck, FileText, Share } from 'lucide-react';
+import { CalendarIcon, CircleCheck, FileText, Plus, Share } from 'lucide-react';
 import { formatPrice } from '@/utils/formatPrice';
 import FormPreview from './formPreview';
+import { format } from 'date-fns';
 interface Prop {
   id?: number | string;
   step: number;
@@ -75,9 +82,20 @@ const createInvestmentSchema = z.object({
       (files) => files.every((file) => file.size <= 5 * 1024 * 1024),
       'Each file must be less than 5MB',
     ),
+  projectMilestones: z
+    .array(
+      z.object({
+        title: z.string().min(1, 'Milestone title is required'),
+        date: z.string().min(1, 'Milestone date is required'),
+        status: z.string().min(1, 'Milestone status is required'),
+        description: z.string().min(1, 'Milestone description is required'),
+      }),
+    )
+    .min(1, 'Add at least one milestone'),
 });
 
 type CreateInvestmentFormData = z.infer<typeof createInvestmentSchema>;
+type MilestoneItem = CreateInvestmentFormData['projectMilestones'][number];
 
 const typeOptions = [
   { label: 'Commercial', value: 'commercial' },
@@ -105,6 +123,11 @@ const riskOption = [
   { label: 'Medium', value: 'medium' },
   { label: 'High', value: 'high' },
 ];
+const milestoneStatusOption = [
+  { label: 'Completed', value: 'completed' },
+  { label: 'In Progress', value: 'in_progress' },
+  { label: 'Up Coming', value: 'up_coming' },
+];
 const requiredDoc = [
   '• Investment Prospectus',
   '• Property Valuation Report',
@@ -115,6 +138,13 @@ const requiredDoc = [
 
 export function CreateInvestmentForm({ step, setStep }: Prop) {
   const [featureInput, setFeatureInput] = useState('');
+  const [milestoneDate, setMilestoneDate] = useState<Date>();
+  const [milestoneInput, setMilestoneInput] = useState<MilestoneItem>({
+    title: '',
+    date: '',
+    status: '',
+    description: '',
+  });
   const isLastStep = step === 5;
 
   const form = useForm<CreateInvestmentFormData>({
@@ -124,6 +154,7 @@ export function CreateInvestmentForm({ step, setStep }: Prop) {
       propertyType: '',
       state: '',
       city: '',
+      address: '',
       propertySize: 0,
       units: 0,
       description: '',
@@ -139,7 +170,12 @@ export function CreateInvestmentForm({ step, setStep }: Prop) {
       coverimage: [],
       propertyImages: [],
       legalDocuments: [],
+      projectMilestones: [],
     },
+  });
+  const milestones = useWatch({
+    control: form.control,
+    name: 'projectMilestones',
   });
 
   const isSection1Valid = async () => {
@@ -178,6 +214,48 @@ export function CreateInvestmentForm({ step, setStep }: Prop) {
 
     return result;
   };
+  const isSection4Valid = async () => {
+    const milestones = form.getValues('projectMilestones');
+    if (milestones.length === 0) {
+      form.setError('projectMilestones', {
+        type: 'manual',
+        message: 'Add at least one milestone before continuing.',
+      });
+      return false;
+    }
+    form.clearErrors('projectMilestones');
+    return true;
+  };
+
+  const handleAddMilestone = () => {
+    if (
+      !milestoneInput.title.trim() ||
+      !milestoneInput.date ||
+      !milestoneInput.status ||
+      !milestoneInput.description.trim()
+    ) {
+      form.setError('projectMilestones', {
+        type: 'manual',
+        message: 'Please fill all milestone fields before adding.',
+      });
+      return;
+    }
+
+    const currentMilestones = form.getValues('projectMilestones');
+    form.setValue('projectMilestones', [...currentMilestones, milestoneInput], {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    form.clearErrors('projectMilestones');
+
+    setMilestoneInput({
+      title: '',
+      date: '',
+      status: '',
+      description: '',
+    });
+    setMilestoneDate(undefined);
+  };
 
   const onSubmit = async (values: CreateInvestmentFormData) => {
     console.log(values);
@@ -201,6 +279,11 @@ export function CreateInvestmentForm({ step, setStep }: Prop) {
     if (step === 3) {
       const valid = await isSection3Valid();
       if (valid) setStep(4);
+    }
+
+    if (step === 4) {
+      const valid = await isSection4Valid();
+      if (valid) setStep(5);
     }
   };
 
@@ -823,7 +906,180 @@ export function CreateInvestmentForm({ step, setStep }: Prop) {
                 </div>
               </>
             )}
-            {step === 4 && <FormPreview previewData={form.getValues()} />}
+            {step === 4 && (
+              <>
+                <div className=" items-center gap-4">
+                  <h1 className="text-2xl font-semibold">Project Milestones</h1>
+                  <p>Define key milestones for the project timeline</p>
+                </div>
+                <div className="grid lg:grid-cols-3 gap-4">
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 ">
+                      <span className="font-bold"> Title </span>{' '}
+                      <p className="text-red-500">*</p>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        value={milestoneInput.title}
+                        onChange={(e) =>
+                          setMilestoneInput((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                        placeholder="E.g Site Acquisition"
+                        className="border-input bg-surface h-10 w-full rounded-md border px-3 text-sm"
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 ">
+                      <span className="font-bold">Date</span>{' '}
+                      <p className="text-red-500">*</p>
+                    </FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            data-empty={!milestoneInput.date}
+                            className="w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
+                          >
+                            <CalendarIcon />
+                            {milestoneInput.date ? (
+                              format(new Date(milestoneInput.date), 'PPP')
+                            ) : (
+                              <span>dd / mm / yyyy</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={milestoneDate}
+                            onSelect={(selectedDate) => {
+                              if (!selectedDate) return;
+                              setMilestoneDate(selectedDate);
+                              setMilestoneInput((prev) => ({
+                                ...prev,
+                                date: format(selectedDate, 'yyyy-MM-dd'),
+                              }));
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                  </FormItem>
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 ">
+                      <span className="font-bold">Status</span>{' '}
+                      <p className="text-red-500">*</p>
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={milestoneInput.status}
+                        onValueChange={(value) =>
+                          setMilestoneInput((prev) => ({
+                            ...prev,
+                            status: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent position={'popper'}>
+                          <SelectGroup>
+                            {milestoneStatusOption.map((option, i) => (
+                              <SelectItem value={option.value} key={i}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                </div>
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 ">
+                    <span className="font-bold">
+                      {' '}
+                      Milestone Description
+                    </span>{' '}
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      value={milestoneInput.description}
+                      onChange={(e) =>
+                        setMilestoneInput((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
+                      placeholder="Describe this milestone..."
+                      className="border-input bg-surface h-32 w-full rounded-md border px-3 text-sm"
+                    />
+                  </FormControl>
+                </FormItem>
+                <div className="flex justify-between items-center">
+                  <div>Minimum 100 characters recommended</div>
+                  <Button
+                    type="button"
+                    variant={'outline'}
+                    onClick={handleAddMilestone}
+                  >
+                    Add Milestone <Plus />
+                  </Button>
+                </div>
+                {form.formState.errors.projectMilestones && (
+                  <p className="text-sm text-red-500">
+                    {form.formState.errors.projectMilestones.message}
+                  </p>
+                )}
+
+                {milestones.length > 0 && (
+                  <div className="space-y-3 max-w-lg rounded-2xl px-4 py-6">
+                    <h3 className="text-lg font-semibold border-b p-2 ">
+                      Milestones Preview ({milestones.length})
+                    </h3>
+                    {milestones.map((milestone, index) => {
+                      const statusClass =
+                        milestone.status === 'completed'
+                          ? 'bg-green-50  text-green-700'
+                          : milestone.status === 'in_progress'
+                            ? 'bg-blue-50 text-blue-700'
+                            : 'bg-gray-50 text-gray-700';
+
+                      return (
+                        <div
+                          key={`${milestone.title}-${index}`}
+                          className={`border rounded-md p-4 ${statusClass}`}
+                        >
+                          <div className="flex justify-between items-center gap-3">
+                            <h4 className="font-semibold text-black">
+                              {milestone.title}
+                            </h4>
+                            <span className="text-xs uppercase">
+                              {milestone.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-2 text-gray-600">
+                            {milestone.description}
+                          </p>
+                          <p className=" mt-1 capitalize text-xs text-gray-600">
+                            {milestone.status.replace('_', ' ')}-
+                            {milestone.date}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+            {step === 5 && <FormPreview previewData={form.getValues()} />}
 
             {/* Buttons */}
             <div className="space-y-3 flex gap-4 justify-between w-full">

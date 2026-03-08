@@ -16,7 +16,7 @@ export default function CreateNewInvestmentpage() {
           <h2 className="text-lg font-bold">Create new investment</h2>
           <small className=" text-gray-500">
             {' '}
-            Step {step < 4 ? step : 4} of 4
+            Step {step < 5 ? step : 5} of 5
           </small>
         </div>
 

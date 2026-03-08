@@ -16,6 +16,12 @@ interface PreviewData {
   coverimage?: File[];
   propertyImages?: File[];
   legalDocuments?: File[];
+  projectMilestones: {
+    title: string;
+    date: string;
+    status: string;
+    description: string;
+  }[];
 }
 
 interface FormPreviewProps {
@@ -155,6 +161,56 @@ export default function FormPreview({ previewData }: FormPreviewProps) {
           ))}
         </ul>
       </div>
+
+      {/* Projrct milestone preview style */}
+      {previewData.projectMilestones.length > 0 && (
+        <div className="space-y-3  max-w-lg rounded-2xl px-4 py-6">
+          <h3 className="text-lg font-semibold border-b p-2">
+            Milestones Preview ({previewData.projectMilestones.length})
+          </h3>
+          {previewData.projectMilestones.map((milestone, index) => {
+            const statusClass =
+              milestone.status === 'completed'
+                ? 'bg-green-50  text-green-700'
+                : milestone.status === 'in_progress'
+                  ? 'bg-blue-50  text-blue-700'
+                  : 'bg-gray-50  text-gray-700';
+            const ovalBg =
+              milestone.status === 'completed'
+                ? 'bg-green-700'
+                : milestone.status === 'in_progress'
+                  ? 'bg-blue-700'
+                  : 'bg-gray-700';
+
+            return (
+              <div key={`${milestone.title}-${index}`} className="flex gap-4">
+                <div className="items-center flex flex-col">
+                  <div className={`w-5 h-5 rounded-2xl ${ovalBg}`}></div>
+                  <div className="w-0.5 min-h-14 h-auto bg-gray-300"></div>
+                </div>
+
+                <div className={`border rounded-md p-4 w-full ${statusClass}`}>
+                  <div className="flex justify-between items-center gap-3">
+                    <h4 className="font-semibold text-black">
+                      {milestone.title}
+                    </h4>
+                    <span className="text-xs uppercase">
+                      {milestone.status.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <p className="text-sm mt-2 text-gray-600">
+                    {milestone.description}
+                  </p>
+                  <p className=" mt-1 capitalize text-xs text-gray-600">
+                    {milestone.status.replace('_', ' ')}-{milestone.date}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="bg-yellow-50 border border-yellow-500 flex gap-2 rounded-lg p-4">
         <TriangleAlert className="w-5 h-5 text-yellow-500" />
         <div className=" space-y-2 ">
