@@ -2,17 +2,13 @@
 
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
-import Image from "next/image";
 import { Button } from "../ui/button";
-import Logo from "@/assets/svg/logo.svg";
 
 export function Header() {
   return (
-    <div className="fixed w-full top-0">
-      <header className="w-full py-4 border-b   border-gray-200">
+    <div className="fixed z-10  bg-white/90  w-full top-0">
+      <header className="w-full border-b h-[60px] flex items-center justify-end   border-gray-200">
         <div className="flex items-center px-4 sm:max-w-[95%] sm:px-8 justify-between">
-          {/* Logo */}
-
           {/* Right side buttons */}
           <div className="flex items-center self-end flex-1 justify-end gap-4">
             <Link href={"/login"}>

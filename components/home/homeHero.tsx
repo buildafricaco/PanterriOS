@@ -37,6 +37,7 @@ interface Feature {
   icon: any;
   color: string;
   border: string;
+  accentHex: string;
 }
 
 const features: Feature[] = [
@@ -48,6 +49,7 @@ const features: Feature[] = [
     icon: FileText,
     color: "text-[#FFC633]",
     border: "border-[#FFC633]",
+    accentHex: "#FFC633",
   },
 
   {
@@ -58,6 +60,7 @@ const features: Feature[] = [
     icon: Calendar,
     color: "text-[#8A38F5]",
     border: "border-[#8A38F5]",
+    accentHex: "#8A38F5",
   },
   {
     id: 3,
@@ -67,6 +70,7 @@ const features: Feature[] = [
     icon: Bot,
     color: "text-[#155DFC]",
     border: "border-[#155DFC]",
+    accentHex: "#155DFC",
   },
   {
     id: 4,
@@ -75,6 +79,7 @@ const features: Feature[] = [
     icon: TrendingUp,
     color: "text-[#009D69]",
     border: "border-[#009D69]",
+    accentHex: "#009D69",
   },
   {
     id: 5,
@@ -83,6 +88,7 @@ const features: Feature[] = [
     icon: BarChart3,
     color: "text-[#EF4444]",
     border: "border-[#EF4444]",
+    accentHex: "#EF4444",
   },
 
   {
@@ -93,6 +99,7 @@ const features: Feature[] = [
     icon: Wallet,
     color: "text-[#155DFC]",
     border: "border-[#155DFC]",
+    accentHex: "#155DFC",
   },
   {
     id: 7,
@@ -102,6 +109,7 @@ const features: Feature[] = [
     icon: Users,
     color: "text-[#009D69]",
     border: "border-[#009D69]",
+    accentHex: "#009D69",
   },
 ];
 
@@ -113,13 +121,13 @@ export default function HomeHero() {
 
   // design pixel positions (absolute values taken from your list)
   const designPositions = [
-    { left: 295, top: 50 },
-    { left: 375, top: 157 },
-    { left: 289, top: 260 },
-    { left: 192, top: 370 },
-    { left: 100, top: 260 },
-    { left: 10, top: 155 },
-    { left: 90, top: 50 },
+    { left: 295, top: 65 },
+    { left: 375, top: 185 },
+    { left: 290, top: 310 },
+    { left: 195, top: 445 },
+    { left: 100, top: 310 },
+    { left: 10, top: 185 },
+    { left: 90, top: 65 },
   ];
 
   useLayoutEffect(() => {
@@ -146,14 +154,12 @@ export default function HomeHero() {
     return () => clearInterval(interval);
   }, []);
 
-  // someone who flirts, or fornicate or like women a lot
-
   return (
     <div
-      className={`${poppins.className} min-h-screen flex justify-between items-center md:mx-36 gap-20`}
+      className={`${poppins.className} pt-[70px]  min-h-screen flex justify-between items-center mx-10  lg:mx-30 gap-20`}
     >
       {/* LEFT SECTION */}
-      <div className="space-y-8 pt-5 font-poppins">
+      <div className="space-y-6 sm:space-y-8 max-sm:px-6 font-poppins w-full md:w-auto">
         <Image
           src={logo}
           alt="logo"
@@ -162,7 +168,7 @@ export default function HomeHero() {
           className="object-fit"
         />
 
-        <h1 className="flex flex-col space-y-3 text-[45px] font-semibold leading-tight">
+        <h1 className="flex flex-col space-y-2 sm:space-y-3 text-3xl max-sm:text-2xl sm:text-4xl md:text-[45px] font-semibold leading-tight">
           <span className="text-[#000000E5] letter-spacing-wide">
             Real Estate Data
           </span>
@@ -170,32 +176,32 @@ export default function HomeHero() {
           <span className="text-[#0000004D]">Financial Operations</span>
         </h1>
 
-        <p className="text-base  font-semibold text-black">
+        <p className="text-sm sm:text-base font-semibold text-black">
           One command centre
         </p>
 
-        <div className="space-y-4 pt-16">
+        <div className="space-y-4 pt-8 sm:pt-16">
           <Link href="/login">
-            <button className="bg-black flex cursor-pointer items-center justify-center w-xs text-white rounded-sm py-4  ">
+            <button className="bg-black flex cursor-pointer items-center justify-center w-full sm:w-xs text-white rounded-sm py-4">
               Login to PanterriOS
             </button>
           </Link>
 
           <div className="flex items-center gap-2 pt-2 text-[#E7000B]">
             <Shield className="w-5 h-5" />
-            <p>Authorized users only</p>
+            <p className="text-sm sm:text-base">Authorized users only</p>
           </div>
         </div>
       </div>
 
       {/* RIGHT SECTION (circular layout) */}
 
-      <div
-        className={`relative md:mr-36 mt-10 ${poppins.className}  flex items-center`}
+      <div 
+        className={`relative hidden md:flex   ${poppins.className} mr-10 md:mr-30 items-center`}
       >
         <div
           ref={circleRef}
-          className="relative w-96 h-96 flex items-center justify-center"
+          className="relative w-[400px] sm:h-[490px] flex items-center justify-center"
         >
           {/* SVG connectors behind icons */}
           <Image src={landingSvg} alt="connectors" fill className="" />
@@ -226,6 +232,9 @@ export default function HomeHero() {
             const pos = designPositions[index] ?? { left: 0, top: 0 };
             const x = pos.left * scale;
             const y = pos.top * scale;
+            const shadowColor = active
+              ? `${feature.accentHex}33`
+              : "#00000033";
 
             return (
               <Tooltip key={feature.id}>
@@ -237,12 +246,13 @@ export default function HomeHero() {
                         top: `${y}px`,
                         position: "absolute",
                         transform: "translate(-50%, -50%)",
+                        boxShadow: `0px 2px 12px 0px ${shadowColor}`,
                       } as any
                     }
                     className={
-                      `flex items-center justify-center h-21 w-40 rounded-2xl bg-[#FAFAFA] border transition-all duration-500 cursor-pointer shadow-lg p-2 ` +
+                      `flex items-center justify-center h-24 w-40 rounded-2xl bg-[#FAFAFA] border transition-all duration-500 cursor-pointer p-2 ` +
                       (active
-                        ? `border-2 ${feature.border} shadow-[${feature.color}] scale-110`
+                        ? `border-2 ${feature.border} scale-105`
                         : `border-white/60`)
                     }
                   >
@@ -254,7 +264,7 @@ export default function HomeHero() {
                 </TooltipTrigger>
 
                 <TooltipContent
-                  className={`bg-white w-[230px]  max-w-sm text-black rounded-xl p-3 shadow-2xl whitespace-normal break-words`}
+                  className={`bg-white w-[230px] ${poppins.className}  max-w-sm text-black rounded-xl p-3 shadow-2xl whitespace-normal break-words`}
                 >
                   <p className="font-semibold text-base text-center break-words">
                     {feature.title}
