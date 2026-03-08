@@ -1,6 +1,11 @@
 'use client';
 
-import { PageHead, StatCard } from '@/components/shared';
+import {
+  PageHead,
+  StatCard,
+  StatCardSkeleton,
+  TableSkeleton,
+} from '@/components/shared';
 import { ReUseAbleTable } from '@/components/shared/reusableTable';
 import { Button } from '@/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -39,7 +44,7 @@ interface UsersRow {
 }
 
 export default function UsersPage() {
-  const { data: usersRes } = useRetrieveUsers({
+  const { data: usersRes, isLoading } = useRetrieveUsers({
     search: '',
     page: 1,
     limit: 20,
@@ -197,18 +202,26 @@ export default function UsersPage() {
         </EditCreateModal>
       </PageHead>
       <div className="grid lg:grid-cols-3 grid-cols-2 flex-wrap lg:gap-6 gap-3 my-8 ">
-        {summary.map((user, i) => (
-          <StatCard
-            label={user.label}
-            value={user.value}
-            Icon={user.icon}
-            bgColor={user.bgColor}
-            key={i}
-          />
-        ))}
+        {isLoading ? (
+          <StatCardSkeleton count={3} />
+        ) : (
+          summary.map((user, i) => (
+            <StatCard
+              label={user.label}
+              value={user.value}
+              Icon={user.icon}
+              bgColor={user.bgColor}
+              key={i}
+            />
+          ))
+        )}
       </div>
 
-      <ReUseAbleTable data={tableData} columns={columns} />
+      {isLoading ? (
+        <TableSkeleton rows={6} columns={6} />
+      ) : (
+        <ReUseAbleTable data={tableData} columns={columns} />
+      )}
     </div>
   );
 }
