@@ -1,6 +1,7 @@
 'use client';
 
 import ProfilePic from '@/assets/images/profile-pic.webp';
+import { UserDetailsSkeleton } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
@@ -10,7 +11,7 @@ import { useToggleUserTwoFactor } from '@/hook/auth/useToggleUserTwoFactor';
 
 export function UsersDetialsPage({ id }: { id: string | number }) {
   const userId = Number(id);
-  const { data: profile } = useRetrieveUserProfile(userId);
+  const { data: profile, isLoading } = useRetrieveUserProfile(userId);
   const { mutateAsync: toggle2fa, isPending: isToggling } =
     useToggleUserTwoFactor();
   const { mutateAsync: deleteUser, isPending: isDeleting } = useDeleteUser();
@@ -43,6 +44,8 @@ export function UsersDetialsPage({ id }: { id: string | number }) {
   const handleDelete = async () => {
     await deleteUser(userId);
   };
+
+  if (isLoading) return <UserDetailsSkeleton />;
 
   return (
     <div>

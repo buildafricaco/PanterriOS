@@ -6,12 +6,14 @@ import {
   TwoFaBar,
 } from '@/components/dashboard';
 
-import { PageHead } from '@/components/shared/';
+import { PageHead, ProfilePageSkeleton } from '@/components/shared/';
 import { Calendar } from 'lucide-react';
 import { useMyProfileDetails } from '@/hook/user-management/useMyProfileDetails';
 
 export default function ProfilePage() {
-  const { data: profile } = useMyProfileDetails();
+  const { data: profile, isLoading } = useMyProfileDetails();
+
+  if (isLoading) return <ProfilePageSkeleton />;
 
   return (
     <div>

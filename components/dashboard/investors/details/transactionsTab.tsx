@@ -1,157 +1,56 @@
 import { ReUseAbleTable } from '@/components/shared/reusableTable';
+import { InvestorOverviewRes } from '@/interface';
+import { formatPrice } from '@/utils/formatPrice';
 import { ColumnDef } from '@tanstack/react-table';
-interface TransactionsProp {
-  date: string;
-  type: string;
-  description: string;
-  amount: {
-    currency: string;
-    value: number;
-    formatted: string;
-    direction: string;
-  };
+
+type TransactionItem = InvestorOverviewRes['data']['transactionDetails']['data'][number];
+
+interface TransactionTableProps {
+  transactions: TransactionItem[];
 }
 
-export function TransactionTable() {
-  const transactions = [
-    {
-      date: '2024-01-15',
-      type: 'Deposit',
-      description: 'Wallet funding via bank transfer',
-      amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '+₦5.0M',
-        direction: 'credit',
-      },
-    },
-    {
-      date: '2024-01-16',
-      type: 'Investment',
-      description: 'Lekki Phase 1 Apartments',
-      amount: {
-        currency: 'NGN',
-        value: 8500000,
-        formatted: '-₦8.5M',
-        direction: 'debit',
-      },
-    },
-    {
-      date: '2024-01-20',
-      type: 'Returns',
-      description: 'ROI payment - Ikoyi Plaza',
-      amount: {
-        currency: 'NGN',
-        value: 1200000,
-        formatted: '+₦1.2M',
-        direction: 'credit',
-      },
-    },
-    {
-      date: '2024-01-20',
-      type: 'Returns',
-      description: 'ROI payment - Ikoyi Plaza',
-      amount: {
-        currency: 'NGN',
-        value: 1200000,
-        formatted: '+₦1.2M',
-        direction: 'credit',
-      },
-    },
-    {
-      date: '2024-01-20',
-      type: 'Returns',
-      description: 'ROI payment - Ikoyi Plaza',
-      amount: {
-        currency: 'NGN',
-        value: 1200000,
-        formatted: '+₦1.2M',
-        direction: 'credit',
-      },
-    },
-    {
-      date: '2024-01-20',
-      type: 'Returns',
-      description: 'ROI payment - Ikoyi Plaza',
-      amount: {
-        currency: 'NGN',
-        value: 1200000,
-        formatted: '+₦1.2M',
-        direction: 'credit',
-      },
-    },
-    {
-      date: '2024-01-20',
-      type: 'Returns',
-      description: 'ROI payment - Ikoyi Plaza',
-      amount: {
-        currency: 'NGN',
-        value: 1200000,
-        formatted: '+₦1.2M',
-        direction: 'credit',
-      },
-    },
-  ];
-
-  const columns: ColumnDef<TransactionsProp>[] = [
+export function TransactionTable({ transactions }: TransactionTableProps) {
+  const columns: ColumnDef<TransactionItem>[] = [
     {
       accessorKey: 'date',
-      header: 'date',
-      cell: ({ row }) => {
-        return (
-          <div className="  ">
-            <p>{row.original.date} </p>
-          </div>
-        );
-      },
+      header: 'Date',
+      cell: ({ row }) => <p>{row.original.date}</p>,
     },
     {
       accessorKey: 'type',
-      header: 'type',
+      header: 'Type',
       cell: ({ row }) => {
-        const status = row.original.type.toLowerCase();
+        const type = row.original.type.toLowerCase();
+        const isDebit = row.original.direction.toLowerCase() === 'debit';
         return (
-          <div className="">
-            {' '}
-            {status === 'investment' ? (
-              <span className="text-xs text-gray-600 bg-gray-50 px-2 border border-gray-500 py-0.5 h-fit capitalize">
-                {status}
-              </span>
-            ) : (
-              <span className="text-xs text-green-600 bg-green-50 px-2 border border-green-500 py-0.5 h-fit capitalize">
-                {status}
-              </span>
-            )}
-          </div>
+          <span
+            className={`text-xs px-2 border py-0.5 h-fit capitalize ${isDebit ? 'text-gray-600 bg-gray-50 border-gray-500' : 'text-green-600 bg-green-50 border-green-500'}`}
+          >
+            {type}
+          </span>
         );
       },
     },
-
     {
       accessorKey: 'description',
-      header: 'description',
-      cell: ({ row }) => (
-        <div className=" font-medium">{row.original.description}</div>
-      ),
+      header: 'Description',
+      cell: ({ row }) => <div className="font-medium">{row.original.description}</div>,
     },
     {
       accessorKey: 'amount',
-      header: 'amount',
+      header: 'Amount',
       cell: ({ row }) => {
-        const amount = row.original.amount.formatted;
+        const direction = row.original.direction.toLowerCase();
+        const sign = direction === 'debit' ? '-' : '+';
+        const formattedAmount = `${sign}${formatPrice(row.original.amount)}`;
         return (
-          <div
-            className={`font-medium ${amount.includes('+') ? 'text-green-500' : 'text-black'}`}
-          >
-            {amount}
+          <div className={direction === 'debit' ? 'text-black' : 'text-green-500'}>
+            {formattedAmount}
           </div>
         );
       },
     },
   ];
-  return (
-    <div>
-      <ReUseAbleTable columns={columns} data={transactions} />
-    </div>
-  );
+
+  return <ReUseAbleTable columns={columns} data={transactions} />;
 }
