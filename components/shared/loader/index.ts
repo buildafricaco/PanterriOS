@@ -3,3 +3,4 @@ export * from './TableSkeleton';
 export * from './InvestorDetailsSkeleton';
 export * from './UserDetailsSkeleton';
 export * from './ProfilePageSkeleton';
+export * from './InvestmentDetailsSkeleton';

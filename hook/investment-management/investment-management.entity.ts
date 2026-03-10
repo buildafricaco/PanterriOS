@@ -189,9 +189,7 @@ export interface InvestmentInvestors {
 
 export interface RetrieveInvestmentDetailsRes {
   message: string;
-  data: {
-    data: InvestmentDetails;
-  };
+  data: InvestmentDetails;
 }
 
 export interface DocumentUpdate {

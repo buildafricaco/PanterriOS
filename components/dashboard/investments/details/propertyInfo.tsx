@@ -1,125 +1,109 @@
-import { CircleCheck } from 'lucide-react';
-import Image from 'next/image';
-import img1 from '@/assets/images/apartment1.png';
-import img2 from '@/assets/images/apartment2.jpg';
+import { StatusBadge } from "@/components/shared";
+import { type InvestmentPropertyDetails } from "@/interface";
+import { CircleCheck } from "lucide-react";
+import Image from "next/image";
 
-export default function PropertyInfo() {
-  const property = {
-    name: 'Lekki Phase 1 Apartments',
-    type: 'Residential',
-    status: 'Fully funded',
-    location: {
-      state: 'Lagos',
-      city: 'Lekki',
-      street_address: '3B Water Corporation Drive',
-    },
-    size_sqm: 2500,
-    total_units: 24,
-    description:
-      "Prime apartment complex property located in Lekki Phase 1, Lagos. This investment opportunity offers strong potential returns with a projected IRR of 18% p.a. Perfect for investors looking for low risk investment options in Nigeria's growing real estate market.",
-    financials: {
-      projected_irr: {
-        value: 18,
-        unit: 'percent',
-        formatted: '18% p.a.',
-      },
-      expected_rental_yield: {
-        range: '7-9%',
-        unit: 'percent',
-        formatted: '7-9% annually',
-      },
-    },
-    highlights: [
-      'Prime location in one of Lagos most sought-after neighborhoods',
-      'Modern architectural design with state-of-the-art amenities',
-      'Expected rental yield of 7-9% annually',
-      '24/7 security with CCTV surveillance and controlled access',
-      'Swimming pool, gym, and recreational facilities',
-      'Proximity to shopping malls, schools, and business districts',
-      'Smart home features and energy-efficient systems',
-    ],
-    propertyImage: [img1, img2, img2],
-  };
+interface PropertyInfoProps {
+  propertyDetails: InvestmentPropertyDetails;
+}
 
+export default function PropertyInfo({ propertyDetails }: PropertyInfoProps) {
   return (
-    <div className="space-y-4 ">
-      <div className=" grid grid-cols-3 items-center">
-        <div className=" gap-2">
-          <div className=" font-semibold">Property Name</div>
-          <p>{property.name}</p>
+    <div className="space-y-4  my-4">
+      <div className="grid capitalize grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+        <div>
+          <div className="font-semibold">Property Name</div>
+          <p>{propertyDetails.propertyName}</p>
         </div>
-        <div className=" gap-2">
-          <div className=" font-semibold">Property Type</div>
-          <p>{property.type}</p>
+        <div>
+          <div className="font-semibold">Property Type</div>
+          <p className="capitalize">{propertyDetails.propertyType}</p>
         </div>
-      </div>
-      <div className=" grid grid-cols-3 items-center">
-        <div className=" gap-2">
-          <div className=" font-semibold"> State</div>
-          <p>{property.location.state}</p>
-        </div>
-
-        <div className=" gap-2">
-          <div className=" font-semibold"> City</div>
-          <p>{property.location.city}</p>
-        </div>
-
-        <div className=" gap-2">
-          <div className=" font-semibold"> Stree Address</div>
-          <p>{property.location.street_address}</p>
+        <div>
+          <div className="font-semibold">Status</div>
+          <StatusBadge status={propertyDetails.status} />
         </div>
       </div>
-      <div className=" grid grid-cols-3 items-center">
-        <div className=" gap-2">
-          <div className=" font-semibold"> Status</div>
-          <p>{property.status}</p>
-        </div>
 
-        <div className=" gap-2">
-          <div className=" font-semibold"> Property Size(Sqm)</div>
-          <p>{property.size_sqm}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+        <div>
+          <div className="font-semibold">State</div>
+          <p className="capitalize">{propertyDetails.state}</p>
         </div>
-
-        <div className=" gap-2">
-          <div className=" font-semibold"> Total Unit</div>
-          <p>{property.total_units}</p>
+        <div>
+          <div className="font-semibold">City</div>
+          <p>{propertyDetails.city}</p>
+        </div>
+        <div>
+          <div className="font-semibold">Street Address</div>
+          <p>{propertyDetails.fullAddress}</p>
         </div>
       </div>
-      <div className=" space-y-4">
-        <div className="text-gray-500 text-sm">Descriptions</div>
-        <p>{property.description}</p>
-      </div>
-      <div className=" space-y-4">
-        <div className="font-semibold">Key Highlight</div>
-        {property.highlights.map((higlight, i) => (
-          <div className="flex gap-2 items-center" key={i}>
-            {' '}
-            <CircleCheck className="text-green-500" /> <span> {higlight}</span>
-          </div>
-        ))}
-      </div>
-      <div>
-        <div className="font-semibold">Key Highlight</div>
 
-        <div className="flex border rounded-md gap-4 py-4 px-6">
-          {property.propertyImage.map((img, i) => (
-            <div key={i} className="w-45 h-45 rounded-md relative">
-              <Image
-                src={img}
-                alt="property"
-                className="object-center w-full h-45 rounded-md"
-                width={100}
-                height={100}
-              />
-              {i === 0 && (
-                <div className="bg-blue-700 text-white w-fit h-fit absolute p-1 text-sm top-2 left-2 rounded-md">
-                  {' '}
-                  Cover
-                </div>
-              )}
+      <div className="grid grid-cols-1  sm:grid-cols-3 gap-4 items-center">
+        <div>
+          <div className="font-semibold">Property Size (Sqm)</div>
+          <p>{propertyDetails.propertySizeSqm}</p>
+        </div>
+        <div>
+          <div className="font-semibold">Property Unit</div>
+          <p>{propertyDetails.propertyUnit}</p>
+        </div>
+        <div>
+          <div className="font-semibold">Total Units</div>
+          <p>{propertyDetails.totalUnits}</p>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="text-gray-500 text-sm">Description</div>
+        <p>{propertyDetails.description}</p>
+      </div>
+
+      <div className="space-y-3">
+        <div className="font-semibold">Key Highlights</div>
+        {propertyDetails.keyHighlights.length > 0 ? (
+          propertyDetails.keyHighlights.map((highlight, index) => (
+            <div
+              className="flex gap-2 items-center"
+              key={`${highlight}-${index}`}
+            >
+              <CircleCheck className="text-green-500 w-4 h-4" />
+              <span>{highlight}</span>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p className="text-sm text-gray-500">No highlights available.</p>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <div className="font-semibold">Property Images</div>
+        {propertyDetails.images.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border rounded-md p-4">
+            {propertyDetails.images.map((image, index) => (
+              <div
+                key={image.id}
+                className="w-full rounded-md relative overflow-hidden border"
+              >
+                <Image
+                  src={image.url}
+                  alt={image.fileName || `Property image ${index + 1}`}
+                  className="w-full h-44 object-cover"
+                  width={200}
+                  height={150}
+                />
+                {index === 0 && (
+                  <div className="bg-blue-700 text-white absolute p-1 text-sm top-2 left-2 rounded-md">
+                    Cover
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">No property images available.</p>
+        )}
       </div>
     </div>
   );

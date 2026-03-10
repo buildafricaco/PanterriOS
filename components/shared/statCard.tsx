@@ -42,7 +42,7 @@ export function StatCard({
         ) : null}
       </div>
 
-      <div className={cn("text-3xl font-bold text-[#000000] mb-2", color)}>
+      <div className={cn("text-3xl font-bold capitalize text-[#000000] mb-2", color)}>
         {value}
       </div>
 
@@ -55,7 +55,7 @@ export function StatCard({
               <TrendIcon className={cn("w-4 h-4", iconColor)} />
             </span>
           )}
-          <span className="text-success text-sm font-medium">
+          <span className="text-success  text-sm font-medium">
             {trendingValue}
           </span>
         </div>

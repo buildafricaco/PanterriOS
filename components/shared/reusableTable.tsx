@@ -79,7 +79,7 @@ export function ReUseAbleTable<TData extends object>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-b min-h-20 border-[#E2E2E2] hover:bg-[#F9FAFB]/50"
+                  className="border-b min-h-20 capitalize border-[#E2E2E2] hover:bg-[#F9FAFB]/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -122,8 +122,7 @@ export function ReUseAbleTable<TData extends object>({
                 <div className="text-sm text-[#6B7280]">
                   Showing{" "}
                   <span className="font-medium text-[#111827]">
-                    {(pagination.currentPage - 1) * pagination.limit + 1}
-                    -
+                    {(pagination.currentPage - 1) * pagination.limit + 1}-
                     {Math.min(
                       pagination.currentPage * pagination.limit,
                       pagination.totalItems,
@@ -139,14 +138,21 @@ export function ReUseAbleTable<TData extends object>({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => pagination.onPageChange(Math.max(1, pagination.currentPage - 1))}
+                    onClick={() =>
+                      pagination.onPageChange(
+                        Math.max(1, pagination.currentPage - 1),
+                      )
+                    }
                     disabled={pagination.currentPage === 1}
                     className="h-9 w-9 p-0"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
 
-                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                  {Array.from(
+                    { length: pagination.totalPages },
+                    (_, i) => i + 1,
+                  )
                     .filter((page) => {
                       const distance = Math.abs(page - pagination.currentPage);
                       return (
@@ -166,7 +172,11 @@ export function ReUseAbleTable<TData extends object>({
                             <span className="px-2 text-gray-500">...</span>
                           )}
                           <Button
-                            variant={pagination.currentPage === page ? "default" : "outline"}
+                            variant={
+                              pagination.currentPage === page
+                                ? "default"
+                                : "outline"
+                            }
                             size="sm"
                             onClick={() => pagination.onPageChange(page)}
                             className="min-w-[40px]"
@@ -182,7 +192,10 @@ export function ReUseAbleTable<TData extends object>({
                     size="sm"
                     onClick={() =>
                       pagination.onPageChange(
-                        Math.min(pagination.totalPages, pagination.currentPage + 1),
+                        Math.min(
+                          pagination.totalPages,
+                          pagination.currentPage + 1,
+                        ),
                       )
                     }
                     disabled={pagination.currentPage === pagination.totalPages}
@@ -224,27 +237,28 @@ export function ReUseAbleTable<TData extends object>({
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
 
-                  {Array.from({ length: table.getPageCount() }, (_, i) => i).map(
-                    (pageIndex) => (
-                      <Button
-                        key={pageIndex}
-                        variant={
-                          table.getState().pagination.pageIndex === pageIndex
-                            ? "default"
-                            : "outline"
-                        }
-                        size="sm"
-                        onClick={() => table.setPageIndex(pageIndex)}
-                        className={`h-9 w-9 p-0 ${
-                          table.getState().pagination.pageIndex === pageIndex
-                            ? "bg-primary-blue text-white hover:bg-primary-blue/90"
-                            : "hover:bg-gray-50"
-                        }`}
-                      >
-                        {pageIndex + 1}
-                      </Button>
-                    ),
-                  )}
+                  {Array.from(
+                    { length: table.getPageCount() },
+                    (_, i) => i,
+                  ).map((pageIndex) => (
+                    <Button
+                      key={pageIndex}
+                      variant={
+                        table.getState().pagination.pageIndex === pageIndex
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() => table.setPageIndex(pageIndex)}
+                      className={`h-9 w-9 p-0 ${
+                        table.getState().pagination.pageIndex === pageIndex
+                          ? "bg-primary-blue text-white hover:bg-primary-blue/90"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageIndex + 1}
+                    </Button>
+                  ))}
 
                   <Button
                     variant="outline"

@@ -13,6 +13,8 @@ export function getStatusColor(status: string): {
     case "active":
     case "activated":
     case "balanced":
+    case "funded":
+    case "published":
       return {
         textColor: "text-[#008236]",
         bgColor: "bg-[#F0FDF4]",

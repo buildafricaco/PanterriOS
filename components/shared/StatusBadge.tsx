@@ -16,9 +16,13 @@ export function StatusBadge({
   const { textColor, bgColor, borderColor } = getStatusColor(status);
   const normalizedStatus = status.toLowerCase();
 
-  const isSuccess = ["success", "completed", "approved", "active"].includes(
-    normalizedStatus,
-  );
+  const isSuccess = [
+    "success",
+    "completed",
+    "approved",
+    "active",
+    "published",
+  ].includes(normalizedStatus);
   const isWarning = ["pending", "in progress", "processing"].includes(
     normalizedStatus,
   );

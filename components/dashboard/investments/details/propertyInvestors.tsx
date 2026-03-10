@@ -1,218 +1,94 @@
-import { ReUseAbleTable } from '@/components/shared/reusableTable';
-import { Input } from '@/components/ui/input';
-import { ColumnDef } from '@tanstack/react-table';
+import { ReUseAbleTable } from "@/components/shared/reusableTable";
+import { StatusBadge } from "@/components/shared";
+import { Input } from "@/components/ui/input";
+import {
+  type InvestmentInvestorItem,
+  type InvestmentInvestors,
+} from "@/interface";
+import { ColumnDef } from "@tanstack/react-table";
 
-interface PropertyInvestorsData {
-  name: string;
-  investment_amount: {
-    currency: string;
-    value: number;
-    formatted: string;
-  };
-  payment_status: string;
-  investment_date: string;
-  stake: {
-    value: number;
-    unit: string;
-    formatted: string;
-  };
+interface PropertyInvestorsProps {
+  investors: InvestmentInvestors;
 }
-export default function PropertyInvestors() {
-  const property_investors = [
+
+interface InvestorTableRow {
+  id: number;
+  name: string;
+  amount: number;
+  date: string;
+  stakePercentage: number;
+  paymentStatus: string;
+}
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const mapInvestorRow = (investor: InvestmentInvestorItem, index: number): InvestorTableRow => ({
+  id: investor.id ?? investor.investorId ?? index + 1,
+  name: investor.investorName ?? "Unknown Investor",
+  amount: investor.amountInvested ?? 0,
+  date: investor.investmentDate ?? "-",
+  stakePercentage: investor.stakePercentage ?? 0,
+  paymentStatus: investor.paymentStatus ?? "pending",
+});
+
+export default function PropertyInvestors({ investors }: PropertyInvestorsProps) {
+  const tableData = investors.data.map(mapInvestorRow);
+
+  const columns: ColumnDef<InvestorTableRow>[] = [
     {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Kemi Adeleke',
-      investment_amount: {
-        currency: 'NGN',
-        value: 2000000,
-        formatted: '₦2.00M',
-      },
-      payment_status: 'Pending',
-      investment_date: '2025-01-20',
-      stake: {
-        value: 4,
-        unit: 'percent',
-        formatted: '4.00%',
-      },
-    },
-    {
-      name: 'Kemi Adeleke',
-      investment_amount: {
-        currency: 'NGN',
-        value: 2000000,
-        formatted: '₦2.00M',
-      },
-      payment_status: 'Pending',
-      investment_date: '2025-01-20',
-      stake: {
-        value: 4,
-        unit: 'percent',
-        formatted: '4.00%',
-      },
-    },
-    {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Chidi Okonkwo',
-      investment_amount: {
-        currency: 'NGN',
-        value: 5000000,
-        formatted: '₦5.00M',
-      },
-      payment_status: 'Paid',
-      investment_date: '2025-01-15',
-      stake: {
-        value: 10,
-        unit: 'percent',
-        formatted: '10.00%',
-      },
-    },
-    {
-      name: 'Kemi Adeleke',
-      investment_amount: {
-        currency: 'NGN',
-        value: 2000000,
-        formatted: '₦2.00M',
-      },
-      payment_status: 'Pending',
-      investment_date: '2025-01-20',
-      stake: {
-        value: 4,
-        unit: 'percent',
-        formatted: '4.00%',
-      },
-    },
-  ];
-  const columns: ColumnDef<PropertyInvestorsData>[] = [
-    {
-      accessorKey: 'name',
-      header: '',
+      accessorKey: "name",
+      header: "Investor",
       cell: ({ row }) => {
         const name = row.original.name;
-        const date = row.original.investment_date;
+        const date = row.original.date;
+
         return (
-          <div className="">
-            <p>{name} </p>
-            <small className="text-gray-500 flex items-center gap-1">
-              {date}
-            </small>
+          <div>
+            <p>{name}</p>
+            <small className="text-gray-500 flex items-center gap-1">{date}</small>
           </div>
         );
       },
     },
-
     {
-      accessorKey: 'amount',
-      header: '',
-      cell: ({ row }) => {
-        const amount = row.original.investment_amount.formatted;
-        const stake = row.original.stake.formatted;
-        return (
-          <div className=" text-right">
-            <p>{amount} </p>
-            <small className="text-gray-500">{stake}</small>
-          </div>
-        );
-      },
+      accessorKey: "amount",
+      header: "Amount",
+      cell: ({ row }) => (
+        <div className="text-right">
+          <p>{formatCurrency(row.original.amount)}</p>
+          <small className="text-gray-500">{row.original.stakePercentage}% stake</small>
+        </div>
+      ),
     },
-
     {
-      accessorKey: 'status',
-      header: ' ',
-      cell: ({ row }) => {
-        const status = row.original.payment_status;
-        return (
-          <div
-            className={`text-center items-center justify-center capitalize whitespace-nowrap p-1 rounded-sm  flex mx-auto  w-20 ${status.toLowerCase() === 'paid' ? ' bg-green-50 text-green-500 border border-green-300 ' : ' bg-orange-50 text-orange-500  border border-orange-300 '}`}
-          >
-            <span> {status}</span>
-          </div>
-        );
-      },
+      accessorKey: "paymentStatus",
+      header: "Status",
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <StatusBadge status={row.original.paymentStatus} className="capitalize" />
+        </div>
+      ),
     },
   ];
+
   return (
-    <div className="border p-2 space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="border p-3 space-y-4 my-4 rounded-md">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <div>
           <h2 className="text-lg font-semibold">Active Investors</h2>
-          <small>42 investors • ₦50.0M total</small>
+          <small>
+            {investors.summary.totalInvestors} investors - {formatCurrency(investors.summary.totalAmountRaised)} total
+          </small>
         </div>
-        <Input placeholder=" search investors..." className="bg-gray-100" />
+        <Input placeholder="Search investors..." className="bg-gray-100 sm:w-64" disabled />
       </div>
-      <ReUseAbleTable data={property_investors} columns={columns} />
+
+      <ReUseAbleTable data={tableData} columns={columns} />
     </div>
   );
 }

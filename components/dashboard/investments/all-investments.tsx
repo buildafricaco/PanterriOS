@@ -3,7 +3,6 @@ import { ReUseAbleTable } from "@/components/shared/reusableTable";
 import { Button } from "@/components/ui/button";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
-import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { InvestmentDetailsView } from "./details/investmentDetailsView";
@@ -112,19 +111,18 @@ export function AllInvestments({
       accessorKey: "action",
       header: "action",
       cell: ({ row }) => {
-        const id = row.original.id;
         return (
           <>
-            <InvestmentDetailsView>
+            <InvestmentDetailsView id={row.original.id}>
               <Button variant={"outline"}>
                 <Eye className="w-5 h-5" />
               </Button>
             </InvestmentDetailsView>
-            <Link href={"/investments/" + id} className="flex lg:hidden">
+            {/* <Link href={"/investments/" + id} className="flex lg:hidden">
               <Button variant={"outline"}>
                 <Eye className="w-5 h-5" />
               </Button>
-            </Link>
+            </Link> */}
           </>
         );
       },
