@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ReUseAbleTable } from "@/components/shared/reusableTable";
 import { TableSkeleton } from "@/components/shared/loader";
 import { withdrawalColumns } from "./withdrawalColumns";
-import { useRetrieveWithdrawalApprovals } from "@/hook/wallet-finance";
+import { useRetrieveWithdrawalRequest } from "@/hook/wallet-finance";
 import { TableFilters } from "@/components/shared/TableFilters";
 import {
   type WalletFinanceSummary,
@@ -33,7 +33,7 @@ export function WithdrawalRequests({
   const status = filterStatus === "all" ? undefined : filterStatus;
   const riskProfile = filterRisk === "all" ? undefined : filterRisk;
 
-  const { data, isLoading } = useRetrieveWithdrawalApprovals({
+  const { data, isLoading } = useRetrieveWithdrawalRequest({
     page,
     limit: 20,
     status: status as WithdrawalApprovalStatusFilter,

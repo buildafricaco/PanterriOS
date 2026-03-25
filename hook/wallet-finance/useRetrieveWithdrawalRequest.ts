@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { type RetrieveWithdrawalApprovalsQuery } from "@/interface";
 import { retrieveWithdrawalApprovals } from "@/services/wallet-finance";
 
-export function useRetrieveWithdrawalApprovals(
+export function useRetrieveWithdrawalRequest(
   params: RetrieveWithdrawalApprovalsQuery,
 ) {
   const { data, isLoading, isError, error } = useQuery({

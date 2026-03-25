@@ -22,6 +22,7 @@ export function StatusBadge({
     "approved",
     "active",
     "published",
+    "paid"
   ].includes(normalizedStatus);
   const isWarning = ["pending", "in progress", "processing"].includes(
     normalizedStatus,

@@ -9,6 +9,8 @@ import {
   type InvestorWalletDetails,
   type RetrieveWithdrawalApprovalsQuery,
   type RetrieveWithdrawalApprovalsRes,
+  WithdrawalRequestActions,
+  WithdrawalResponseDetails,
 } from "@/interface";
 import API from "@/services/axios";
 
@@ -75,5 +77,27 @@ export const retrieveInvestorWalletDetails = async (
     `/investor-wallet/admin/investor-wallets/${investorId}`,
   );
 
+  return data?.data;
+};
+
+// wallet-finance-actions
+
+export const withdrawalRequest = async (
+  params: WithdrawalRequestActions,
+): Promise<{ message: string }> => {
+  const { data } = await API.post(
+    `/investor-wallet/admin/withdrawals/approvals/${params.requestId}/decision`,
+    params.params,
+  );
+
+  return data;
+};
+
+export const withdrawalRequestDetails = async (
+  requestId: string,
+): Promise<WithdrawalResponseDetails> => {
+  const { data } = await API.post(
+    `/investor-wallet/admin/withdrawals/approvals/${requestId}/requery`,
+  );
   return data?.data;
 };
