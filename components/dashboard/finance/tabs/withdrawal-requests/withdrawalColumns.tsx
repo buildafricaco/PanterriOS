@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CircleCheckBig, CircleX } from "lucide-react";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 
-import { formatDate } from "@/utils/helpers";
+import { formatCurrency, formatDate } from "@/utils/helpers";
 
 const getRiskColor = (riskProfileLabel: string) => {
   const colors: Record<string, string> = {
@@ -30,9 +30,7 @@ export const withdrawalColumns: ColumnDef<WithdrawalApprovalItem>[] = [
     cell: ({ row }) => (
       <div>
         <p className="font-medium text-gray-900">{row.original.investorName}</p>
-        <p className="text-xs text-gray-400">
-          {formatDate(row.original.createdAt)}
-        </p>
+        <p className="text-xs text-gray-400">{row.original.createdAt}</p>
       </div>
     ),
   },
@@ -41,7 +39,6 @@ export const withdrawalColumns: ColumnDef<WithdrawalApprovalItem>[] = [
     header: "BANK",
     cell: ({ row }) => (
       <div>
-        <p className="font-medium text-gray-900">{row.getValue("bankName")}</p>
         <p className="text-sm text-gray-600 font-medium">
           {row.original.bankName}
         </p>
@@ -54,10 +51,7 @@ export const withdrawalColumns: ColumnDef<WithdrawalApprovalItem>[] = [
     header: "AMOUNT",
     cell: ({ row }) => (
       <span className="font-semibold text-gray-900">
-        {row.original.amount.toLocaleString("en-US", {
-          style: "currency",
-          currency: "NGN",
-        })}
+        {formatCurrency(row.original.amount)}
       </span>
     ),
   },
