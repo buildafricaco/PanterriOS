@@ -7,6 +7,7 @@ import { SlideInPanelDrawer } from "@/components/shared";
 import { WithdrawalRequestDetails } from "./WithdrawalRequestDetails";
 import { useWithdrawalActions } from "@/hook/wallet-finance/useWithdrawalActions";
 import { WithdrawalRequestItem } from "@/interface";
+import { Spinner } from "@/components/ui/spinner";
 
 export const WithdrawalActionButtons = ({
   row,
@@ -15,7 +16,15 @@ export const WithdrawalActionButtons = ({
 }) => {
   const status = row.statusLabel?.trim().toLowerCase();
   const id = row.requestId;
-  const { withdrawalAction, isPending } = useWithdrawalActions();
+  const { withdrawalAction, isPending, variables } = useWithdrawalActions();
+  const isApproving =
+    isPending &&
+    variables?.requestId === id &&
+    variables?.params?.decision === "approve";
+  const isRejecting =
+    isPending &&
+    variables?.requestId === id &&
+    variables?.params?.decision === "reject";
 
   const handleApproveWithdrawal = async () => {
     try {
@@ -54,20 +63,32 @@ export const WithdrawalActionButtons = ({
         <Button
           size="sm"
           onClick={handleApproveWithdrawal}
-          disabled={isPending}
-          className="bg-green-600 rounded-sm font-normal hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isApproving}
+          className="bg-green-600 rounded-sm w-full flex-1 font-normal hover:bg-green-700 text-white  disabled:cursor-not-allowed"
         >
-          <CircleCheckBig className="h-4 w-4 mr-0.5" /> Approve
+          {isApproving ? (
+            <Spinner />
+          ) : (
+            <>
+              <CircleCheckBig className="h-4 w-4 mr-0.5" /> Approve
+            </>
+          )}
         </Button>
         <Button
           size="sm"
           variant="destructive"
           onClick={handleRejectWithdrawal}
-          disabled={isPending}
-          className="rounded-sm font-normal disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isRejecting}
+          className="rounded-sm font-normal w-full flex-1  disabled:cursor-not-allowed"
         >
-          <CircleX className="h-4 w-4 mr-0.5" />
-          Reject
+          {isRejecting ? (
+            <Spinner />
+          ) : (
+            <>
+              <CircleX className="h-4 w-4 mr-0.5" />
+              Reject
+            </>
+          )}
         </Button>
       </div>
     );

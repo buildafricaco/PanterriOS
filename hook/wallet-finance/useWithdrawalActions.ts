@@ -11,19 +11,22 @@ export const useWithdrawalActions = () => {
     mutateAsync: withdrawalAction,
     isPending,
     isError,
+    variables,
   } = useMutation({
     mutationFn: (param: WithdrawalRequestActions) => withdrawalRequest(param),
     onSuccess: () => {
-        
+      queryClient.invalidateQueries({
+        queryKey: ["wallet-finance", "transactions"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["wallet-finance", "withdrawal-approvals"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["wallet-finance", "transactions"],
+        queryKey: ["wallet-finance", "withdrawal-request-details"],
       });
     },
   });
-  return { withdrawalAction, isPending, isError };
+  return { withdrawalAction, isPending, isError, variables };
 };
 
 export const useWithdrawalRequestDetails = (requestId: string) => {
