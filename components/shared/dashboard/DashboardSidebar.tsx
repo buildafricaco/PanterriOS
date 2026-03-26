@@ -238,7 +238,7 @@ export function DashboardSidebar({
       </nav>
 
       {/* Account Menu Items - Always Visible at Bottom */}
-      <div className="p-3 pb-6 border-t">
+      {/* <div className="p-3 pb-6 border-t">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -298,7 +298,7 @@ export function DashboardSidebar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
     </div>
   );
 
