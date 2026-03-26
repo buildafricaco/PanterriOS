@@ -88,7 +88,7 @@ export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
           title="Wallet Control Center"
           subtitle="Manage investor wallet settings "
           width="md"
-          contentClassName={'mx-0'}
+          contentClassName={"mx-0"}
         >
           <InvestorAudit investorId={wallet.investorId} />
         </SlideInPanelDrawer>

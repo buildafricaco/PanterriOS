@@ -147,7 +147,7 @@ export interface RetrieveWithdrawalApprovalsQuery {
   search?: string;
 }
 
-export interface WithdrawalApprovalItem {
+export interface WithdrawalRequestItem {
   requestId: string;
   investorId: number;
   investorName: string;
@@ -168,7 +168,7 @@ export interface WithdrawalApprovalItem {
 
 export interface RetrieveWithdrawalApprovalsRes {
   message: string;
-  data: WithdrawalApprovalItem[];
+  data: WithdrawalRequestItem[];
   summary?: WalletFinanceSummary;
   pagination: {
     currentPage: number;
@@ -239,19 +239,39 @@ export interface InvestorWalletRecentActivityItem {
   activityType: string;
   badge: string;
   amount: number;
-  amountDirection: 'credit' | 'debit';
+  amountDirection: "credit" | "debit";
   reference: string;
 }
 
 export interface InvestorWalletDetails {
-  data:{  walletId: number;
-  investorId: number;
-  investorCode: string;
-  investorName: string;
-  investorEmail: string;
-  initials: string;
-  status: Exclude<InvestorWalletStatusFilter, 'all'>;
-  statusLabel: string;
-  overview: InvestorWalletOverview;
-  recentActivity: InvestorWalletRecentActivityItem[];}
+  data: {
+    walletId: number;
+    investorId: number;
+    investorCode: string;
+    investorName: string;
+    investorEmail: string;
+    initials: string;
+    status: Exclude<InvestorWalletStatusFilter, "all">;
+    statusLabel: string;
+    overview: InvestorWalletOverview;
+    recentActivity: InvestorWalletRecentActivityItem[];
+  };
+}
+
+export interface WithdrawalRequestActions {
+  requestId: string;
+  params: { decision: "approve" | "reject"; adminNote: string };
+}
+
+export interface WithdrawalResponseDetails {
+  message: string;
+  data: {
+    requestId: string;
+    reference: string;
+    status: string;
+    statusLabel: string;
+    providerStatus: string;
+    providerTransactionReference: string;
+    payoutInitiatedAt: string;
+  };
 }

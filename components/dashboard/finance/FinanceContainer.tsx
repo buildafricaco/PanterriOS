@@ -46,7 +46,7 @@ export function FinanceContainer() {
     {
       title: "All Transactions",
       value: "all-transactions",
-      count: allTransactionsCount,
+      count: activeTab === "all-transactions" ? allTransactionsCount : 0,
       content: (
         <AllTransactions
           onCountChange={(count, summary) => {
@@ -59,7 +59,7 @@ export function FinanceContainer() {
     {
       title: "Withdrawal Requests",
       value: "withdrawal-requests",
-      count: withdrawalCount,
+      count: activeTab === "withdrawal-requests" ? withdrawalCount : 0,
       content: (
         <WithdrawalRequests
           onCountChange={(count, summary) => {
@@ -69,16 +69,17 @@ export function FinanceContainer() {
         />
       ),
     },
+
     {
       title: "Reconciliation",
       value: "reconciliation",
-      count: DUMMY_RECONCILIATION_DATA.length,
+      count: activeTab === "reconciliation" ? DUMMY_RECONCILIATION_DATA.length : 0,
       content: <Reconciliation />,
     },
     {
       title: "Yield Events",
       value: "yield-events",
-      count: yieldCount,
+      count: activeTab === "yield-events" ? yieldCount : 0,
       content: (
         <YieldEvents
           onCountChange={(count, summary) => {
@@ -91,7 +92,7 @@ export function FinanceContainer() {
     {
       title: "Investors Wallet",
       value: "investors-wallet",
-      count: investorWalletCount,
+      count: activeTab === "investors-wallet" ? investorWalletCount : 0,
       content: (
         <InvestorsWallet
           onCountChange={(count, summary) => {
@@ -106,7 +107,7 @@ export function FinanceContainer() {
   const FINANCE_STATS: FinanceStats[] = [
     {
       label: "Total Balance",
-      value: formatCurrency(summary?.totalBalance || 0,),
+      value: formatCurrency(summary?.totalBalance || 0),
       description: "As of today",
       icon: "Wallet",
       color: "text-gray-900",
@@ -190,11 +191,13 @@ export function FinanceContainer() {
                 className="relative flex h-9 items-center gap-2 whitespace-nowrap rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium text-gray-700 transition-all data-[state=active]:bg-white data-[state=active]:text-black sm:px-4"
               >
                 {tab.title}
-                <Badge
-                  className={`rounded-sm px-2 py-1 ${badgeColors[tab.value]}`}
-                >
-                  {tab.count}
-                </Badge>
+                {tab.count > 0  && (
+                  <Badge
+                    className={`rounded-sm px-2 py-1 ${badgeColors[tab.value]}`}
+                  >
+                    {tab.count}
+                  </Badge>
+                )}
               </TabsTrigger>
             ))}
           </TabsList>

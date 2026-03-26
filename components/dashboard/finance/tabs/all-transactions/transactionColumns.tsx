@@ -11,8 +11,6 @@ import { TransactionAudit } from "./TransactionAudit";
 import { WalletFinanceTransaction } from "@/interface";
 import { formatCurrency } from "@/utils/helpers";
 
-
-
 export const transactionColumns: ColumnDef<WalletFinanceTransaction>[] = [
   {
     accessorKey: "reference",

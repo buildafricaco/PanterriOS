@@ -164,7 +164,7 @@ export default function HomeHero() {
         <Image
           src={logo}
           alt="logo"
-          width={100}
+          width={130}
           height={40}
           className="object-fit"
         />

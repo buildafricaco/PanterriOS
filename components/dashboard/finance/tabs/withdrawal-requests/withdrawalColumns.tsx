@@ -1,11 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { WithdrawalApprovalItem } from "@/interface";
+import { WithdrawalRequestItem } from "@/interface";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CircleCheckBig, CircleX } from "lucide-react";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-
-import { formatCurrency, formatDate } from "@/utils/helpers";
+import { formatCurrency } from "@/utils/helpers";
+import { WithdrawalActionButtons } from "./WithdrawalActionButtons";
 
 const getRiskColor = (riskProfileLabel: string) => {
   const colors: Record<string, string> = {
@@ -16,7 +14,7 @@ const getRiskColor = (riskProfileLabel: string) => {
   return colors[riskProfileLabel] || "bg-gray-50 text-gray-700 border-gray-200";
 };
 
-export const withdrawalColumns: ColumnDef<WithdrawalApprovalItem>[] = [
+export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
   {
     accessorKey: "requestId",
     header: "REQUEST ID",
@@ -68,43 +66,12 @@ export const withdrawalColumns: ColumnDef<WithdrawalApprovalItem>[] = [
     header: "STATUS",
     cell: ({ row }) => {
       const status = row.original.statusLabel;
-      return <StatusBadge status={status} />;
+      return <StatusBadge status={status} showDot />;
     },
   },
   {
     accessorKey: "actions",
     header: "ACTIONS",
-    cell: ({ row }) => {
-      const handleApprove = () => {
-        console.log("Approve:", row.original.requestId);
-        // TODO: Implement approval logic
-      };
-
-      const handleReject = () => {
-        console.log("Reject:", row.original.requestId);
-        // TODO: Implement rejection logic
-      };
-
-      return (
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            onClick={handleApprove}
-            className="bg-green-600 rounded-sm font-normal hover:bg-green-700 text-white disabled:opacity-50"
-          >
-            <CircleCheckBig className="h-4 w-4 mr-0.5" /> Approve
-          </Button>
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={handleReject}
-            className="rounded-sm font-normal"
-          >
-            <CircleX className="h-4 w-4 mr-0.5" />
-            Reject
-          </Button>
-        </div>
-      );
-    },
+    cell: ({ row }) => <WithdrawalActionButtons row={row.original} />,
   },
 ];
