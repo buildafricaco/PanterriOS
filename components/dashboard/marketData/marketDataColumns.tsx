@@ -1,54 +1,30 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { PencilLine } from "lucide-react";
 import type { MarketData } from "@/interface/marketData.entity";
+import { formatCurrency } from "@/utils/helpers";
 
-const moneyFormatter = new Intl.NumberFormat("en-NG", {
-  style: "currency",
-  currency: "NGN",
-  maximumFractionDigits: 0,
-});
 
-function toNumber(value: unknown) {
-  if (typeof value === "number") return value;
-  if (typeof value !== "string") return 0;
-
-  const parsed = Number(value.replace(/[^\d.-]/g, ""));
-
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function formatValue(value: unknown) {
-  const amount = toNumber(value);
-
-  if (!amount) return "—";
-
-  return moneyFormatter.format(amount);
-}
-
-function formatPercent(value: unknown) {
-  const amount = toNumber(value);
-
-  if (!amount) return "0.0%";
-
-  const percent = Math.abs(amount) <= 1 ? amount * 100 : amount;
-
-  return `${percent.toFixed(1)}%`;
-}
 
 export const marketDataColumns: ColumnDef<MarketData>[] = [
   {
     accessorKey: "subMarket",
-    header: "sub-market",
+    header: "Sub Market",
     cell: ({ row }) => (
-      <div className="font-medium text-[#111827]">{row.original.subMarket}</div>
+      <div className="font-medium text-[#111827]">
+        {row.original.subMarket === 'N/A'
+        ? '-'
+        :  row.original.subMarket}</div>
     ),
   },
+  
   {
     accessorKey: "sampleAssetType",
-    header: "sample asset",
+    header: "Sample Asset",
     cell: ({ row }) => (
       <div className="font-medium capitalize text-[#0F172A]">
-        {row.original.sampleAssetType}
+          {row.original.sampleAssetType === 'N/A'
+        ? '-'
+        : row.original.sampleAssetType}
       </div>
     ),
   },
@@ -57,7 +33,11 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "avg sale price",
     cell: ({ row }) => (
       <div className="font-semibold text-[#0F172A]">
-        {formatValue(row.original.averageSalePrice)}
+       
+           {row.original.averageSalePrice === 'N/A'
+        ? '-'
+        : 
+        formatCurrency(row.original.averageSalePrice)}
       </div>
     ),
   },
@@ -66,34 +46,37 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "median rent",
     cell: ({ row }) => (
       <div className="font-semibold text-[#0F172A]">
-        {formatValue(row.original.medianRent)}
+          {row.original.medianRent === 'N/A'
+        ? '-'
+        : formatCurrency(row.original.medianRent)}
       </div>
     ),
   },
   {
     accessorKey: "rentMin",
     header: "rent range",
-    cell: ({ row }) => (
-      <div className="font-medium text-[#334155]">
-        {formatValue(row.original.rentMin)} - {formatValue(row.original.rentMax)}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const rentRange = `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`;
+      return (
+        <div className="font-medium text-[#334155]">
+          {row.original.rentMin.includes('N/A') 
+        ? '-'
+        :  {rentRange}
+        }
+        </div>
+      );
+    },
   },
-  {
-    accessorKey: "growthVal",
-    header: "mom growth",
-    cell: ({ row }) => (
-      <div className="font-medium text-emerald-600">
-        {formatPercent(row.original.growthVal)}
-      </div>
-    ),
-  },
+
   {
     accessorKey: "averageYearOverYearGrowth",
     header: "yoy growth",
     cell: ({ row }) => (
       <div className="font-medium text-blue-600">
-        {formatPercent(row.original.averageYearOverYearGrowth)}
+        {row.original.averageYearOverYearGrowth === 'N/A'
+        ? '-'
+        : 
+       row.original.averageYearOverYearGrowth}%
       </div>
     ),
   },
@@ -102,7 +85,9 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "yield",
     cell: ({ row }) => (
       <div className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-sm font-medium text-slate-700">
-        {formatPercent(row.original.yield)}
+        {row.original.yield === 'N/A'
+        ? '-'
+        : row.original.yield}%
       </div>
     ),
   },

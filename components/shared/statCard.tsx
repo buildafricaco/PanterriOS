@@ -35,7 +35,7 @@ export function StatCard({
 
 
   return (
-    <div className="w-full rounded-3xl border border-[#E5E7EB] bg-white p-6 sm:p-8">
+    <div className="w-full rounded-xl border border-[#E5E7EB] bg-white p-6 sm:p-8">
       <div className="mb-8 flex items-start justify-between">
         {typeof Icon === "string" ? (
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F3F4F6] text-2xl font-bold text-[#9CA3AF]">

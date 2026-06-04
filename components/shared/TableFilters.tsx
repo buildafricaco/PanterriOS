@@ -76,7 +76,7 @@ export function TableFilters({
       <div className="flex w-full flex-col pt-2 gap-3 sm:flex-row justify-between lg:min-w-[420px] lg:items-end">
         <div className="flex w-full max-sm:flex-col gap-3 sm:justify-between">
           {search && (
-            <div className="relative flex  w-fit bg-[#F3F4F6] rounded-sm border shadow-xs lg:max-w-lg">
+            <div className="relative flex  w-fit bg-[#F3F4F6] rounded-sm lg:max-w-lg">
               <Search className="text-gray-600 pointer-events-none absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 transform" />
 
               <Input
@@ -87,7 +87,7 @@ export function TableFilters({
                   setLocalSearch(value);
                   onSearchChange(value);
                 }}
-                className="h-9 w-full border-border  pl-10 pr-8 text-sm placeholder:text-[#636363] sm:min-w-[220px]"
+                className="h-9 w-full pl-10 pr-8 text-sm placeholder:text-[#636363] sm:min-w-[220px]"
                 aria-label="Search tasks"
               />
 
@@ -137,7 +137,7 @@ export function TableFilters2({
               <Input
                 placeholder={searchPlaceholder}
                 value={localSearch}
-                type='number'
+                type="number"
                 onChange={(e) => {
                   const value = e.target.value;
                   setLocalSearch(value);
