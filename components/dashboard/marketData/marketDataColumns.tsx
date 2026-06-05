@@ -3,28 +3,25 @@ import { PencilLine } from "lucide-react";
 import type { MarketData } from "@/interface/marketData.entity";
 import { formatCurrency } from "@/utils/helpers";
 
-
-
 export const marketDataColumns: ColumnDef<MarketData>[] = [
   {
     accessorKey: "subMarket",
     header: "Sub Market",
     cell: ({ row }) => (
       <div className="font-medium text-[#111827]">
-        {row.original.subMarket === 'N/A'
-        ? '-'
-        :  row.original.subMarket}</div>
+        {row.original.subMarket === "N/A" ? "-" : row.original.subMarket}
+      </div>
     ),
   },
-  
+
   {
     accessorKey: "sampleAssetType",
     header: "Sample Asset",
     cell: ({ row }) => (
       <div className="font-medium capitalize text-[#0F172A]">
-          {row.original.sampleAssetType === 'N/A'
-        ? '-'
-        : row.original.sampleAssetType}
+        {row.original.sampleAssetType === "N/A"
+          ? "-"
+          : row.original.sampleAssetType}
       </div>
     ),
   },
@@ -33,11 +30,9 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "avg sale price",
     cell: ({ row }) => (
       <div className="font-semibold text-[#0F172A]">
-       
-           {row.original.averageSalePrice === 'N/A'
-        ? '-'
-        : 
-        formatCurrency(row.original.averageSalePrice)}
+        {row.original.averageSalePrice === "N/A"
+          ? "-"
+          : formatCurrency(row.original.averageSalePrice)}
       </div>
     ),
   },
@@ -46,9 +41,9 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "median rent",
     cell: ({ row }) => (
       <div className="font-semibold text-[#0F172A]">
-          {row.original.medianRent === 'N/A'
-        ? '-'
-        : formatCurrency(row.original.medianRent)}
+        {row.original.medianRent === "N/A"
+          ? "-"
+          : formatCurrency(row.original.medianRent)}
       </div>
     ),
   },
@@ -56,13 +51,12 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     accessorKey: "rentMin",
     header: "rent range",
     cell: ({ row }) => {
-      const rentRange = `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`;
+      // const rentRange = `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`;
       return (
         <div className="font-medium text-[#334155]">
-          {row.original.rentMin.includes('N/A') 
-        ? '-'
-        :  {rentRange}
-        }
+          {row.original.rentMin.includes("N/A")
+            ? "-"
+            : `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`}
         </div>
       );
     },
@@ -73,10 +67,10 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "yoy growth",
     cell: ({ row }) => (
       <div className="font-medium text-blue-600">
-        {row.original.averageYearOverYearGrowth === 'N/A'
-        ? '-'
-        : 
-       row.original.averageYearOverYearGrowth}%
+        {row.original.averageYearOverYearGrowth === "N/A"
+          ? "-"
+          : row.original.averageYearOverYearGrowth}
+        %
       </div>
     ),
   },
@@ -85,9 +79,7 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     header: "yield",
     cell: ({ row }) => (
       <div className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-sm font-medium text-slate-700">
-        {row.original.yield === 'N/A'
-        ? '-'
-        : row.original.yield}%
+        {row.original.yield === "N/A" ? "-" : row.original.yield}%
       </div>
     ),
   },
