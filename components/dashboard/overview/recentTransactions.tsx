@@ -1,7 +1,7 @@
 'use client';
 import { StatusBadge } from '@/components/shared';
 import { DashboardActivityTransaction } from '@/interface';
-import { dateAndTimeFormatter } from '@/utils/helpers';
+import { dateAndTimeFormatter, formatCurrency } from '@/utils/helpers';
 import { ArrowDownLeft, ArrowUpRight, MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -102,7 +102,7 @@ export default function RecentTransactions({
 
                 <div className="flex w-full flex-col gap-2 lg:w-auto lg:min-w-[250px] lg:items-end">
                   <div className="text-right  font-bold tracking-[-0.04em] text-[#18233A]">
-                    {transaction.amount}
+                    {formatCurrency(transaction.amount)}
                   </div>
 
                   <StatusBadge status={transaction.status} />

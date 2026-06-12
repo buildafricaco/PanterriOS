@@ -135,3 +135,45 @@ export function PortfolioDistributionSkeleton() {
     </div>
   );
 }
+
+export function DashboardMetricsSectionSkeleton() {
+  return (
+    <section className="space-y-5">
+      <div className="space-y-2 animate-pulse">
+        <div className="h-7 w-72 rounded bg-gray-200" />
+        <div className="h-4 w-[28rem] max-w-full rounded bg-gray-100" />
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={`dashboard-metric-skeleton-${index}`}
+            className="rounded-xl border border-[#D9E2F0] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] animate-pulse"
+          >
+            <div className="space-y-2">
+              <div className="h-6 w-36 rounded bg-gray-200" />
+              <div className="h-4 w-40 rounded bg-gray-100" />
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div className="space-y-2">
+                <div className="h-4 w-28 rounded bg-gray-200" />
+                <div className="h-11 rounded border border-[#D9E2F0] bg-[#F8FAFC]" />
+              </div>
+
+              <div className="space-y-2">
+                <div className="h-4 w-32 rounded bg-gray-200" />
+                <div className="h-11 rounded border border-[#D9E2F0] bg-white" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap justify-end gap-3 animate-pulse">
+        <div className="h-10 w-36 rounded-md border border-[#D9E2F0] bg-white" />
+        <div className="h-10 w-32 rounded-md bg-[#111111]/15" />
+      </div>
+    </section>
+  );
+}

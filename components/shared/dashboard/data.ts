@@ -9,6 +9,7 @@ import {
   FileText,
   HandCoins,
   LayoutDashboard,
+  ListEnd,
   MapPin,
   Scale,
   Shield,
@@ -16,6 +17,7 @@ import {
   User,
   Users2,
   Wallet,
+  Workflow,
 } from 'lucide-react';
 
 export const USER_ROLES = [
@@ -47,6 +49,7 @@ export type Role = 'Admin.Officer' | 'Real.Estate.Analyst' | 'Content.Editor';
 // Common menu items shared across all roles
 export const COMMON_MENU: MenuItem[] = [
   { name: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' },
+  { name: 'Approval queue', icon: ListEnd, link: '/approval-queue' },
 ];
 
 // Role-specific menu items
@@ -92,6 +95,7 @@ export const ROLE_SPECIFIC_MENUS: Record<Role, MenuItem[]> = {
     { name: 'Ai Agents', icon: Bot, link: '/ai-agents' },
     { name: 'Users & Roles', icon: Shield, link: '/users' },
     { name: 'Audit Log', icon: FileSearchCorner, link: '/audit-log' },
+    { name: 'Workflow', icon: Workflow, link: '/workflow' },
   ],
   'Real.Estate.Analyst': [
     { name: 'Market Data', icon: MapPin, link: '/market-data' },

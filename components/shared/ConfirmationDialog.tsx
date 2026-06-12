@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
-import { Loader2 } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 import {
   AlertDialog,
@@ -11,10 +12,15 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/alert-dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
-type ConfirmationDialogVariant = "default" | "delete" | "activate" | "deactivate";
+type ConfirmationDialogVariant =
+  | 'default'
+  | 'delete'
+  | 'activate'
+  | 'deactivate';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -23,9 +29,12 @@ interface ConfirmationDialogProps {
   description?: string;
   confirmText?: string;
   cancelText?: string;
-  onConfirm: () => void | Promise<void>;
+  onConfirm: (comment?: string) => void | Promise<void>;
   onCancel?: () => void;
   isLoading?: boolean;
+  isCommentRequired?: boolean;
+  commentLabel?: string;
+  commentPlaceholder?: string;
   variant?: ConfirmationDialogVariant;
 }
 
@@ -34,20 +43,20 @@ const variantConfig: Record<
   { defaultTitle: string; defaultDescription: string }
 > = {
   default: {
-    defaultTitle: "Confirm action",
-    defaultDescription: "Are you sure you want to continue?",
+    defaultTitle: 'Confirm action',
+    defaultDescription: 'Are you sure you want to continue?',
   },
   delete: {
-    defaultTitle: "Delete item",
-    defaultDescription: "This action cannot be undone.",
+    defaultTitle: 'Delete item',
+    defaultDescription: 'This action cannot be undone.',
   },
   activate: {
-    defaultTitle: "Activate item",
-    defaultDescription: "This item will become active immediately.",
+    defaultTitle: 'Activate item',
+    defaultDescription: 'This item will become active immediately.',
   },
   deactivate: {
-    defaultTitle: "Deactivate item",
-    defaultDescription: "This item will no longer be active.",
+    defaultTitle: 'Deactivate item',
+    defaultDescription: 'This item will no longer be active.',
   },
 };
 
@@ -57,41 +66,58 @@ export function ConfirmationDialog({
   title,
   description,
   confirmText,
-  cancelText = "Cancel",
+  cancelText = 'Cancel',
   onConfirm,
   onCancel,
   isLoading = false,
-  variant = "default",
+  isCommentRequired = false,
+  commentLabel = 'Comment',
+  commentPlaceholder = 'Add a comment',
+  variant = 'default',
 }: ConfirmationDialogProps) {
   const config = variantConfig[variant];
+  const [comment, setComment] = useState('');
+
+  useEffect(() => {
+    if (!open) {
+      const timeout = setTimeout(() => {
+        setComment('');
+      }, 0);
+      return () => clearTimeout(timeout);
+    }
+  }, [open]);
 
   const handleConfirm = async (e: React.MouseEvent) => {
     e.preventDefault();
-    await onConfirm();
+    await onConfirm(comment.trim());
   };
 
   const handleCancel = () => {
     if (isLoading) return;
+    setComment('');
     onCancel?.();
     onOpenChange(false);
   };
 
   const handleOpenChange = (newOpen: boolean) => {
     if (isLoading) return;
+    if (!newOpen) {
+      setComment('');
+    }
     onOpenChange(newOpen);
   };
 
   const getConfirmButtonText = () => {
     if (confirmText) return confirmText;
     switch (variant) {
-      case "delete":
-        return "Delete";
-      case "activate":
-        return "Activate";
-      case "deactivate":
-        return "Deactivate";
+      case 'delete':
+        return 'Delete';
+      case 'activate':
+        return 'Activate';
+      case 'deactivate':
+        return 'Deactivate';
       default:
-        return "Confirm";
+        return 'Confirm';
     }
   };
 
@@ -108,6 +134,17 @@ export function ConfirmationDialog({
             </AlertDialogDescription>
           </div>
         </AlertDialogHeader>
+        {isCommentRequired ? (
+          <div className="mt-2 space-y-2">
+            <p className="text-sm font-medium">{commentLabel}</p>
+            <Textarea
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
+              placeholder={commentPlaceholder}
+              className="min-h-28"
+            />
+          </div>
+        ) : null}
         <AlertDialogFooter className="mt-0 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
           <AlertDialogCancel
             onClick={handleCancel}
@@ -118,10 +155,10 @@ export function ConfirmationDialog({
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            disabled={isLoading}
+            disabled={isLoading || (isCommentRequired && !comment.trim())}
             className={cn(
-              "h-9 w-full text-sm sm:h-10 sm:w-auto sm:min-w-[100px]",
-              variant === "delete" && "bg-red-600 text-white hover:bg-red-700",
+              'h-9 w-full text-sm sm:h-10 sm:w-auto sm:min-w-[100px]',
+              variant === 'delete' && 'bg-red-600 text-white hover:bg-red-700',
             )}
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

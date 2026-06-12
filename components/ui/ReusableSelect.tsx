@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import type * as React from "react";
+import type * as React from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 export interface ReusableSelectItem {
   label: string;
@@ -35,7 +35,10 @@ export function ReusableSelect({
   return (
     <Select onValueChange={onChange} value={value}>
       <SelectTrigger
-        className={cn("h-9 w-full rounded-sm border-[#E5E7EB] bg-white", className)}
+        className={cn(
+          'h-9 w-full rounded-sm border-[#E5E7EB] bg-white',
+          className,
+        )}
       >
         <div className="flex items-center gap-2">
           {icon ? <span className="text-sm">{icon}</span> : null}
@@ -43,8 +46,8 @@ export function ReusableSelect({
         </div>
       </SelectTrigger>
       <SelectContent>
-        {items.map((item) => (
-          <SelectItem key={item.value} value={item.value}>
+        {items.map((item, i) => (
+          <SelectItem key={item.value + i} value={item.value}>
             {item.label}
           </SelectItem>
         ))}

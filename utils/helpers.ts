@@ -23,11 +23,12 @@ export const formatTime = (value: string | undefined) => {
 /**
  * Format a number as currency
  */
-export function formatCurrency(amount: number, currency = 'NGN'): string {
+export function formatCurrency(amount: number | string, currency = 'NGN'): string {
+  const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
   return new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency,
-  }).format(amount);
+  }).format(amountNum);
 }
 
 /**
@@ -153,4 +154,17 @@ export function formatCurrencyValue(value: number | null): string {
   }
 
   return `₦${value.toLocaleString('en-NG')}`;
+}
+
+export  function apiResponseFormatPayload<T>(value: unknown): T {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'statusCode' in value &&
+    'data' in value
+  ) {
+    return (value as { data: T }).data;
+  }
+
+  return value as T;
 }

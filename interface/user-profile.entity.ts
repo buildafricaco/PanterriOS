@@ -50,6 +50,13 @@ export interface AdminUsersRes {
     filteredCount: number;
   };
 }
+export interface AllPlatformUsersRes {
+  statusCode: number;
+  data: {
+    message: string;
+    data: { id: number; fullName: string; email: string }[];
+  };
+}
 
 export interface RetrieveUsersQuery {
   search?: string;

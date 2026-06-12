@@ -1,5 +1,6 @@
 import {
   AdminUsersRes,
+  AllPlatformUsersRes,
   RetrieveUsersQuery,
   UserProfileRes,
 } from '@/interface/user-profile.entity';
@@ -55,5 +56,10 @@ export const retrieveUserProfile = async (
   const { data } = await API.get(
     `/user-management/admin/${userId}/profile-details`,
   );
+  return data;
+};
+
+export const retrieveAllUsers = async (): Promise<AllPlatformUsersRes> => {
+  const { data } = await API.get('/user-management/panterrious/all');
   return data;
 };

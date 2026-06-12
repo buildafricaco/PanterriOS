@@ -9,4 +9,6 @@ export * from './InvestmentDetailsSkeleton';
 export * from './TransactionAuditSkeleton';
 export * from './EventFormSkeleton';
 export * from './createEdituserSekeleton';
+export * from './chartLoader';
 export * from './DashboardOverviewSkeletons';
+export * from './WorkflowDetailSkeleton';
