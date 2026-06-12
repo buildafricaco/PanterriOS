@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { SlideInPanelDrawer } from '@/components/shared';
 import { ArticlePreview } from '../ArticlePreview';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/authStore';
 
 interface CrawledQueueCardProps {
   article: CrwalerArticle;
@@ -25,6 +26,7 @@ interface CrawledQueueCardProps {
 
 export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
   const router = useRouter();
+  const { user } = useAuthStore();
   const { mutateAsync: updateStatusFn, isPending: isLoading } =
     useUpdateArticleStatus();
   const publishedDate = article.publishedAt ?? '2026-02-18';
@@ -110,7 +112,7 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   <XCircle className="h-4 w-4" />
                   {isLoading ? 'rejecting...' : 'Reject'}
                 </Button>
-              ) : (
+              ) : user?.data.roles.includes('Admin.Officer') ? (
                 <Button
                   type="button"
                   className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
@@ -119,6 +121,16 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   {isLoading ? 'publsishing...' : 'Approve & Publish'}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant={'outline'}
+                  onClick={() => handleStatusUpdate(article._id, 'draft')}
+                  disabled={isLoading}
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  {isLoading ? 'Saving...' : 'Save to Draft'}
                 </Button>
               )}
               <Link href={article.url}>

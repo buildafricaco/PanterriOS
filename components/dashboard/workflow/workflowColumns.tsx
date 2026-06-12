@@ -54,13 +54,6 @@ function WorkflowActionsCell({
 
 export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => (
-      <span className=" font-semibold ">{row.original.id}</span>
-    ),
-  },
-  {
     accessorKey: 'name',
     header: 'Workflow Name',
     cell: ({ row }) => (

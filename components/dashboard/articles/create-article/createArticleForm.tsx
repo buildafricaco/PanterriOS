@@ -1,69 +1,70 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { z } from "zod";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PageHead } from "@/components/shared";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { boolean, z } from 'zod';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PageHead } from '@/components/shared';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { ArticleEditor } from "./articleEditor";
-import { Send, Upload } from "lucide-react";
-import Image from "next/image";
-import { useCreateArticle } from "@/hook/articles/useCreateArticle";
-import { useUploadMediaImage } from "@/hook/media-upload/useUploadMediaImage";
-import { useSearchParams } from "next/navigation";
-import { useRetrieveArticleDetails } from "@/hook/articles/useRetrieveArticlesDetails";
-import { useEditArticle } from "@/hook/articles/useEditArticle";
-import { Spinner } from "@/components/ui/spinner";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { ArticleEditor } from './articleEditor';
+import { Send, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { useCreateArticle } from '@/hook/articles/useCreateArticle';
+import { useUploadMediaImage } from '@/hook/media-upload/useUploadMediaImage';
+import { useSearchParams } from 'next/navigation';
+import { useRetrieveArticleDetails } from '@/hook/articles/useRetrieveArticlesDetails';
+import { useEditArticle } from '@/hook/articles/useEditArticle';
+import { Spinner } from '@/components/ui/spinner';
+import { useAuthStore } from '@/store/authStore';
 
 const articleCategories = [
-  "Market Analysis",
-  "Investment Strategy",
-  "Housing Crisis",
-  "Technology",
-  "Infrastructure",
-  "Regulation",
+  'Market Analysis',
+  'Investment Strategy',
+  'Housing Crisis',
+  'Technology',
+  'Infrastructure',
+  'Regulation',
 ] as const;
 
 const articleSchema = z.object({
-  title: z.string().trim().min(5, "Title must be at least 5 characters"),
-  summary: z.string().trim().min(20, "Summary must be at least 20 characters"),
-  content: z.string().trim().min(1, "Article content is required"),
-  coverImage: z.string().trim().min(1, "Featured image is required"),
-  category: z.array(z.string().trim().min(1)).min(1, "Category is required"),
-  author: z.string().trim().min(2, "Author name is required"),
-  readTime: z.string().trim().min(1, "Reading time is required"),
-  tags: z.string().min(1, "Add at least one tag"),
+  title: z.string().trim().min(5, 'Title must be at least 5 characters'),
+  summary: z.string().trim().min(20, 'Summary must be at least 20 characters'),
+  content: z.string().trim().min(1, 'Article content is required'),
+  coverImage: z.string().trim().min(1, 'Featured image is required'),
+  category: z.array(z.string().trim().min(1)).min(1, 'Category is required'),
+  author: z.string().trim().min(2, 'Author name is required'),
+  readTime: z.string().trim().min(1, 'Reading time is required'),
+  tags: z.string().min(1, 'Add at least one tag'),
   featureOnHomepage: z.boolean(),
   editorsPick: z.boolean(),
-  postType: z.string().trim().min(1, "Post type is required"),
+  postType: z.string().trim().min(1, 'Post type is required'),
 });
 
 type ArticleFormValues = z.infer<typeof articleSchema>;
 
 const defaultArticleState: ArticleFormValues = {
-  title: "",
-  summary: "",
-  content: "",
-  coverImage: "",
+  title: '',
+  summary: '',
+  content: '',
+  coverImage: '',
   category: [],
-  author: "",
-  readTime: "",
-  tags: "",
+  author: '',
+  readTime: '',
+  tags: '',
   featureOnHomepage: false,
   editorsPick: false,
-  postType: "article",
+  postType: 'article',
 };
 
 function FieldShell({
@@ -95,10 +96,12 @@ const CreateArticleForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: createArticleFn, isPending: isLoading } =
     useCreateArticle();
-  const artilceId = useSearchParams().get("id");
+  const { user } = useAuthStore();
+  const artilceId = useSearchParams().get('id');
   const editMode = Boolean(artilceId);
+  const canpublish = Boolean(user?.data.roles.includes('Admin.Officer'));
   const { data: article, isLoading: isFetching } = useRetrieveArticleDetails(
-    artilceId ?? "",
+    artilceId ?? '',
   );
   const { mutateAsync: editArticleFn, isPending: isEditing } = useEditArticle();
   const {
@@ -122,13 +125,13 @@ const CreateArticleForm = () => {
     defaultValues: defaultArticleState,
   });
 
-  const featureOnHomepage = watch("featureOnHomepage");
-  const editorsPick = watch("editorsPick");
-  const coverImage = watch("coverImage");
+  const featureOnHomepage = watch('featureOnHomepage');
+  const editorsPick = watch('editorsPick');
+  const coverImage = watch('coverImage');
 
   useEffect(() => {
     return () => {
-      if (coverImagePreview?.startsWith("blob:")) {
+      if (coverImagePreview?.startsWith('blob:')) {
         URL.revokeObjectURL(coverImagePreview);
       }
     };
@@ -141,21 +144,21 @@ const CreateArticleForm = () => {
 
     const articleDetails = article.data;
     const normalizedTags = Array.isArray(articleDetails.tags)
-      ? articleDetails.tags.join(", ")
-      : (articleDetails.tags ?? "");
+      ? articleDetails.tags.join(', ')
+      : (articleDetails.tags ?? '');
 
     reset({
-      title: articleDetails.title ?? "",
-      summary: articleDetails.excerpt ?? "",
-      content: articleDetails.content ?? "",
-      coverImage: articleDetails.imageUrl ?? "",
+      title: articleDetails.title ?? '',
+      summary: articleDetails.excerpt ?? '',
+      content: articleDetails.content ?? '',
+      coverImage: articleDetails.imageUrl ?? '',
       category: articleDetails.categories ?? [],
-      author: articleDetails.author ?? "",
-      readTime: articleDetails.readingTime ?? "",
+      author: articleDetails.author ?? '',
+      readTime: articleDetails.readingTime ?? '',
       tags: normalizedTags,
       featureOnHomepage: articleDetails.isFeatured ?? false,
       editorsPick: articleDetails.isEditorsPick ?? false,
-      postType: articleDetails.postType ?? "",
+      postType: articleDetails.postType ?? '',
     });
 
     setCoverImagePreview(articleDetails.imageUrl ?? null);
@@ -165,7 +168,7 @@ const CreateArticleForm = () => {
     const badges: string[] = [];
 
     if (featureOnHomepage) {
-      badges.push("FEATURED");
+      badges.push('FEATURED');
     }
 
     if (editorsPick) {
@@ -176,9 +179,9 @@ const CreateArticleForm = () => {
   }, [featureOnHomepage, editorsPick]);
 
   const postType = [
-    { label: "Blog", value: "blog" },
-    { label: "Articles", value: "article" },
-    { label: "Market Insights", value: "insight" },
+    { label: 'Blog', value: 'blog' },
+    { label: 'Articles', value: 'article' },
+    { label: 'Market Insights', value: 'insight' },
   ];
 
   const onSubmit: SubmitHandler<ArticleFormValues> = async (data) => {
@@ -192,12 +195,14 @@ const CreateArticleForm = () => {
       readingTime: data.readTime,
       tags: data.tags,
       title: data.title,
-      postType: data.postType || "article",
+      postType: data.postType || 'article',
     };
     if (editMode && artilceId) {
       await editArticleFn({ id: artilceId, payload });
+    } else if (canpublish) {
+      await createArticleFn({ ...payload });
     } else {
-      await createArticleFn(payload);
+      await createArticleFn({ status: 'draft', ...payload });
     }
   };
 
@@ -213,7 +218,7 @@ const CreateArticleForm = () => {
     const previewUrl = URL.createObjectURL(file);
 
     setCoverImagePreview((currentPreview) => {
-      if (currentPreview?.startsWith("blob:")) {
+      if (currentPreview?.startsWith('blob:')) {
         URL.revokeObjectURL(currentPreview);
       }
 
@@ -222,29 +227,29 @@ const CreateArticleForm = () => {
 
     try {
       const response = await uploadMediaImageFn(file);
-      const result = response.data?.file?.url ?? "";
+      const result = response.data?.file?.url ?? '';
 
-      setValue("coverImage", result, {
+      setValue('coverImage', result, {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
       });
       setCoverImagePreview(result);
     } catch {
-      setValue("coverImage", "", {
+      setValue('coverImage', '', {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
       });
       setCoverImagePreview((currentPreview) => {
-        if (currentPreview?.startsWith("blob:")) {
+        if (currentPreview?.startsWith('blob:')) {
           URL.revokeObjectURL(currentPreview);
         }
 
         return null;
       });
     } finally {
-      event.target.value = "";
+      event.target.value = '';
     }
   };
 
@@ -252,11 +257,11 @@ const CreateArticleForm = () => {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(() => onSubmit)}
       className="w-full space-y-6 px-0 pb-10"
     >
       <PageHead
-        pageTitle={editMode ? "Edit Article" : "Create New Article"}
+        pageTitle={editMode ? 'Edit Article' : 'Create New Article'}
         subTitle="Write and publish content for the platform"
       >
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -285,7 +290,11 @@ const CreateArticleForm = () => {
             className="flex h-9 items-center gap-2 rounded-sm px-3 text-xs sm:h-10 sm:text-sm"
           >
             <Send className="h-4 w-4" />
-            {editMode ? <span>Save Change</span> : <span>Publish Article</span>}
+            {editMode ? (
+              <span>Save Change</span>
+            ) : (
+              <span> {canpublish ? 'Publish Article' : 'Save to draft'}</span>
+            )}
             {(isLoading || isEditing) && <Spinner />}
           </Button>
         </div>
@@ -303,7 +312,7 @@ const CreateArticleForm = () => {
                 helper="Use a clear, keyword-rich headline."
               >
                 <Input
-                  {...register("title")}
+                  {...register('title')}
                   placeholder="Lagos real estate demand accelerates in Q2 2026"
                   className="border-input bg-surface h-9 w-full rounded-md border p-2 text-xs sm:h-10 sm:p-3 sm:text-sm"
                 />
@@ -317,7 +326,7 @@ const CreateArticleForm = () => {
                 helper="This will be used in cards, previews, and search listings."
               >
                 <Textarea
-                  {...register("summary")}
+                  {...register('summary')}
                   placeholder="Write a concise summary that explains the angle of the article in two short sentences."
                   className="border-input bg-surface min-h-28 w-full rounded-md border p-2 text-xs sm:min-h-32 sm:p-3 sm:text-sm"
                 />
@@ -442,7 +451,7 @@ const CreateArticleForm = () => {
                     Active Badges:
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {activeBadges.includes("FEATURED") ? (
+                    {activeBadges.includes('FEATURED') ? (
                       <span className="inline-flex rounded-sm bg-amber-400 px-3 py-1 text-sm font-semibold text-black">
                         FEATURED
                       </span>
@@ -472,7 +481,7 @@ const CreateArticleForm = () => {
             <CardContent className="space-y-4">
               <FieldShell label="Author Name">
                 <Input
-                  {...register("author")}
+                  {...register('author')}
                   placeholder="Your name"
                   className="border-input bg-surface h-9 w-full rounded-md border p-2 text-xs sm:h-10 sm:p-3 sm:text-sm"
                 />
@@ -489,7 +498,7 @@ const CreateArticleForm = () => {
                   control={control}
                   render={({ field }) => (
                     <Select
-                      value={field.value[0] ?? ""}
+                      value={field.value[0] ?? ''}
                       onValueChange={(value) => field.onChange([value])}
                     >
                       <SelectTrigger className="h-9 p-2 text-xs sm:h-10 sm:p-3 sm:text-sm">
@@ -540,7 +549,7 @@ const CreateArticleForm = () => {
                 helper="Estimated reading duration"
               >
                 <Input
-                  {...register("readTime")}
+                  {...register('readTime')}
                   placeholder="e.g., 8 min"
                   className="border-input bg-surface h-9 w-full rounded-md border p-2 text-xs sm:h-10 sm:p-3 sm:text-sm"
                 />
@@ -596,8 +605,8 @@ const CreateArticleForm = () => {
                   <div>
                     <p className="text-sm font-medium text-slate-900">
                       {isUploadingImage
-                        ? "Uploading image..."
-                        : "Click to upload image"}
+                        ? 'Uploading image...'
+                        : 'Click to upload image'}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
                       PNG, JPG, WEBP up to 5MB
@@ -617,7 +626,7 @@ const CreateArticleForm = () => {
                     value={field.value}
                     onChange={(event) => {
                       setCoverImagePreview((currentPreview) => {
-                        if (currentPreview?.startsWith("blob:")) {
+                        if (currentPreview?.startsWith('blob:')) {
                           URL.revokeObjectURL(currentPreview);
                         }
 

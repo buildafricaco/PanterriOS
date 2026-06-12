@@ -51,12 +51,13 @@ export const marketDataColumns: ColumnDef<MarketData>[] = [
     accessorKey: "rentMin",
     header: "rent range",
     cell: ({ row }) => {
-      // const rentRange = `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`;
+       const rentRange = `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`;
       return (
         <div className="font-medium text-[#334155]">
-          {row.original.rentMin.includes("N/A")
-            ? "-"
-            : `${formatCurrency(row.original.rentMin)} - ${formatCurrency(row.original.rentMax)}`}
+          {row.original.rentMin.includes('N/A') 
+        ? '-'
+        : rentRange
+        }
         </div>
       );
     },

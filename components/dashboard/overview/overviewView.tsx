@@ -1,6 +1,6 @@
 'use client';
 import { format } from 'date-fns';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Settings } from 'lucide-react';
 import {
   DashboardMiniCardsSkeleton,
   DashboardPanelSkeleton,
@@ -29,12 +29,15 @@ import {
   useRetrieveDashboardOverview,
   useRetrieveDashboardTopProjects,
 } from '@/hook/dashboard';
+import Link from 'next/link';
+import { useAuthStore } from '@/store/authStore';
 
 export function OverviewView() {
   const todaysDate = new Date();
   const [date, setDate] = useState<Date>(todaysDate);
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
+  const { user } = useAuthStore();
   const { data: overviewCardData, isLoading: isOverviewLoading } =
     useRetrieveDashboardOverview({
       month,
@@ -77,28 +80,38 @@ export function OverviewView() {
           <h1 className="lg:text-3xl  text-xl font-bold">Dashboard</h1>
           <p>Investment and platform overview</p>
         </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              data-empty={!date}
-              className=" flex justify-start text-left font-normal data-[empty=true]:text-white text-white bg-[#45556C]"
-            >
-              <span className="hideen lg:inline-flex">
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
-              </span>
-              <ChevronDown />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              required={true}
-            />
-          </PopoverContent>
-        </Popover>
+        <div className="flex gap-5">
+          {user?.data.roles.includes('Admin.Officer') && (
+            <Link href={'/settings'}>
+              <Button variant={'outline'} className="cursor-pointer">
+                <Settings />
+              </Button>
+            </Link>
+          )}
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                data-empty={!date}
+                className=" flex justify-start text-left font-normal data-[empty=true]:text-white text-white bg-[#45556C]"
+              >
+                <span className="hideen lg:inline-flex">
+                  {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                </span>
+                <ChevronDown />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                required={true}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       {isOverviewLoading || !overviewData ? (

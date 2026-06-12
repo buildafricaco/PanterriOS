@@ -14,6 +14,7 @@ export * from './media.entity';
 export * from './analytics';
 export * from './workflow.entity';
 export * from './approval-queue.entity';
+export * from './settings.entity';
 
 export interface Pagination {
   currentPage?: number;
