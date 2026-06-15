@@ -241,35 +241,37 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                 )}
               />
 
-              <Field className="mx-auto w-44">
-                <FieldLabel htmlFor="date">Date of birth</FieldLabel>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      id="date"
-                      className="justify-start font-normal"
+              {!isEditMode && (
+                <Field className="mx-auto w-44">
+                  <FieldLabel htmlFor="date">Date of birth</FieldLabel>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="date"
+                        className="justify-start font-normal"
+                      >
+                        {date ? date.toLocaleDateString() : 'Select date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
                     >
-                      {date ? date.toLocaleDateString() : 'Select date'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto overflow-hidden p-0"
-                    align="start"
-                  >
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      defaultMonth={date}
-                      captionLayout="dropdown"
-                      onSelect={(date) => {
-                        setDate(date);
-                        setOpen(false);
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </Field>
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        defaultMonth={date}
+                        captionLayout="dropdown"
+                        onSelect={(date) => {
+                          setDate(date);
+                          setOpen(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </Field>
+              )}
 
               <FormField
                 control={form.control}
@@ -280,7 +282,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value || editProfile?.data.gender}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="select gender" />
@@ -329,7 +331,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value || editProfile?.data.department}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="select department" />
@@ -391,7 +393,7 @@ export function CreateUserForm({ closeModal, id }: Prop) {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value || editProfile?.data.appAccess}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="select App access" />
