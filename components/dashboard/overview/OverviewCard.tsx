@@ -17,7 +17,6 @@ interface CardData {
   color: string;
 }
 export function OverviewCard({
-  analyticsData,
   pendingWithdrawal,
 }: {
   analyticsData: DashboardanalyticsData;

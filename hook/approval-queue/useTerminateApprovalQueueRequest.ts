@@ -6,7 +6,7 @@ import { terminateApprovalQueueRequest } from '@/services/approval-queue';
 import { toast } from 'sonner';
 
 interface TerminateApprovalQueueRequestPayload {
-  id: number;
+  id: number | string;
   payload: ApprovalQueueDecisionReq;
 }
 

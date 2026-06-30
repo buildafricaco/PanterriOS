@@ -47,7 +47,7 @@ export const flagYieldDisbursement = async (
 };
 
 export const retrieveYieldDisbursementReview = async (
-  reviewId: number,
+  reviewId: number | string,
 ): Promise<RetrieveYieldDisbursementReviewRes> => {
   const { data } = await API.get(
     `/investments/admin/yield-disbursement-reviews/${reviewId}`,
@@ -57,7 +57,7 @@ export const retrieveYieldDisbursementReview = async (
 };
 
 export const disburseInvestmentYield = async (
-  id: number,
+  id: number | string,
 ): Promise<CommonRes> => {
   const { data } = await API.post(
     `/investments/admin/${id}/yield-disbursements`,

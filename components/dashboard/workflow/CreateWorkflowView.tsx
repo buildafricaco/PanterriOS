@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -69,10 +69,10 @@ const defaultStep = {
   userId: undefined,
 };
 
-export function CreateWorkflowView({ id }: { id?: string }) {
+export function CreateWorkflowView({ id }: { id?: number | string }) {
   const router = useRouter();
-  const workflowId = Number(id);
-  const isEditMode = Number.isFinite(workflowId);
+  const workflowId = id;
+  const isEditMode = Boolean(workflowId);
 
   const { mutateAsync: CreateWorkflowFn, isPending: isCreatingWorkflow } =
     useCreateWorkflow();
@@ -110,8 +110,14 @@ export function CreateWorkflowView({ id }: { id?: string }) {
     value: p.module,
   }));
 
-  const watchedModule = form.watch('module');
-  const watchedSubModule = form.watch('subModule');
+  const watchedModule = useWatch({
+    control: form.control,
+    name: 'module',
+  });
+  const watchedSubModule = useWatch({
+    control: form.control,
+    name: 'subModule',
+  });
 
   const subModuleOptions = useMemo(() => {
     const selectedModule = modulePermission.find(
@@ -145,7 +151,7 @@ export function CreateWorkflowView({ id }: { id?: string }) {
       .filter((user) => user.id != null)
       .map((user) => ({
         label: user.fullName,
-        value: user.id.toString(),
+        value: user.publicId as string,
       })) || [];
   const handleDuplicateStep = (index: number) => {
     const step = form.getValues(`steps.${index}`);
@@ -211,16 +217,16 @@ export function CreateWorkflowView({ id }: { id?: string }) {
 
     if (isEditMode) {
       const response = await updateWorkflowFn({
-        id: workflowId,
+        id: workflowId!,
         payload,
       });
-      router.push(`/workflow/${response.data.id}`);
+      router.push(`/workflow/${response.data.publicId ?? response.data.id}`);
       return;
     }
 
     const response = await CreateWorkflowFn(payload);
     form.reset();
-    router.push(`/workflow/${response.data.id}`);
+    router.push(`/workflow/${response.data.publicId ?? response.data.id}`);
   };
 
   if (isEditMode && (isWorkflowLoading || !workflow)) {
@@ -407,7 +413,7 @@ export function CreateWorkflowView({ id }: { id?: string }) {
                           }}
                           aria-label={`Remove step ${index + 1}`}
                         >
-                          <Trash2 className="h-5 w-5 text-[#FF1F1F]" />
+                          <Trash2 className="h-5 w-5 text-danger" />
                         </button>
                       </div>
                     </div>

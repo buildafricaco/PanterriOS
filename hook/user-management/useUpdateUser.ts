@@ -9,8 +9,13 @@ export function useUpdateUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ userId, payload }: { userId: number; payload: UpdateUserReq }) =>
-      updateUserDetails(userId, payload),
+    mutationFn: async ({
+      userId,
+      payload,
+    }: {
+      userId: number | string;
+      payload: UpdateUserReq;
+    }) => updateUserDetails(userId, payload),
     onSuccess: (data, variables) => {
       toast.success(data.message || 'User details updated successfully');
       queryClient.invalidateQueries({ queryKey: ['users', 'list'] });

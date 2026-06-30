@@ -92,9 +92,10 @@ export function MarketPriceTrendChart({
     return areaOptionsByCity[city] ?? [];
   }, [city]);
 
-  useEffect(() => {
-    setSelectedArea("all");
-  }, [city]);
+  const activeSelectedArea = useMemo(() => {
+    if (selectedArea === "all") return "all";
+    return areaOptions.includes(selectedArea) ? selectedArea : "all";
+  }, [areaOptions, selectedArea]);
 
   useEffect(() => {
     const updateSize = () => {
@@ -128,7 +129,7 @@ export function MarketPriceTrendChart({
   const { data: priceTrendResponse, isLoading } = usePriceTrendSeries({
     city,
     months: 6,
-    location: selectedArea === "all" ? undefined : selectedArea,
+    location: activeSelectedArea === "all" ? undefined : activeSelectedArea,
     propertyType: selectedPropertyType,
   });
 
@@ -173,7 +174,7 @@ export function MarketPriceTrendChart({
 
             <div className="flex items-center gap-3">
               <Select
-                value={selectedArea}
+                value={activeSelectedArea}
                 onValueChange={setSelectedArea}
               >
                 <SelectTrigger className="h-10 min-w-[170px] rounded-lg border-[#E4E7EC] bg-white text-sm shadow-none focus:ring-0">

@@ -48,7 +48,7 @@ export function StatCard({
               bgColor ?? "bg-[#F1E8FF]",
             )}
           >
-            <Icon className={cn("h-6 w-6", iconColor ?? "text-[#7E22CE]")} />
+            <Icon className={cn("h-6 w-6", iconColor )} />
           </span>
         ) : null}
 
@@ -69,7 +69,7 @@ export function StatCard({
 
         <div
           className={cn(
-            "pt-1 text-3xl font-bold leading-tight text-[#111827] [overflow-wrap:anywhere]",
+            "pt-1 text-3xl font-bold capitalize leading-tight text-[#111827] [overflow-wrap:anywhere]",
             color,
           )}
         >

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   useCreateInvestment,
   useRetrieveInvestmentDetails,
   useUpdateInvestment,
-} from "@/hook/investment-management";
+} from '@/hook/investment-management';
 import {
   Form,
   FormControl,
@@ -17,8 +17,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { z } from "zod";
+} from '@/components/ui/form';
+import { z } from 'zod';
 import {
   Select,
   SelectContent,
@@ -26,16 +26,19 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { FileUpload } from "@/components/ui/file-upload";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/popover';
+import {
+  FileUpload,
+  type ExistingUploadItem,
+} from '@/components/ui/file-upload';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   CalendarIcon,
   CircleCheck,
@@ -43,36 +46,36 @@ import {
   Plus,
   Share,
   Trash2,
-} from "lucide-react";
-import { formatPrice } from "@/utils/formatPrice";
-import FormPreview from "./formPreview";
-import { format } from "date-fns";
+} from 'lucide-react';
+import { formatPrice } from '@/utils/formatPrice';
+import FormPreview from './formPreview';
+import { format } from 'date-fns';
 interface Prop {
   id?: number | string;
   step: number;
   setStep: (step: number) => void;
 }
 
-const milestoneStatusValues = ["completed", "in_progress", "upcoming"] as const;
+const milestoneStatusValues = ['completed', 'in_progress', 'upcoming'] as const;
 
 const createInvestmentSchema = z.object({
-  propertyName: z.string().min(1, "Property Name is required"),
-  propertyType: z.string().min(1, "Select Property Type "),
-  state: z.string().min(1, " Select State "),
-  city: z.string().min(1, " City is required "),
+  propertyName: z.string().min(1, 'Property Name is required'),
+  propertyType: z.string().min(1, 'Select Property Type '),
+  state: z.string().min(1, ' Select State '),
+  city: z.string().min(1, ' City is required '),
   propertySize: z.number().optional(),
-  address: z.string().min(1, "Address is required"),
+  address: z.string().min(1, 'Address is required'),
   units: z.number().optional(),
-  description: z.string().min(1, "description is required"),
-  features: z.array(z.string()).min(1, "Input at least one features"),
-  targetAmount: z.number().min(1, "Target Amount is required"),
-  minimumInvestment: z.number().min(1, "Minimum Investment is required"),
+  description: z.string().min(1, 'description is required'),
+  features: z.array(z.string()).min(1, 'Input at least one features'),
+  targetAmount: z.number().min(1, 'Target Amount is required'),
+  minimumInvestment: z.number().min(1, 'Minimum Investment is required'),
   returnDistributionSchedule: z
     .string()
-    .min(1, "Select Return Distribution Schedule "),
-  duration: z.string().min(1, "Duration is Required"),
-  expectedReturns: z.string().min(1, "Expected Returns is Required"),
-  riskRating: z.string().min(1, "Select Risk Rating"),
+    .min(1, 'Select Return Distribution Schedule '),
+  duration: z.string().min(1, 'Duration is Required'),
+  expectedReturns: z.string().min(1, 'Expected Returns is Required'),
+  riskRating: z.string().min(1, 'Select Risk Rating'),
   propertyValue: z.number().optional(),
   expectedROI: z.number().optional(),
   coverImage: z
@@ -80,114 +83,108 @@ const createInvestmentSchema = z.object({
     .optional()
     .refine(
       (file) => !file || file.size <= 5 * 1024 * 1024,
-      "Cover image must be less than 5MB",
+      'Cover image must be less than 5MB',
     ),
   propertyImages: z
     .array(z.instanceof(File))
     .optional()
     .refine(
       (files) => !files || files.every((file) => file.size <= 5 * 1024 * 1024),
-      "Each file must be less than 5MB",
+      'Each file must be less than 5MB',
     ),
   legalDocuments: z
     .array(z.instanceof(File))
     .optional()
     .refine(
       (files) => !files || files.every((file) => file.size <= 5 * 1024 * 1024),
-      "Each file must be less than 5MB",
+      'Each file must be less than 5MB',
     ),
   projectMilestones: z
     .array(
       z.object({
-        title: z.string().min(1, "Milestone title is required"),
-        date: z.string().min(1, "Milestone date is required"),
+        title: z.string().min(1, 'Milestone title is required'),
+        date: z.string().min(1, 'Milestone date is required'),
         status: z.enum(milestoneStatusValues, {
           message:
-            "Milestone status must be completed, in_progress, or upcoming",
+            'Milestone status must be completed, in_progress, or upcoming',
         }),
-        description: z.string().min(1, "Milestone description is required"),
+        description: z.string().min(1, 'Milestone description is required'),
       }),
     )
-    .min(1, "Add at least one milestone"),
+    .min(1, 'Add at least one milestone'),
 });
 
 type CreateInvestmentFormData = z.infer<typeof createInvestmentSchema>;
-type MilestoneItem = CreateInvestmentFormData["projectMilestones"][number];
-type MilestoneInput = Omit<MilestoneItem, "status"> & {
-  status: MilestoneItem["status"] | "";
-};
-type ExistingUploadItem = {
-  id: number;
-  name: string;
-  url: string;
-  type?: string;
+type MilestoneItem = CreateInvestmentFormData['projectMilestones'][number];
+type MilestoneInput = Omit<MilestoneItem, 'status'> & {
+  status: MilestoneItem['status'] | '';
 };
 
 const typeOptions = [
-  { label: "Commercial", value: "commercial" },
-  { label: "Industrial Space", value: "industrial_space" },
-  { label: "Land", value: "land" },
-  { label: "Office Block", value: "office_block" },
-  { label: "Retail Mall", value: "retail_mall" },
-  { label: "Residential", value: "residential" },
-  { label: "Student Housing", value: "student_housing" },
+  { label: 'Commercial', value: 'commercial' },
+  { label: 'Industrial Space', value: 'industrial_space' },
+  { label: 'Land', value: 'land' },
+  { label: 'Office Block', value: 'office_block' },
+  { label: 'Retail Mall', value: 'retail_mall' },
+  { label: 'Residential', value: 'residential' },
+  { label: 'Student Housing', value: 'student_housing' },
 ];
 const statesOption = [
-  { label: "Lagos", value: "Lagos" },
-  { label: "Abuja", value: "Abuja" },
-  { label: "Port Harcourt", value: "Port Harcourt" },
+  { label: 'Lagos', value: 'Lagos' },
+  { label: 'Abuja', value: 'Abuja' },
+  { label: 'Port Harcourt', value: 'Port Harcourt' },
 ];
 const schedulOption = [
-  { label: "Monthly", value: "monthly" },
-  { label: "Quarterly", value: "quarterly" },
-  { label: "Annual", value: "annual" },
-  { label: "Bi annual", value: "bi_annual" },
-  { label: "At Maturity", value: "at_maturity" },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Quarterly', value: 'quarterly' },
+  { label: 'Annual', value: 'annual' },
+  { label: 'Bi annual', value: 'bi_annual' },
+  { label: 'At Maturity', value: 'at_maturity' },
 ];
 const riskOption = [
-  { label: "Low", value: "low" },
-  { label: "Medium", value: "medium" },
-  { label: "High", value: "high" },
+  { label: 'Low', value: 'low' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'High', value: 'high' },
 ];
 const milestoneStatusOption = [
-  { label: "Completed", value: "completed" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Up Coming", value: "upcoming" },
+  { label: 'Completed', value: 'completed' },
+  { label: 'In Progress', value: 'in_progress' },
+  { label: 'Up Coming', value: 'upcoming' },
 ];
 const requiredDoc = [
-  "• Investment Prospectus",
-  "• Property Valuation Report",
-  "• Title Documents",
-  "• Developer Information",
-  "• Financial Projections",
+  '• Investment Prospectus',
+  '• Property Valuation Report',
+  '• Title Documents',
+  '• Developer Information',
+  '• Financial Projections',
 ];
 
 const normalizeValue = (value: string) =>
   value
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
 
 const mapToOptionValue = (
   rawValue: string,
   options: { value: string; label?: string }[],
-  fallback = "",
+  fallback = '',
 ) => {
   const normalized = normalizeValue(rawValue);
   const matched = options.find(
     (option) =>
       normalizeValue(option.value) === normalized ||
-      normalizeValue(option.label ?? "") === normalized,
+      normalizeValue(option.label ?? '') === normalized,
   );
 
   return matched?.value ?? fallback;
 };
 
 export function CreateInvestmentForm({ step, setStep, id }: Prop) {
-  const investmentId = id ? Number(id) : undefined;
+  const investmentId = id;
   const isEditMode = Boolean(investmentId);
-  const [featureInput, setFeatureInput] = useState("");
+  const [featureInput, setFeatureInput] = useState('');
   const [existingCoverImage, setExistingCoverImage] = useState<
     ExistingUploadItem[]
   >([]);
@@ -199,17 +196,17 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
   >([]);
   const [milestoneDate, setMilestoneDate] = useState<Date>();
   const [milestoneInput, setMilestoneInput] = useState<MilestoneInput>({
-    title: "",
-    date: "",
-    status: "",
-    description: "",
+    title: '',
+    date: '',
+    status: '',
+    description: '',
   });
   const [submitAction, setSubmitAction] = useState<
-    "draft" | "published" | null
+    'draft' | 'published' | null
   >(null);
   const isLastStep = step === 5;
   const { data: editDetails, isLoading: isEditLoading } =
-    useRetrieveInvestmentDetails(investmentId, isEditMode);
+    useRetrieveInvestmentDetails(investmentId!, isEditMode);
   const { mutateAsync: createInvestmentFn, isPending } = useCreateInvestment();
   const { mutateAsync: updateInvestmentFn, isPending: isUpdating } =
     useUpdateInvestment();
@@ -217,21 +214,21 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
   const form = useForm<CreateInvestmentFormData>({
     resolver: zodResolver(createInvestmentSchema),
     defaultValues: {
-      propertyName: "",
-      propertyType: "",
-      state: "",
-      city: "",
-      address: "",
+      propertyName: '',
+      propertyType: '',
+      state: '',
+      city: '',
+      address: '',
       propertySize: 0,
       units: 0,
-      description: "",
+      description: '',
       features: [],
       targetAmount: 0,
       minimumInvestment: 0,
-      returnDistributionSchedule: "quarterly",
-      duration: "",
-      expectedReturns: "",
-      riskRating: "",
+      returnDistributionSchedule: 'quarterly',
+      duration: '',
+      expectedReturns: '',
+      riskRating: '',
       propertyValue: 0,
       expectedROI: 0,
       coverImage: undefined,
@@ -242,7 +239,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
   });
   const milestones = useWatch({
     control: form.control,
-    name: "projectMilestones",
+    name: 'projectMilestones',
   });
 
   useEffect(() => {
@@ -261,7 +258,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
     ).coverImage;
     const mappedExistingImages = (editDetails.propertyDetails.images ?? []).map(
       (img) => ({
-        id: img.id,
+        id: img.publicId,
         name: img.fileName,
         url: img.url,
         type: img.mimeType,
@@ -275,8 +272,8 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
       coverImageUrl
         ? [
             {
-              id: coverFromImages?.id ?? 0,
-              name: coverFromImages?.name ?? "Cover image",
+              id: coverFromImages?.id ?? 'cover-image',
+              name: coverFromImages?.name ?? 'Cover image',
               url: coverImageUrl,
               type: coverFromImages?.type,
             },
@@ -289,12 +286,14 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
         : mappedExistingImages,
     );
 
-    const mappedExistingDocuments = (editDetails.documents ?? []).map((doc) => ({
-      id: doc.id,
-      name: doc.documentName,
-      url: doc.fileUrl,
-      type: doc.mimeType,
-    }));
+    const mappedExistingDocuments = (editDetails.documents ?? []).map(
+      (doc) => ({
+        id: doc.publicId,
+        name: doc.documentName,
+        url: doc.fileUrl,
+        type: doc.mimeType,
+      }),
+    );
     setExistingLegalDocuments(mappedExistingDocuments);
 
     form.reset({
@@ -315,7 +314,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
       returnDistributionSchedule: mapToOptionValue(
         editDetails.financialDetails.returnDistributionSchedule,
         schedulOption,
-        "monthly",
+        'monthly',
       ),
       duration: String(editDetails.financialDetails.durationMonths),
       expectedReturns: String(
@@ -334,78 +333,78 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
         editDetails.propertyDetails.milestones?.map((milestone) => ({
           title: milestone.title,
           date: milestone.date,
-          status: normalizeValue(milestone.status) as MilestoneItem["status"],
+          status: normalizeValue(milestone.status) as MilestoneItem['status'],
           description: milestone.description,
         })) ?? [],
     });
 
     // Force these controlled select values after reset to avoid stale UI in Radix Select.
-    form.setValue("propertyType", mappedPropertyType, { shouldValidate: true });
-    form.setValue("state", mappedState, { shouldValidate: true });
+    form.setValue('propertyType', mappedPropertyType, { shouldValidate: true });
+    form.setValue('state', mappedState, { shouldValidate: true });
   }, [editDetails, form, isEditMode]);
 
   const isSection1Valid = async () => {
     const result = await form.trigger([
-      "propertyName",
-      "propertyType",
-      "state",
-      "city",
-      "address",
+      'propertyName',
+      'propertyType',
+      'state',
+      'city',
+      'address',
       // "propertySize",
       // "units",
-      "description",
-      "features",
+      'description',
+      'features',
     ]);
 
     return result;
   };
   const isSection2Valid = async () => {
     const result = await form.trigger([
-      "targetAmount",
-      "minimumInvestment",
-      "returnDistributionSchedule",
-      "duration",
-      "expectedReturns",
-      "riskRating",
+      'targetAmount',
+      'minimumInvestment',
+      'returnDistributionSchedule',
+      'duration',
+      'expectedReturns',
+      'riskRating',
     ]);
 
     return result;
   };
   const isSection3Valid = async () => {
     const result = await form.trigger([
-      "coverImage",
-      "propertyImages",
-      "legalDocuments",
+      'coverImage',
+      'propertyImages',
+      'legalDocuments',
     ]);
 
     if (isEditMode) {
       return result;
     }
 
-    const coverImage = form.getValues("coverImage");
-    const propertyImages = form.getValues("propertyImages") || [];
-    const legalDocuments = form.getValues("legalDocuments") || [];
+    const coverImage = form.getValues('coverImage');
+    const propertyImages = form.getValues('propertyImages') || [];
+    const legalDocuments = form.getValues('legalDocuments') || [];
 
     if (!coverImage) {
-      form.setError("coverImage", {
-        type: "manual",
-        message: "Upload cover image",
+      form.setError('coverImage', {
+        type: 'manual',
+        message: 'Upload cover image',
       });
       return false;
     }
 
     if (!propertyImages.length) {
-      form.setError("propertyImages", {
-        type: "manual",
-        message: "Upload at least one property image",
+      form.setError('propertyImages', {
+        type: 'manual',
+        message: 'Upload at least one property image',
       });
       return false;
     }
 
     if (!legalDocuments.length) {
-      form.setError("legalDocuments", {
-        type: "manual",
-        message: "Upload at least one Legal Documents",
+      form.setError('legalDocuments', {
+        type: 'manual',
+        message: 'Upload at least one Legal Documents',
       });
       return false;
     }
@@ -414,15 +413,15 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
   };
 
   const isSection4Valid = async () => {
-    const milestones = form.getValues("projectMilestones");
+    const milestones = form.getValues('projectMilestones');
     if (milestones.length === 0) {
-      form.setError("projectMilestones", {
-        type: "manual",
-        message: "Add at least one milestone before continuing.",
+      form.setError('projectMilestones', {
+        type: 'manual',
+        message: 'Add at least one milestone before continuing.',
       });
       return false;
     }
-    form.clearErrors("projectMilestones");
+    form.clearErrors('projectMilestones');
     return true;
   };
 
@@ -433,21 +432,21 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
       !milestoneInput.status ||
       !milestoneInput.description.trim()
     ) {
-      form.setError("projectMilestones", {
-        type: "manual",
-        message: "Please fill all milestone fields before adding.",
+      form.setError('projectMilestones', {
+        type: 'manual',
+        message: 'Please fill all milestone fields before adding.',
       });
       return;
     }
 
-    const currentMilestones = form.getValues("projectMilestones");
+    const currentMilestones = form.getValues('projectMilestones');
     form.setValue(
-      "projectMilestones",
+      'projectMilestones',
       [
         ...currentMilestones,
         {
           ...milestoneInput,
-          status: milestoneInput.status as MilestoneItem["status"],
+          status: milestoneInput.status as MilestoneItem['status'],
         },
       ],
       {
@@ -455,39 +454,39 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
         shouldValidate: true,
       },
     );
-    form.clearErrors("projectMilestones");
+    form.clearErrors('projectMilestones');
 
     setMilestoneInput({
-      title: "",
-      date: "",
-      status: "",
-      description: "",
+      title: '',
+      date: '',
+      status: '',
+      description: '',
     });
     setMilestoneDate(undefined);
   };
 
   const handleDeleteMilestone = (indexToDelete: number) => {
-    const currentMilestones = form.getValues("projectMilestones");
+    const currentMilestones = form.getValues('projectMilestones');
     const updatedMilestones = currentMilestones.filter(
       (_, index) => index !== indexToDelete,
     );
 
-    form.setValue("projectMilestones", updatedMilestones, {
+    form.setValue('projectMilestones', updatedMilestones, {
       shouldDirty: true,
       shouldValidate: true,
     });
 
     if (updatedMilestones.length === 0) {
-      form.setError("projectMilestones", {
-        type: "manual",
-        message: "Add at least one milestone before continuing.",
+      form.setError('projectMilestones', {
+        type: 'manual',
+        message: 'Add at least one milestone before continuing.',
       });
     }
   };
 
   const onSubmit = async (
     values: CreateInvestmentFormData,
-    publicationStatus: "draft" | "published" = "published",
+    publicationStatus: 'draft' | 'published' = 'published',
   ) => {
     try {
       setSubmitAction(publicationStatus);
@@ -507,8 +506,9 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
         expectedReturnPercentage: parseFloat(values.expectedReturns),
         riskRating: values.riskRating,
         investmentPublicationStatus: publicationStatus,
-        propertyValue: values.propertyValue === 0 ? undefined : values.propertyValue,
-        expectedRoi: values.expectedROI  === 0 ? undefined : values.expectedROI,
+        propertyValue:
+          values.propertyValue === 0 ? undefined : values.propertyValue,
+        expectedRoi: values.expectedROI === 0 ? undefined : values.expectedROI,
         propertySizeSqm: values.propertySize,
         propertyUnit: values.units?.toString(),
         keyHighlights: values.features,
@@ -536,8 +536,8 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
     } catch (error) {
       console.error(
         isEditMode
-          ? "Failed to update investment:"
-          : "Failed to create investment:",
+          ? 'Failed to update investment:'
+          : 'Failed to create investment:',
         error,
       );
     } finally {
@@ -585,10 +585,10 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) =>
-              onSubmit(values, "published"),
+              onSubmit(values, 'published'),
             )}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && step !== 4) {
+              if (e.key === 'Enter' && step !== 4) {
                 e.preventDefault();
               }
             }}
@@ -598,13 +598,13 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
               <>
                 <div className=" items-center gap-4">
                   <h1 className="text-lg sm:text-xl font-semibold">
-                    {" "}
+                    {' '}
                     Basic Information
                   </h1>
                   <p className="text-xs sm:text-sm">
                     {isEditMode
-                      ? "Update the fundamental details about the property"
-                      : "Enter the fundamental details about the property"}
+                      ? 'Update the fundamental details about the property'
+                      : 'Enter the fundamental details about the property'}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full">
@@ -615,7 +615,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> Property Name</span>{" "}
+                          <span className="font-bold"> Property Name</span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -637,19 +637,19 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> Property Type</span>{" "}
+                          <span className="font-bold"> Property Type</span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
                           <Select
                             key={`propertyType-${field.value}`}
                             onValueChange={field.onChange}
-                            value={field.value ?? ""}
+                            value={field.value ?? ''}
                           >
                             <SelectTrigger className="h-9 sm:h-10 p-2 sm:p-3 text-xs sm:text-sm">
                               <SelectValue placeholder="Select property type" />
                             </SelectTrigger>
-                            <SelectContent position={"popper"}>
+                            <SelectContent position={'popper'}>
                               <SelectGroup>
                                 {typeOptions.map((option, i) => (
                                   <SelectItem value={option.value} key={i}>
@@ -674,19 +674,19 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> State</span>{" "}
+                          <span className="font-bold"> State</span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
                           <Select
                             key={`state-${field.value}`}
                             onValueChange={field.onChange}
-                            value={field.value ?? ""}
+                            value={field.value ?? ''}
                           >
                             <SelectTrigger className="h-9 sm:h-10 p-2 sm:p-3 text-xs sm:text-sm">
                               <SelectValue placeholder="Select state" />
                             </SelectTrigger>
-                            <SelectContent position={"popper"}>
+                            <SelectContent position={'popper'}>
                               <SelectGroup>
                                 {statesOption.map((option, i) => (
                                   <SelectItem value={option.value} key={i}>
@@ -708,7 +708,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> City </span>{" "}
+                          <span className="font-bold"> City </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -728,7 +728,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> Street Address </span>{" "}
+                          <span className="font-bold"> Street Address </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -751,14 +751,14 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                           <span className="font-bold">
-                            {" "}
+                            {' '}
                             Property Size (Sqm)
                           </span>
                           {/* <p className="text-red-500">*</p> */}
                         </FormLabel>
                         <FormControl>
                           <Input
-                            {...form.register("propertySize", {
+                            {...form.register('propertySize', {
                               valueAsNumber: true,
                             })}
                             placeholder="2,500"
@@ -781,7 +781,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            {...form.register("units", {
+                            {...form.register('units', {
                               valueAsNumber: true,
                             })}
                             type="number"
@@ -801,7 +801,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                        <span className="font-bold"> Property Description</span>{" "}
+                        <span className="font-bold"> Property Description</span>{' '}
                         <p className="text-red-500">*</p>
                       </FormLabel>
                       <FormControl>
@@ -821,7 +821,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                        <span className="font-bold"> Key Features</span>{" "}
+                        <span className="font-bold"> Key Features</span>{' '}
                         <p className="text-red-500">*</p>
                       </FormLabel>
 
@@ -839,7 +839,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                           onClick={() => {
                             if (featureInput.trim()) {
                               field.onChange([...field.value, featureInput]);
-                              setFeatureInput("");
+                              setFeatureInput('');
                             }
                           }}
                         >
@@ -869,7 +869,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
               <>
                 <div className=" items-center gap-4">
                   <h1 className="text-lg sm:text-xl font-semibold">
-                    {" "}
+                    {' '}
                     Financial Details
                   </h1>
                   <p className="text-xs sm:text-sm">
@@ -884,12 +884,12 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={() => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> Target Amount (₦) </span>{" "}
+                          <span className="font-bold"> Target Amount (₦) </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
                           <Input
-                            {...form.register("targetAmount", {
+                            {...form.register('targetAmount', {
                               valueAsNumber: true,
                             })}
                             type="number"
@@ -908,14 +908,14 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                           <span className="font-bold">
-                            {" "}
-                            Minimum Investment (₦){" "}
-                          </span>{" "}
+                            {' '}
+                            Minimum Investment (₦){' '}
+                          </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
                           <Input
-                            {...form.register("minimumInvestment", {
+                            {...form.register('minimumInvestment', {
                               valueAsNumber: true,
                             })}
                             type="number"
@@ -934,9 +934,9 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                           <span className="font-bold">
-                            {" "}
+                            {' '}
                             Return Distribution Schedule
-                          </span>{" "}
+                          </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -947,7 +947,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                             <SelectTrigger className="h-9 sm:h-10 p-2 sm:p-3 text-xs sm:text-sm">
                               <SelectValue placeholder="Select return schedule" />
                             </SelectTrigger>
-                            <SelectContent position={"popper"}>
+                            <SelectContent position={'popper'}>
                               <SelectGroup>
                                 {schedulOption.map((option, i) => (
                                   <SelectItem value={option.value} key={i}>
@@ -971,7 +971,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold"> Duration (Months) </span>{" "}
+                          <span className="font-bold"> Duration (Months) </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -993,7 +993,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                           <span className="font-bold">
                             Expected Returns (%)
-                          </span>{" "}
+                          </span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -1013,7 +1013,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="font-bold">Risk Rating</span>{" "}
+                          <span className="font-bold">Risk Rating</span>{' '}
                           <p className="text-red-500">*</p>
                         </FormLabel>
                         <FormControl>
@@ -1025,7 +1025,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                             <SelectTrigger className="h-9 sm:h-10 p-2 sm:p-3 text-xs sm:text-sm">
                               <SelectValue placeholder="Select risk" />
                             </SelectTrigger>
-                            <SelectContent position={"popper"}>
+                            <SelectContent position={'popper'}>
                               <SelectGroup>
                                 {riskOption.map((option, i) => (
                                   <SelectItem value={option.value} key={i}>
@@ -1055,11 +1055,11 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                           <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                             <span className="font-bold">
                               Property Value (₦)
-                            </span>{" "}
+                            </span>{' '}
                           </FormLabel>
                           <FormControl>
                             <Input
-                              {...form.register("propertyValue", {
+                              {...form.register('propertyValue', {
                                 valueAsNumber: true,
                               })}
                               type="number"
@@ -1077,12 +1077,12 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                       render={() => (
                         <FormItem>
                           <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                            <span className="font-bold">Expected ROI (%)</span>{" "}
+                            <span className="font-bold">Expected ROI (%)</span>{' '}
                             {/* <p className="text-red-500">*</p> */}
                           </FormLabel>
                           <FormControl>
                             <Input
-                              {...form.register("expectedROI", {
+                              {...form.register('expectedROI', {
                                 valueAsNumber: true,
                               })}
                               type="number"
@@ -1104,24 +1104,24 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 w-full text-xs sm:text-sm">
                     <div className="">
                       <small>Target Amount</small>
-                      <div>{formatPrice(form.getValues("targetAmount"))}</div>
+                      <div>{formatPrice(form.getValues('targetAmount'))}</div>
                     </div>
                     <div className="">
                       <small>Min. Investment</small>
                       <div>
-                        {formatPrice(form.getValues("minimumInvestment"))}
+                        {formatPrice(form.getValues('minimumInvestment'))}
                       </div>
                     </div>
                     <div className="">
                       <small>Expected ROI</small>
                       <div className="text-green-500">
-                        {form.getValues("expectedReturns")}%
+                        {form.getValues('expectedReturns')}%
                       </div>
                     </div>
                     <div className="">
                       <small>Duration</small>
                       <div className="text-green-500 capitalize">
-                        {form.getValues("duration")} months
+                        {form.getValues('duration')} months
                       </div>
                     </div>
                   </div>
@@ -1185,7 +1185,9 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                               existingFiles={existingPropertyImages}
                               onRemoveExisting={(id) =>
                                 setExistingPropertyImages(
-                                  existingPropertyImages.filter((img) => img.id !== id),
+                                  existingPropertyImages.filter(
+                                    (img) => img.id !== id,
+                                  ),
                                 )
                               }
                               placeholder="Upload other property images"
@@ -1208,7 +1210,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                         <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                           <span className="font-bold">
                             Legal Documents
-                          </span>{" "}
+                          </span>{' '}
                         </FormLabel>
                         <FormControl>
                           <div className="w-full min-h-28 sm:min-h-32 text-xs sm:text-sm">
@@ -1218,7 +1220,9 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                               existingFiles={existingLegalDocuments}
                               onRemoveExisting={(id) =>
                                 setExistingLegalDocuments(
-                                  existingLegalDocuments.filter((doc) => doc.id !== id),
+                                  existingLegalDocuments.filter(
+                                    (doc) => doc.id !== id,
+                                  ),
                                 )
                               }
                               placeholder="Upload Legal Documents"
@@ -1258,7 +1262,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 w-full">
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                      <span className="font-bold"> Title </span>{" "}
+                      <span className="font-bold"> Title </span>{' '}
                       <p className="text-red-500">*</p>
                     </FormLabel>
                     <FormControl>
@@ -1277,7 +1281,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   </FormItem>
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                      <span className="font-bold">Date</span>{" "}
+                      <span className="font-bold">Date</span>{' '}
                       <p className="text-red-500">*</p>
                     </FormLabel>
                     <FormControl>
@@ -1291,7 +1295,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                           >
                             <CalendarIcon />
                             {milestoneInput.date ? (
-                              format(new Date(milestoneInput.date), "PPP")
+                              format(new Date(milestoneInput.date), 'PPP')
                             ) : (
                               <span>dd / mm / yyyy</span>
                             )}
@@ -1306,7 +1310,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                               setMilestoneDate(selectedDate);
                               setMilestoneInput((prev) => ({
                                 ...prev,
-                                date: format(selectedDate, "yyyy-MM-dd"),
+                                date: format(selectedDate, 'yyyy-MM-dd'),
                               }));
                             }}
                           />
@@ -1316,7 +1320,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   </FormItem>
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
-                      <span className="font-bold">Status</span>{" "}
+                      <span className="font-bold">Status</span>{' '}
                       <p className="text-red-500">*</p>
                     </FormLabel>
                     <FormControl>
@@ -1325,14 +1329,14 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                         onValueChange={(value) =>
                           setMilestoneInput((prev) => ({
                             ...prev,
-                            status: value as MilestoneItem["status"],
+                            status: value as MilestoneItem['status'],
                           }))
                         }
                       >
                         <SelectTrigger className="h-9 sm:h-10 p-2 sm:p-3 text-xs sm:text-sm">
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
-                        <SelectContent position={"popper"}>
+                        <SelectContent position={'popper'}>
                           <SelectGroup>
                             {milestoneStatusOption.map((option, i) => (
                               <SelectItem value={option.value} key={i}>
@@ -1348,9 +1352,9 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                 <FormItem>
                   <FormLabel className="flex items-center gap-2 text-xs sm:text-sm">
                     <span className="font-bold">
-                      {" "}
+                      {' '}
                       Milestone Description
-                    </span>{" "}
+                    </span>{' '}
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -1370,7 +1374,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                   <div>Minimum 100 characters recommended</div>
                   <Button
                     type="button"
-                    variant={"outline"}
+                    variant={'outline'}
                     onClick={handleAddMilestone}
                     className="text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4"
                   >
@@ -1390,11 +1394,11 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     </h3>
                     {milestones.map((milestone, index) => {
                       const statusClass =
-                        milestone.status === "completed"
-                          ? "bg-green-50  text-green-700"
-                          : milestone.status === "in_progress"
-                            ? "bg-blue-50 text-blue-700"
-                            : "bg-gray-50 text-gray-700";
+                        milestone.status === 'completed'
+                          ? 'bg-green-50  text-green-700'
+                          : milestone.status === 'in_progress'
+                            ? 'bg-blue-50 text-blue-700'
+                            : 'bg-gray-50 text-gray-700';
 
                       return (
                         <div
@@ -1407,7 +1411,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                             </h4>
                             <div className="flex items-center gap-3">
                               <span className="text-xs sm:text-sm uppercase">
-                                {milestone.status.replace("_", " ")}
+                                {milestone.status.replace('_', ' ')}
                               </span>
                               <Button
                                 type="button"
@@ -1425,7 +1429,7 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                             {milestone.description}
                           </p>
                           <p className=" mt-1 capitalize text-xs text-gray-600">
-                            {milestone.status.replace("_", " ")}-
+                            {milestone.status.replace('_', ' ')}-
                             {milestone.date}
                           </p>
                         </div>
@@ -1455,41 +1459,41 @@ export function CreateInvestmentForm({ step, setStep, id }: Prop) {
                     type="button"
                     variant="outline"
                     onClick={() =>
-                      form.handleSubmit((values) => onSubmit(values, "draft"))()
+                      form.handleSubmit((values) => onSubmit(values, 'draft'))()
                     }
                     disabled={isPending || isUpdating}
                     className="flex items-center gap-2 text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4"
                   >
                     <FileText className="w-4 h-4" />
-                    {submitAction === "draft" && (isPending || isUpdating)
-                      ? "Saving Draft..."
+                    {submitAction === 'draft' && (isPending || isUpdating)
+                      ? 'Saving Draft...'
                       : isEditMode
-                        ? "Save Changes"
-                        : "Save as Draft"}
+                        ? 'Save Changes'
+                        : 'Save as Draft'}
                   </Button>
                   <Button
                     type="submit"
                     disabled={isPending || isUpdating}
                     className="flex items-center gap-2 text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4"
                   >
-                    {submitAction === "published" && (isPending || isUpdating)
+                    {submitAction === 'published' && (isPending || isUpdating)
                       ? isEditMode
-                        ? "Updating..."
-                        : "Publishing..."
+                        ? 'Updating...'
+                        : 'Publishing...'
                       : isEditMode
-                        ? "Update Investment"
-                        : "Publish Investment"}
+                        ? 'Update Investment'
+                        : 'Publish Investment'}
                     <Share className="w-4 h-4" />
                   </Button>
                 </div>
               ) : (
                 <Button
-                  type={"button"}
+                  type={'button'}
                   onClick={isLastStep ? undefined : handleNext}
                   disabled={isPending || isUpdating}
                   className="text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4"
                 >
-                  {isLastStep ? "Submit" : "Continue"}
+                  {isLastStep ? 'Submit' : 'Continue'}
                 </Button>
               )}
             </div>

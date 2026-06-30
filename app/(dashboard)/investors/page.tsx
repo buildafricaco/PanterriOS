@@ -30,7 +30,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 interface InvestorsDataTableProp {
-  id: number;
+  id: string;
   code: string;
   name: string;
   email: string;
@@ -57,7 +57,7 @@ export default function Investorspage() {
 
   const investors = useMemo<InvestorsDataTableProp[]>(() => {
     return (data?.data ?? []).map((investor) => ({
-      id: investor.investorId,
+      id: investor.investorPublicId,
       code: investor.investorCode,
       name: investor.name,
       email: investor.email,

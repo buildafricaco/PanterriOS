@@ -6,7 +6,7 @@ import { updateWorkflow } from '@/services/workflow';
 import { toast } from 'sonner';
 
 interface UpdateWorkflowMutationPayload {
-  id: number;
+  id: number | string;
   payload: UpdateWorkflowReq;
 }
 

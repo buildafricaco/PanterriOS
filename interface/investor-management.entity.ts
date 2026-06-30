@@ -17,6 +17,7 @@ export interface InvestorManagementSummary {
 
 export interface InvestorManagementListItem {
   investorId: number;
+  investorPublicId: string;
   investorCode: string;
   name: string;
   tierLevel: string;
@@ -47,6 +48,7 @@ export interface RetrieveInvestorOverviewQuery {
 
 export interface InvestorOverviewHeader {
   investorId: number;
+  investorPublicId: string;
   investorCode: string;
   fullName: string;
   initials: string;

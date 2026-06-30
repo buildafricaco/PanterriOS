@@ -30,7 +30,7 @@ export const retrieveInvestors = async (
 };
 
 export const retrieveInvestorOverview = async (
-  investorId: number,
+  investorId: number | string,
   query: RetrieveInvestorOverviewQuery = {},
 ): Promise<InvestorOverviewRes> => {
   const { data } = await API.get(

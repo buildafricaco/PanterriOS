@@ -6,7 +6,11 @@ import { useRetrieveTransactionDetails } from "@/hook/wallet-finance";
 import { DrawerClose } from "@/components/ui/drawer";
 import { formatCurrency } from "@/utils/helpers";
 
-export function TransactionAudit({ transactionId }: { transactionId: number }) {
+export function TransactionAudit({
+  transactionId,
+}: {
+  transactionId: number | string;
+}) {
   const { data, isLoading, error } =
     useRetrieveTransactionDetails(transactionId);
 

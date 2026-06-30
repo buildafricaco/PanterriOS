@@ -3,7 +3,8 @@ import { Pagination } from './index';
 export interface UserProfileRes {
   statusCode: 200;
   data: {
-    id: number;
+    id?: number;
+    publicId?: string;
     email: string;
     firstName: string;
     lastName: string;
@@ -32,6 +33,7 @@ export interface AdminUsersStats {
 
 export interface AdminUsersDataItem {
   id?: number;
+  publicId: string;
   fullName: string;
   email: string;
   roles: string[];
@@ -54,7 +56,7 @@ export interface AllPlatformUsersRes {
   statusCode: number;
   data: {
     message: string;
-    data: { id: number; fullName: string; email: string }[];
+    data: { id?: number; publicId?: string; fullName: string; email: string }[];
   };
 }
 

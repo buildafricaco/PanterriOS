@@ -10,7 +10,7 @@ export function useDeleteInvestment() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (id: number) => deleteInvestment(id),
+    mutationFn: (id: number | string) => deleteInvestment(id),
     onSuccess: (data) => {
       toast.success(data.message || 'Investment deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['investments', 'list'] });

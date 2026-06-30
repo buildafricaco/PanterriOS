@@ -4,7 +4,7 @@ export interface RetrieveAuditLogsQuery {
   module?: string;
   action?: string;
   entityType?: string;
-  critical?: boolean | "true" | "false";
+  critical?: boolean | 'true' | 'false';
   actorUserId?: number;
   startDate?: string;
   endDate?: string;
@@ -24,7 +24,8 @@ export interface AuditLogChanges {
 }
 
 export interface AuditLogRecord {
-  id: number;
+  id?: number;
+  publicId: string;
   reference: string;
   module: string;
   action: string;

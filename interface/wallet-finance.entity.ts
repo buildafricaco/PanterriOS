@@ -1,25 +1,25 @@
 export type WalletFinanceTransactionTypeFilter =
-  | "all"
-  | "deposit"
-  | "withdrawal"
-  | "investment"
-  | "yield"
-  | "investment_opt_out";
+  | 'all'
+  | 'deposit'
+  | 'withdrawal'
+  | 'investment'
+  | 'yield'
+  | 'investment_opt_out';
 
 export type WalletFinanceTransactionStatusFilter =
-  | "all"
-  | "completed"
-  | "pending"
-  | "processing"
-  | "approved"
-  | "rejected"
-  | "failed";
+  | 'all'
+  | 'completed'
+  | 'pending'
+  | 'processing'
+  | 'approved'
+  | 'rejected'
+  | 'failed';
 
 export type WalletFinanceTimeRangeFilter =
-  | "all_time"
-  | "today"
-  | "this_week"
-  | "this_month";
+  | 'all_time'
+  | 'today'
+  | 'this_week'
+  | 'this_month';
 
 export interface RetrieveWalletFinanceQuery {
   page?: number;
@@ -41,9 +41,10 @@ export interface WalletFinanceSummary {
 }
 
 export interface WalletFinanceTransaction {
-  id: number;
+  publicId: string;
   reference: string;
   investorId: number;
+  investorPublicId?: string;
   investorName: string;
   type: WalletFinanceTransactionTypeFilter;
   amount: number;
@@ -72,14 +73,15 @@ export interface WalletFinanceAuditTrailItem {
 }
 
 export interface WalletFinanceTransactionDetails {
-  id: number;
+  publicId: string;
   reference: string;
   investorId: number;
+  investorPublicId?: string;
   investorName: string;
-  type: Exclude<WalletFinanceTransactionTypeFilter, "all">;
+  type: Exclude<WalletFinanceTransactionTypeFilter, 'all'>;
   typeLabel: string;
   amount: number;
-  status: Exclude<WalletFinanceTransactionStatusFilter, "all">;
+  status: Exclude<WalletFinanceTransactionStatusFilter, 'all'>;
   statusLabel: string;
   description: string;
   dateTime: string;
@@ -97,15 +99,15 @@ export interface RetrieveYieldDisbursementsQuery {
   page?: number;
   limit?: number;
   search?: string;
-  status?: "all" | "pending" | "disbursed";
+  status?: 'all' | 'pending' | 'disbursed';
   timeRange?: WalletFinanceTimeRangeFilter;
 }
 
 export type YieldDisbursementStatus =
-  | "pending"
-  | "disbursed"
-  | "flagged"
-  | "partial";
+  | 'pending'
+  | 'disbursed'
+  | 'flagged'
+  | 'partial';
 
 export interface YieldDisbursementStatusBreakdown {
   pending: number;
@@ -144,8 +146,6 @@ export interface RetrieveYieldDisbursementsRes {
     limit: number;
   };
 }
-
-
 
 export interface YieldDisbursementLedgerInvestor {
   disbursementId: number;
@@ -214,17 +214,17 @@ export interface RetrieveYieldDisbursementReviewRes {
 // ─── Withdrawal Approvals ────────────────────────────────────────────────────
 
 export type WithdrawalApprovalStatusFilter =
-  | "all"
-  | "pending"
-  | "processing"
-  | "approved"
-  | "rejected";
+  | 'all'
+  | 'pending'
+  | 'processing'
+  | 'approved'
+  | 'rejected';
 
 export type WithdrawalApprovalRiskProfileFilter =
-  | "all"
-  | "low_risk"
-  | "medium_risk"
-  | "high_risk";
+  | 'all'
+  | 'low_risk'
+  | 'medium_risk'
+  | 'high_risk';
 
 export interface RetrieveWithdrawalApprovalsQuery {
   page?: number;
@@ -266,10 +266,10 @@ export interface RetrieveWithdrawalApprovalsRes {
 }
 
 export type InvestorWalletStatusFilter =
-  | "all"
-  | "active"
-  | "suspended"
-  | "closed";
+  | 'all'
+  | 'active'
+  | 'suspended'
+  | 'closed';
 
 export interface RetrieveInvestorWalletsQuery {
   page?: number;
@@ -280,7 +280,9 @@ export interface RetrieveInvestorWalletsQuery {
 
 export interface InvestorWalletItem {
   walletId: number;
+  walletPublicId: string;
   investorId: number;
+  investorPublicId: string;
   investorCode: string;
   investorName: string;
   investorEmail: string;
@@ -289,7 +291,7 @@ export interface InvestorWalletItem {
   lockedBalance: number;
   invested: number;
   returns: number;
-  status: Exclude<InvestorWalletStatusFilter, "all">;
+  status: Exclude<InvestorWalletStatusFilter, 'all'>;
   statusLabel: string;
   createdAt: string;
 }
@@ -319,26 +321,28 @@ export interface InvestorWalletOverview {
 }
 
 export interface InvestorWalletRecentActivityItem {
-  id: number;
+  publicId: string;
   title: string;
   description: string;
   occurredAt: string;
   activityType: string;
   badge: string;
   amount: number;
-  amountDirection: "credit" | "debit";
+  amountDirection: 'credit' | 'debit';
   reference: string;
 }
 
 export interface InvestorWalletDetails {
   data: {
     walletId: number;
+    walletPublicId: string;
     investorId: number;
+    investorPublicId: string;
     investorCode: string;
     investorName: string;
     investorEmail: string;
     initials: string;
-    status: Exclude<InvestorWalletStatusFilter, "all">;
+    status: Exclude<InvestorWalletStatusFilter, 'all'>;
     statusLabel: string;
     overview: InvestorWalletOverview;
     recentActivity: InvestorWalletRecentActivityItem[];
@@ -347,7 +351,7 @@ export interface InvestorWalletDetails {
 
 export interface WithdrawalRequestActions {
   requestId: string;
-  params: { decision: "approve" | "reject"; adminNote: string };
+  params: { decision: 'approve' | 'reject'; adminNote: string };
 }
 
 export interface WithdrawalRequestDetails {

@@ -22,39 +22,41 @@ export const retrieveWorkflowTriggers =
 export const createWorkflow = async (
   payload: CreateWorkflowReq,
 ): Promise<CreateWorkflowRes> => {
-    const { data } = await API.post('/admin/workflows/create', payload);
-    return data;
-  };
+  const { data } = await API.post('/admin/workflows/create', payload);
+  return data;
+};
 
 export const retrieveWorkflows = async (
   params: RetrieveWorkflowsQuery,
 ): Promise<RetrieveWorkflowsRes> => {
-    const { data } = await API.get('/admin/workflows/list', { params });
-    return data;
-  };
+  const { data } = await API.get('/admin/workflows/list', { params });
+  return data;
+};
 
 export const retrieveWorkflowDetails = async (
-  id: number,
+  id: number | string,
 ): Promise<RetrieveWorkflowDetailsRes> => {
-    const { data } = await API.get(`/admin/workflows/${id}`);
-    return data;
-  };
+  const { data } = await API.get(`/admin/workflows/${id}`);
+  return data;
+};
 
 export const updateWorkflow = async (
-  id: number,
+  id: number | string,
   payload: UpdateWorkflowReq,
 ): Promise<UpdateWorkflowRes> => {
-    const { data } = await API.patch(`/admin/workflows/${id}`, payload);
-    return data;
-  };
+  const { data } = await API.patch(`/admin/workflows/${id}`, payload);
+  return data;
+};
 
-export const deleteWorkflow = async (id: number): Promise<CommonRes> => {
-    const { data } = await API.delete(`/admin/workflows/${id}`);
-    return data;
-  };
+export const deleteWorkflow = async (
+  id: number | string,
+): Promise<CommonRes> => {
+  const { data } = await API.delete(`/admin/workflows/${id}`);
+  return data;
+};
 
 export const updateWorkflowStatus = async (
-  id: number,
+  id: number | string,
   payload: UpdateWorkflowStatusReq,
 ): Promise<UpdateWorkflowStatusRes> => {
   const { data } = await API.patch(`/admin/workflows/${id}/status`, payload);

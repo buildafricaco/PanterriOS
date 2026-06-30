@@ -1,17 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { PageHead } from "@/components/shared";
-import { useParams, useSearchParams } from "next/navigation";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { PageHead } from '@/components/shared';
+import { useParams } from 'next/navigation';
 
 export default function AgentSettings() {
   const param = useParams();
-  const searchparam = useSearchParams();
-  console.log("Search Params:", searchparam.get("propertyName")); // Debug log to check the value of propertyName
-  console.log("Params:", param); // Debug log to check the value of type
   const [maintenance, setMaintenance] = useState(false);
   const [autoDiscovery, setAutoDiscovery] = useState(true);
 
@@ -172,11 +169,11 @@ export default function AgentSettings() {
 
               <div className="mt-4 space-y-4">
                 {[
-                  "New Investor Registration",
-                  "Withdrawal Requests",
-                  "Investment Funding",
-                  "AI Content Discoveries",
-                  "Payout Approvals",
+                  'New Investor Registration',
+                  'Withdrawal Requests',
+                  'Investment Funding',
+                  'AI Content Discoveries',
+                  'Payout Approvals',
                 ].map((label) => (
                   <div
                     key={label}

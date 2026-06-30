@@ -26,7 +26,7 @@ export const retrieveWalletFinance = async (
 };
 
 export const retrieveWalletFinanceTransactionDetails = async (
-  transactionId: number,
+  transactionId: number|string,
 ): Promise<RetrieveWalletFinanceTransactionDetailsRes> => {
   const { data } = await API.get(
     `/investor-wallet/admin/finance/transactions/${transactionId}`,
@@ -59,7 +59,7 @@ export const retrieveInvestorWallets = async (
 };
 
 export const retrieveInvestorWalletDetails = async (
-  investorId: number,
+  investorId: number|string,
 ): Promise<InvestorWalletDetails> => {
   const { data } = await API.get(
     `/investor-wallet/admin/investor-wallets/${investorId}`,

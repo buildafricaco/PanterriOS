@@ -8,7 +8,7 @@ export function useDeleteUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (userId: number) => deleteUser(userId),
+    mutationFn: async (userId: number | string) => deleteUser(userId),
     onSuccess: (data) => {
       toast.success(data.message || 'User deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['users', 'list'] });

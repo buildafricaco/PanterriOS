@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Activity,
@@ -10,12 +10,12 @@ import {
   ShieldCheck,
   User,
   X,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SlideInPanelDrawer } from "@/components/shared";
-import { useRetrieveAuditLogRecord } from "@/hook/audit-log";
-import type { AuditLogRecord } from "@/interface";
-import { ActionBadge } from "./auditLogColumns";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { SlideInPanelDrawer } from '@/components/shared';
+import { useRetrieveAuditLogRecord } from '@/hook/audit-log';
+import type { AuditLogRecord } from '@/interface';
+import { ActionBadge } from './auditLogColumns';
 
 interface AuditLogDetailsDrawerProps {
   row: AuditLogRecord;
@@ -38,17 +38,17 @@ function AuditLogDetailsSkeleton() {
 }
 
 function formatDateTime(value?: string) {
-  if (!value) return "-";
+  if (!value) return '-';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  const dateText = date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+  const dateText = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
-  const timeText = date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
+  const timeText = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
   });
 
   return `${dateText}, ${timeText}`;
@@ -57,13 +57,13 @@ function formatDateTime(value?: string) {
 function formatDeviceInfo(
   deviceInfo?: string | Record<string, unknown> | null,
 ) {
-  if (!deviceInfo) return "-";
-  if (typeof deviceInfo === "string") return deviceInfo;
+  if (!deviceInfo) return '-';
+  if (typeof deviceInfo === 'string') return deviceInfo;
 
-  const city = typeof deviceInfo.city === "string" ? deviceInfo.city : "";
-  const state = typeof deviceInfo.state === "string" ? deviceInfo.state : "";
-  const ip = typeof deviceInfo.ip === "string" ? deviceInfo.ip : "";
-  const location = [city, state].filter(Boolean).join(", ");
+  const city = typeof deviceInfo.city === 'string' ? deviceInfo.city : '';
+  const state = typeof deviceInfo.state === 'string' ? deviceInfo.state : '';
+  const ip = typeof deviceInfo.ip === 'string' ? deviceInfo.ip : '';
+  const location = [city, state].filter(Boolean).join(', ');
 
   if (location && ip) return `${location} (${ip})`;
   if (location) return location;
@@ -73,23 +73,23 @@ function formatDeviceInfo(
 }
 
 function formatChangeValue(value: unknown) {
-  if (value === null || value === undefined || value === "") return "-";
+  if (value === null || value === undefined || value === '') return '-';
 
-  if (typeof value === "boolean") {
-    return value ? "Yes" : "No";
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
   }
 
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     return value.toLocaleString();
   }
 
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return value;
   }
 
   if (Array.isArray(value)) {
-    if (value.length === 0) return "-";
-    return value.join(", ");
+    if (value.length === 0) return '-';
+    return value.join(', ');
   }
 
   return JSON.stringify(value);
@@ -97,8 +97,8 @@ function formatChangeValue(value: unknown) {
 
 function formatFieldLabel(field: string) {
   return field
-    .replace(/([A-Z])/g, " $1")
-    .replace(/_/g, " ")
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/_/g, ' ')
     .trim()
     .replace(/^./, (char) => char.toUpperCase());
 }
@@ -114,12 +114,12 @@ function buildFieldsToDisplay(
   const afterKeys = after ? Object.keys(after) : [];
 
   return Array.from(new Set([...beforeKeys, ...afterKeys]))
-    .filter((field) => field !== "id" && field !== "_id")
+    .filter((field) => field !== 'id' && field !== '_id')
     .slice(0, 12);
 }
 
 export function AuditLogDetailsDrawer({ row }: AuditLogDetailsDrawerProps) {
-  const requestId = row.reference || String(row.id);
+  const requestId = row.publicId || row.reference;
   const {
     data: detailsData,
     isPending,
@@ -156,7 +156,6 @@ export function AuditLogDetailsDrawer({ row }: AuditLogDetailsDrawerProps) {
         </button>
       }
       title="Record Details"
-      subtitle={`Audit Reference: ${requestId}`}
       width="lg"
       contentClassName="mx-0"
     >
@@ -198,7 +197,7 @@ export function AuditLogDetailsDrawer({ row }: AuditLogDetailsDrawerProps) {
                 </p>
                 <p className="inline-flex items-center gap-2 text-[#111827]">
                   <User className="h-4 w-4 text-[#64748B]" />
-                  {details?.actor?.name ?? row.actor?.name ?? "-"}
+                  {details?.actor?.name ?? row.actor?.name ?? '-'}
                 </p>
               </div>
 

@@ -51,7 +51,7 @@ export const retrieveUsers = async (
 };
 
 export const retrieveUserProfile = async (
-  userId: number,
+  userId: number | string,
 ): Promise<UserProfileRes> => {
   const { data } = await API.get(
     `/user-management/admin/${userId}/profile-details`,

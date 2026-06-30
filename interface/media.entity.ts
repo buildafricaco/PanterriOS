@@ -16,7 +16,8 @@ export interface MediaUploadData {
 }
 
 export interface Author {
-  id: string;
+  id?: string;
+  publicId?:string
   name: string;
 }
 

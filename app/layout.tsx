@@ -10,8 +10,8 @@ const gistInter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Penterrios',
-  description: 'Penterrios Admin',
+  title: 'Panterrios',
+  description: 'Panterrios Admin',
 };
 
 export default function RootLayout({
