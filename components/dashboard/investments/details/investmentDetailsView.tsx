@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Drawer,
   DrawerClose,
@@ -7,26 +7,28 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState } from "react";
-import { MapPin, X } from "lucide-react";
-import Overview from "./overview";
-import { FinancialDetails } from "./financialDetails";
-import PropertyInfo from "./propertyInfo";
-import { Documents } from "./documents";
-import PropertyInvestors from "./propertyInvestors";
-import { useRetrieveInvestmentDetails } from "@/hook/investment-management/useRetrieveInvestmentDetails";
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEffect, useState } from 'react';
+import { MapPin, X } from 'lucide-react';
+import Overview from './overview';
+import { FinancialDetails } from './financialDetails';
+import PropertyInfo from './propertyInfo';
+import { Documents } from './documents';
+import PropertyInvestors from './propertyInvestors';
+import { useRetrieveInvestmentDetails } from '@/hook/investment-management/useRetrieveInvestmentDetails';
 import {
   useToggleInvestmentDocumentVisibility,
   useUpdateInvestmentPublicationStatus,
-} from "@/hook/investment-management";
-import { InvestmentDetailsSkeleton, StatusBadge } from "@/components/shared";
+} from '@/hook/investment-management';
+import { InvestmentDetailsSkeleton, StatusBadge } from '@/components/shared';
+import { useUpdatePauseYieldStart } from '@/hook/investment-management/useUpdatePauseYieldStart';
+import { Spinner } from '@/components/ui/spinner';
 
 interface DetailsPageViewProp {
   children?: React.ReactNode;
-  id?: number;
+  id: number | string;
 }
 export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,57 +39,53 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
     mutate: updatePublicationStatus,
     isPending: isUpdatingPublicationStatus,
   } = useUpdateInvestmentPublicationStatus();
-  const [tab, setTab] = useState("overview");
-  const [togglingDocumentId, setTogglingDocumentId] = useState<number | null>(
-    null,
-  );
-
-  useEffect(() => {
-    const handleInvestmentDeleted = (event: Event) => {
-      const deletedInvestmentId = (event as CustomEvent<{ id: number }>).detail
-        ?.id;
-
-      if (deletedInvestmentId === id) {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("investment-deleted", handleInvestmentDeleted);
-
-    return () => {
-      window.removeEventListener("investment-deleted", handleInvestmentDeleted);
-    };
-  }, [id]);
+  const { updatePauseYieldFn, isPending: isUpdatingPauseYield } =
+    useUpdatePauseYieldStart();
+  const [tab, setTab] = useState('overview');
+  const [togglingDocumentId, setTogglingDocumentId] = useState<
+    number | string | null
+  >(null);
 
   const investmentDetails = data;
   const publicationStatus =
     investmentDetails?.header?.investmentPublicationStatus?.toLowerCase() ??
-    "pending";
-  const isPublished = publicationStatus === "published";
+    'pending';
+  const isPublished = publicationStatus === 'published';
+  const yieldStatus = investmentDetails?.yieldEvents?.paused;
 
   const handlePublicationStatus = () => {
     if (!id) return;
     updatePublicationStatus(id);
   };
 
-  const handleToggleDocumentVisibility = (documentId: number) => {
+  const handleToggleDocumentVisibility = (documentId: number | string) => {
     setTogglingDocumentId(documentId);
     toggleDocumentVisibility(documentId, {
       onSettled: () => setTogglingDocumentId(null),
     });
   };
 
+  const handlePauseYieldEvent = () => {
+    if (!id) return;
+    updatePauseYieldFn({
+      id,
+      payload: {
+        paused: !yieldStatus,
+        reason: yieldStatus ? undefined : 'Paused by admin',
+      },
+    });
+  };
   const tabs = [
     {
-      title: "Overview",
-      value: "overview",
+      title: 'Overview',
+      value: 'overview',
       content: investmentDetails?.overview && (
         <Overview overview={investmentDetails.overview} />
       ),
     },
     {
-      title: "Financial Details",
-      value: "financial-details",
+      title: 'Financial Details',
+      value: 'financial-details',
       content: investmentDetails?.financialDetails && (
         <FinancialDetails
           financialDetails={investmentDetails.financialDetails}
@@ -95,15 +93,15 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
       ),
     },
     {
-      title: "Property Details",
-      value: "property-info",
+      title: 'Property Details',
+      value: 'property-info',
       content: investmentDetails?.propertyDetails && (
         <PropertyInfo propertyDetails={investmentDetails.propertyDetails} />
       ),
     },
     {
-      title: "Documents",
-      value: "documents",
+      title: 'Documents',
+      value: 'documents',
       content: (
         <Documents
           documents={investmentDetails?.documents ?? []}
@@ -114,8 +112,8 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
       ),
     },
     {
-      title: "Investors",
-      value: "investors",
+      title: 'Investors',
+      value: 'investors',
       content: (
         <PropertyInvestors
           investors={
@@ -137,7 +135,7 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
         onOpenChange={(open) => {
           setIsOpen(open);
           if (open) {
-            setTab("overview");
+            setTab('overview');
           }
         }}
       >
@@ -157,24 +155,30 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
                 <div className="w-full">
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 items-start sm:items-center">
                     <div className="text-base sm:text-xl font-bold break-words">
-                      {investmentDetails?.header.propertyName ?? "-"}
+                      {investmentDetails?.header.propertyName ?? '-'}
                     </div>
                     <StatusBadge
                       status={
                         investmentDetails?.header
-                          ?.investmentPublicationStatus ?? ""
+                          ?.investmentPublicationStatus ?? ''
                       }
                       showDot
                     />
                   </div>
                   <p className="text-gray-500 pt-1 flex items-center text-xs sm:text-sm gap-1">
                     <MapPin className="w-4 h-4 shrink-0" />
-                    <span className="capitalize break-words">{investmentDetails?.header.location ?? "-"}</span>
+                    <span className="capitalize break-words">
+                      {investmentDetails?.header.location ?? '-'}
+                    </span>
                   </p>
                 </div>
               )}
               <DrawerClose asChild>
-                <button type="button" aria-label="Close investment details" className="h-10 w-10 inline-flex items-center justify-center">
+                <button
+                  type="button"
+                  aria-label="Close investment details"
+                  className="h-10 w-10 inline-flex items-center justify-center"
+                >
                   <X className="w-5 h-5" />
                 </button>
               </DrawerClose>
@@ -198,12 +202,25 @@ export function InvestmentDetailsView({ children, id }: DetailsPageViewProp) {
                     disabled={isUpdatingPublicationStatus || !id}
                   >
                     {isUpdatingPublicationStatus
-                      ? "Updating..."
+                      ? 'Updating...'
                       : isPublished
-                        ? "Unpublish"
-                        : "Publish"}
+                        ? 'Unpublish'
+                        : 'Publish'}
                   </Button>
-                  <div className="w-24" aria-hidden="true" />
+                  <Button
+                    variant="secondary"
+                    className="min-w-[100px] text-orange-500 bg-orange-100 cursor-pointer"
+                    onClick={handlePauseYieldEvent}
+                    disabled={isUpdatingPauseYield || !id}
+                  >
+                    {isUpdatingPauseYield ? (
+                      <Spinner />
+                    ) : yieldStatus ? (
+                      'Pause Yield'
+                    ) : (
+                      'Resume Yield'
+                    )}
+                  </Button>
                 </div>
 
                 <Tabs

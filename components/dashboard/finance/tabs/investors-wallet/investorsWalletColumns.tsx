@@ -1,40 +1,35 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { type InvestorWalletItem } from "@/interface";
-import { StatusBadge } from "@/components/shared/StatusBadge";
-import { SlideInPanelDrawer } from "@/components/shared/SlideInPanel";
-import { MoreVertical } from "lucide-react";
-import { InvestorAudit } from "./InvestorAudit";
+import { ColumnDef } from '@tanstack/react-table';
+import { type InvestorWalletItem } from '@/interface';
+import { StatusBadge } from '@/components/shared/StatusBadge';
+import { SlideInPanelDrawer } from '@/components/shared/SlideInPanel';
+import { MoreVertical } from 'lucide-react';
+import { InvestorAudit } from './InvestorAudit';
 
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
     maximumFractionDigits: 2,
   }).format(value);
 }
 
 export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
   {
-    accessorKey: "investorName",
-    header: "INVESTOR",
+    accessorKey: 'investorName',
+    header: 'INVESTOR',
     cell: ({ row }) => (
       <div>
-        <p className="font-medium text-[#111111]">{row.original.investorName}</p>
+        <p className="font-medium text-[#111111]">
+          {row.original.investorName}
+        </p>
         {/* <p className="text-sm text-gray-600">{row.original.investorEmail}</p>
         <p className="text-xs text-gray-400">ID: {row.original.investorCode}</p> */}
       </div>
     ),
   },
   {
-    accessorKey: "InvestorId",
-    header: " Investor ID",
-    cell: ({ row }) => (
-      <span className="text-sm text-gray-600">{row.original.investorId}</span>
-    ),
-  },
-  {
-    accessorKey: "balance",
-    header: "BALANCE",
+    accessorKey: 'balance',
+    header: 'BALANCE',
     cell: ({ row }) => (
       <div>
         <p className="font-semibold text-[#111111]">
@@ -56,8 +51,8 @@ export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
   //   ),
   // },
   {
-    accessorKey: "invested",
-    header: "Invested",
+    accessorKey: 'invested',
+    header: 'Invested',
     cell: ({ row }) => (
       <div>
         <p className="font-medium text-[#45556C]">
@@ -67,8 +62,8 @@ export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
     ),
   },
   {
-    accessorKey: "returns",
-    header: "Returns",
+    accessorKey: 'returns',
+    header: 'Returns',
     cell: ({ row }) => (
       <div>
         <p className="font-medium text-[#00A63E]">
@@ -78,20 +73,20 @@ export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
     ),
   },
   {
-    accessorKey: "statusLabel",
-    header: "STATUS",
+    accessorKey: 'statusLabel',
+    header: 'STATUS',
     cell: ({ row }) => <StatusBadge status={row.original.statusLabel} />,
   },
   {
-    accessorKey: "createdAt",
-    header: "CREATED",
+    accessorKey: 'createdAt',
+    header: 'CREATED',
     cell: ({ row }) => (
       <span className="text-gray-600">{row.original.createdAt}</span>
     ),
   },
   {
-    accessorKey: "action",
-    header: "action",
+    accessorKey: 'action',
+    header: 'action',
     cell: ({ row }) => {
       const wallet = row.original;
 
@@ -103,9 +98,9 @@ export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
           title="Wallet Control Center"
           subtitle="Manage investor wallet settings "
           width="md"
-          contentClassName={"mx-0"}
+          contentClassName={'mx-0'}
         >
-          <InvestorAudit investorId={wallet.investorId} />
+          <InvestorAudit investorId={wallet.walletPublicId} />
         </SlideInPanelDrawer>
       );
     },

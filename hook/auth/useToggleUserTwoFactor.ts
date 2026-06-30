@@ -8,8 +8,13 @@ export function useToggleUserTwoFactor() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ userId, isEnabled }: { userId: number; isEnabled: boolean }) =>
-      toggleUserTwoFactor(userId, { isEnabled }),
+    mutationFn: ({
+      userId,
+      isEnabled,
+    }: {
+      userId: number | string;
+      isEnabled: boolean;
+    }) => toggleUserTwoFactor(userId, { isEnabled }),
     onSuccess: (data, variables) => {
       toast.success(data.message || '2FA updated successfully');
       queryClient.invalidateQueries({

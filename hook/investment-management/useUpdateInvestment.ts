@@ -11,8 +11,13 @@ export function useUpdateInvestment() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: UpdateInvestmentReq }) =>
-      updateInvestmentDetails(id, payload),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: number | string;
+      payload: UpdateInvestmentReq;
+    }) => updateInvestmentDetails(id, payload),
     onSuccess: (data) => {
       toast.success(data.message || 'Investment updated successfully');
       queryClient.invalidateQueries({ queryKey: ['investments', 'list'] });

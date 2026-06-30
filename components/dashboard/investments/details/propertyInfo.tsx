@@ -83,7 +83,7 @@ export default function PropertyInfo({ propertyDetails }: PropertyInfoProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 border rounded-md p-2 sm:p-4">
             {propertyDetails.images.map((image, index) => (
               <div
-                key={image.id}
+                key={image.publicId}
                 className="w-full rounded-md relative overflow-hidden border"
               >
                 <Image

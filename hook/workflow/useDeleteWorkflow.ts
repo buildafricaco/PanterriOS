@@ -8,7 +8,7 @@ export function useDeleteWorkflow() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => deleteWorkflow(id),
+    mutationFn: (id: number | string) => deleteWorkflow(id),
     onSuccess: (data) => {
       toast.success(data.message || 'Workflow deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['workflow', 'list'] });

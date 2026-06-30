@@ -14,7 +14,7 @@ import {
   VerifyOtpReq,
   VerifyOtpRes,
 } from '@/interface';
-import  {API, AUTH, getTwoFactorTemporaryToken } from '@/services/axios';
+import { API, AUTH, getTwoFactorTemporaryToken } from '@/services/axios';
 import { UserProfileRes } from '@/interface/user-profile.entity';
 import { tokenStore } from '@/store/tokenStore';
 
@@ -44,9 +44,7 @@ export const getAppStatus = async (): Promise<CommonRes> => {
 export const createUser = async (
   payload: CreateUserReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/auth/admin/create-user', payload,
- 
-  );
+  const { data } = await API.post('/auth/admin/create-user', payload);
   return data;
 };
 
@@ -143,7 +141,7 @@ export const logout = async (): Promise<CommonRes> => {
 };
 
 export const toggleUserTwoFactor = async (
-  userId: number,
+  userId: number | string,
   payload: ToggleTwoFactorReq,
 ): Promise<CommonRes> => {
   const { data } = await API.post(
@@ -154,7 +152,7 @@ export const toggleUserTwoFactor = async (
 };
 
 export const updateUserDetails = async (
-  userId: number,
+  userId: number|string,
   payload: UpdateUserReq,
 ): Promise<CommonRes> => {
   const { data } = await API.put(
@@ -164,7 +162,9 @@ export const updateUserDetails = async (
   return data;
 };
 
-export const deleteUser = async (userId: number): Promise<CommonRes> => {
+export const deleteUser = async (
+  userId: number | string,
+): Promise<CommonRes> => {
   const { data } = await API.delete(`/user-management/admin/${userId}/delete`);
   return data;
 };

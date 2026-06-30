@@ -16,18 +16,13 @@ interface DetailsViewProp {
   id?: string | number;
 }
 
-function getInvestorId(id?: string | number): number | undefined {
-  if (typeof id === 'number' && Number.isFinite(id)) return id;
-  if (typeof id === 'string' && id.trim()) {
-    const parsed = Number(id);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
-}
-
 export function DetailsView({ id }: DetailsViewProp) {
   const [tab, setTab] = useState('overview');
-  const investorId = useMemo(() => getInvestorId(id), [id]);
+  const investorId = useMemo(() => {
+    if (typeof id === 'number' && Number.isFinite(id)) return id;
+    if (typeof id === 'string' && id.trim()) return id;
+    return undefined;
+  }, [id]);
   const { data, isLoading, isError } = useRetrieveInvestorOverview(investorId);
 
   if (!investorId) {
@@ -68,12 +63,16 @@ export function DetailsView({ id }: DetailsViewProp) {
     {
       title: 'Investments',
       value: 'investments',
-      content: <InvestmentsTable investments={overviewData.investmentDetails.data} />,
+      content: (
+        <InvestmentsTable investments={overviewData.investmentDetails.data} />
+      ),
     },
     {
       title: 'Transactions',
       value: 'transactions',
-      content: <TransactionTable transactions={overviewData.transactionDetails.data} />,
+      content: (
+        <TransactionTable transactions={overviewData.transactionDetails.data} />
+      ),
     },
     {
       title: 'KYC Details',
@@ -100,12 +99,6 @@ export function DetailsView({ id }: DetailsViewProp) {
                 </h2>
                 <div className="text-sm space-y-0.5 mt-1">
                   <p className="text-gray-600 truncate">{header.email}</p>
-                  <p className="text-gray-600">
-                    Investor ID:{' '}
-                    <span className="font-medium text-gray-900">
-                      {header.investorCode}
-                    </span>
-                  </p>
                 </div>
               </div>
 

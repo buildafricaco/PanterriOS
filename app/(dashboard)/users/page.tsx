@@ -25,7 +25,7 @@ import EditCreateModal from '@/components/dashboard/users/modal/editCreateModal'
 import { useRetrieveUsers } from '@/hook/user-management/useRetrieveUsers';
 
 interface UsersRow {
-  id: number;
+  publicId: string;
   name: string;
   email: string;
   role: string;
@@ -42,7 +42,7 @@ export default function UsersPage() {
 
   const tableData: UsersRow[] =
     usersRes?.data?.data.map((user, index) => ({
-      id: user.id || index + 1,
+      publicId: user.publicId,
       name: user.fullName,
       email: user.email,
       role: user.roles?.join(', ') || '-',
@@ -127,7 +127,7 @@ export default function UsersPage() {
       accessorKey: 'action',
       header: 'action',
       cell: ({ row }) => {
-        const id = row.original.id;
+        const id = row.original.publicId;
         return (
           <div className="flex gap-2">
             <>

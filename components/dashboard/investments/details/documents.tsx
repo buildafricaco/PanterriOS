@@ -1,19 +1,22 @@
-import { type InvestmentDocument } from "@/interface";
-import { FileText, Globe, Lock } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { type InvestmentDocument } from '@/interface';
+import { FileText, Globe, Lock } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface DocumentsProps {
   documents: InvestmentDocument[];
-  onToggleVisibility?: (documentId: number) => void;
+  onToggleVisibility?: (documentId: number | string) => void;
   isToggling?: boolean;
-  togglingDocumentId?: number | null;
+  togglingDocumentId?: number | string | null;
 }
 
 const formatFileSize = (bytes: number) => {
-  if (!bytes) return "0 B";
+  if (!bytes) return '0 B';
 
-  const sizes = ["B", "KB", "MB", "GB"];
-  const sizeIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), sizes.length - 1);
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const sizeIndex = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(1024)),
+    sizes.length - 1,
+  );
   const size = bytes / 1024 ** sizeIndex;
 
   return `${size.toFixed(sizeIndex === 0 ? 0 : 1)} ${sizes[sizeIndex]}`;
@@ -30,42 +33,56 @@ export function Documents({
       <div className="font-bold text-sm sm:text-base">Legal Documents</div>
 
       {documents.length === 0 ? (
-        <div className="text-xs sm:text-sm text-gray-500 border rounded-md p-3 sm:p-4">No documents available.</div>
+        <div className="text-xs sm:text-sm text-gray-500 border rounded-md p-3 sm:p-4">
+          No documents available.
+        </div>
       ) : (
         <div className="space-y-3">
           {documents.map((doc) => {
             const isPublic = doc.isPublic ?? true;
 
             return (
-            <div className="bg-gray-100 p-2 sm:p-4 flex flex-row justify-between items-center gap-3 rounded-md" key={doc.id}>
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <div className="bg-white p-2 text-red-500 rounded-md shrink-0">
-                  <FileText className="w-4 h-4" />
+              <div
+                className="bg-gray-100 p-2 sm:p-4 flex flex-row justify-between items-center gap-3 rounded-md"
+                key={doc.publicId}
+              >
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className="bg-white p-2 text-red-500 rounded-md shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm [overflow-wrap:anywhere]">
+                      {doc.documentName}
+                    </p>
+                    <p className="text-[11px] sm:text-xs text-gray-500">
+                      {formatFileSize(doc.fileSizeBytes)}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm [overflow-wrap:anywhere]">
-                    {doc.documentName}
-                  </p>
-                  <p className="text-[11px] sm:text-xs text-gray-500">{formatFileSize(doc.fileSizeBytes)}</p>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-2 shrink-0 min-h-10">
-                {isPublic ? (
-                  <Globe className="text-green-600 w-4 h-4" />
-                ) : (
-                  <Lock className="text-gray-500 w-4 h-4" />
-                )}
-                <p className="text-gray-500 text-xs sm:text-sm">{isPublic ? "Public" : "Private"}</p>
-                <Switch
-                  checked={isPublic}
-                  onCheckedChange={() => onToggleVisibility?.(doc.id)}
-                  disabled={Boolean(isToggling && togglingDocumentId === doc.id)}
-                  className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-300"
-                />
+                <div className="flex items-center gap-2 shrink-0 min-h-10">
+                  {isPublic ? (
+                    <Globe className="text-green-600 w-4 h-4" />
+                  ) : (
+                    <Lock className="text-gray-500 w-4 h-4" />
+                  )}
+                  <p className="text-gray-500 text-xs sm:text-sm">
+                    {isPublic ? 'Public' : 'Private'}
+                  </p>
+                  <Switch
+                    checked={isPublic}
+                    onCheckedChange={() =>
+                      doc.publicId && onToggleVisibility?.(doc.publicId)
+                    }
+                    disabled={Boolean(
+                      isToggling && togglingDocumentId === doc.publicId,
+                    )}
+                    className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-300"
+                  />
+                </div>
               </div>
-            </div>
-          )})}
+            );
+          })}
         </div>
       )}
     </div>

@@ -19,14 +19,15 @@ function WorkflowActionsCell({
     useDeleteWorkflow();
 
   const handleDeleteWorkflow = async () => {
-    await deleteWorkflowFn(workflow.id);
+    if (!workflow.publicId) return;
+    await deleteWorkflowFn(workflow.publicId);
     setIsDeleteDialogOpen(false);
   };
 
   return (
     <>
       <div className="flex items-center justify-end gap-4">
-        <Link href={`/workflow/create-workflow/${workflow.id}`}>
+        <Link href={`/workflow/create-workflow/${workflow.publicId}`}>
           <Pencil className="h-5 w-5 " />
         </Link>
         <button
@@ -57,7 +58,7 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'name',
     header: 'Workflow Name',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`} className="  ">
+      <Link href={`/workflow/${row.original.publicId}`} className="  ">
         {row.original.name}
       </Link>
     ),
@@ -66,7 +67,7 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'module',
     header: 'Module',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`} className="  ">
+      <Link href={`/workflow/${row.original.publicId}`} className="  ">
         {row.original.module}
       </Link>
     ),
@@ -75,7 +76,7 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'action',
     header: 'Action',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`} className="  ">
+      <Link href={`/workflow/${row.original.publicId}`} className="  ">
         {row.original.action}
       </Link>
     ),
@@ -84,7 +85,10 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     id: 'steps',
     header: 'Steps',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`} className=" text-[#526581] ">
+      <Link
+        href={`/workflow/${row.original.publicId}`}
+        className=" text-[#526581] "
+      >
         {row.original.stepsCount} steps
       </Link>
     ),
@@ -93,7 +97,10 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'triggersCount',
     header: 'Triggers',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`} className=" text-[#526581] ">
+      <Link
+        href={`/workflow/${row.original.publicId}`}
+        className=" text-[#526581] "
+      >
         {row.original.triggersCount}
       </Link>
     ),
@@ -102,7 +109,7 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`}>
+      <Link href={`/workflow/${row.original.publicId}`}>
         <span
           className={`inline-flex rounded-md border px-3 py-1 text-sm capitalize ${
             row.original.status === 'active'
@@ -119,7 +126,7 @@ export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
     accessorKey: 'updatedAt',
     header: 'Last Updated',
     cell: ({ row }) => (
-      <Link href={`/workflow/${row.original.id}`}>
+      <Link href={`/workflow/${row.original.publicId}`}>
         <span className=" whitespace-nowrap text-[#526581]">
           {row.original.updatedAt}
         </span>{' '}

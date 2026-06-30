@@ -26,7 +26,7 @@ export interface CreateInvestmentReq {
 
 export interface ProjectMilestone {
   title: string;
-  status: "completed" | "in_progress" | "upcoming";
+  status: 'completed' | 'in_progress' | 'upcoming';
   date: string;
   description: string;
 }
@@ -46,7 +46,8 @@ export interface RetrieveInvestmentsQuery {
 }
 
 export interface InvestmentListItem {
-  id: number;
+  id?: number;
+  publicId: string;
   propertyName: string;
   propertyType: string;
   investmentStatus: string;
@@ -58,7 +59,8 @@ export interface InvestmentListItem {
 }
 
 export interface DraftInvestmentItem {
-  id: number;
+  id?: number;
+  publicId: string;
   name: string;
   propertyType: string;
   location: {
@@ -110,7 +112,8 @@ export interface DraftInvestmentListRes {
 }
 
 export interface InvestmentDetails {
-  id: number;
+  id?: number;
+  publicId: string;
   createdAt: string;
   updatedAt: string;
   header: InvestmentDetailsHeader;
@@ -119,8 +122,8 @@ export interface InvestmentDetails {
   propertyDetails: InvestmentPropertyDetails;
   documents: InvestmentDocument[];
   investors: InvestmentInvestors;
+  yieldEvents: InvestmentYieldEvent;
 }
-
 
 export interface InvestmentDetailsHeader {
   propertyName: string;
@@ -128,7 +131,12 @@ export interface InvestmentDetailsHeader {
   investmentStatus: string;
   investmentPublicationStatus: string;
 }
-
+export interface InvestmentYieldEvent {
+  paused: boolean;
+  reason?: string;
+  pausedAt?: string;
+  pausedByName?: string;
+}
 export interface InvestmentDetailsOverview {
   createdBy: string;
   durationMonths: number;
@@ -173,7 +181,8 @@ export interface InvestmentPropertyDetails {
     description: string;
   }[];
   images: {
-    id: number;
+    id?: number;
+    publicId: string;
     url: string;
     fileName: string;
     fileSizeBytes: number;
@@ -184,7 +193,8 @@ export interface InvestmentPropertyDetails {
 }
 
 export interface InvestmentDocument {
-  id: number;
+  id?: number;
+  publicId: string;
   fileUrl: string;
   documentName: string;
   fileSizeBytes: number;
@@ -196,6 +206,7 @@ export interface InvestmentDocument {
 
 export interface InvestmentInvestorItem {
   id?: number;
+  publicId: string;
   investorId?: number;
   investorName?: string;
   amount?: number;
@@ -222,14 +233,14 @@ export interface RetrieveInvestmentDetailsRes {
 }
 
 export interface DocumentUpdate {
-  action: "add" | "remove" | "replace";
+  action: 'add' | 'remove' | 'replace';
   index?: number;
   url?: string;
   fileName?: string;
 }
 
 export interface ImageUpdate {
-  action: "add" | "remove" | "replace";
+  action: 'add' | 'remove' | 'replace';
   index?: number;
   url?: string;
 }
@@ -266,7 +277,8 @@ export interface UpdateInvestmentReq {
 export interface UpdateInvestmentRes {
   message: string;
   data: {
-    id: number;
+    id?: number;
+    publicId: string;
     investmentPublicationStatus: string;
   };
 }
@@ -274,7 +286,8 @@ export interface UpdateInvestmentRes {
 export interface ToggleInvestmentDocumentVisibilityRes {
   message: string;
   data: {
-    id: number;
+    id?: number;
+    publicId: string;
     isPublic: boolean;
     fileUrl: string;
   };

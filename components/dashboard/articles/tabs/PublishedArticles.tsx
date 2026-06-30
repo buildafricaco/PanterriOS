@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
+// import { useMemo } from 'react';
 import { ReUseAbleTable, SlideInPanelDrawer } from '@/components/shared';
-import { articlesDashboardData } from '../data';
+// import { articlesDashboardData } from '../data';
 import { BadgePill } from '../articleColumns';
 import { CrawlerArticlesResponse, CrwalerArticle } from '@/interface';
 import { ColumnDef } from '@tanstack/react-table';
@@ -19,25 +19,25 @@ interface ArticlesTabProps {
   currentPage: number;
 }
 
-const pageLimit = articlesDashboardData.pagination.limit;
+// const pageLimit = articlesDashboardData.pagination.limit;
 
 export function PublishedArticles({
   article,
-  category,
+  // category,
   setCurrentPage,
   currentPage,
 }: ArticlesTabProps) {
-  const filteredArticles = useMemo(() => {
-    if (category === 'all') {
-      return articlesDashboardData.publishedArticles;
-    }
+  // const filteredArticles = useMemo(() => {
+  //   if (category === 'all') {
+  //     return articlesDashboardData.publishedArticles;
+  //   }
 
-    return articlesDashboardData.publishedArticles.filter(
-      (article) =>
-        article.category.toLowerCase() === category ||
-        article.tags.some((tag) => tag.toLowerCase() === category),
-    );
-  }, [category]);
+  //   return articlesDashboardData.publishedArticles.filter(
+  //     (article) =>
+  //       article.category.toLowerCase() === category ||
+  //       article.tags.some((tag) => tag.toLowerCase() === category),
+  //   );
+  // }, [category]);
   const publishedArticleColumns: ColumnDef<CrwalerArticle>[] = [
     {
       accessorKey: 'title',

@@ -30,7 +30,7 @@ export const retrieveAssignedApprovalQueue = async (
 };
 
 export const retrieveApprovalQueueRequestDetails = async (
-  id: number,
+  id: number | string,
 ): Promise<RetrieveApprovalQueueRequestDetailsRes> => {
   const { data } = await API.get(`/admin/approval-queue/${id}`);
 
@@ -38,25 +38,31 @@ export const retrieveApprovalQueueRequestDetails = async (
 };
 
 export const approveApprovalQueueRequest = async (
-  id: number,
+  id: number | string,
   payload: ApprovalQueueDecisionReq,
 ): Promise<ApprovalQueueDecisionRes> => {
-  const { data } = await API.post(`/admin/approval-queue/${id}/approve`, payload);
+  const { data } = await API.post(
+    `/admin/approval-queue/${id}/approve`,
+    payload,
+  );
 
   return data;
 };
 
 export const rejectApprovalQueueRequest = async (
-  id: number,
+  id: number | string,
   payload: ApprovalQueueDecisionReq,
 ): Promise<ApprovalQueueDecisionRes> => {
-  const { data } = await API.post(`/admin/approval-queue/${id}/reject`, payload);
+  const { data } = await API.post(
+    `/admin/approval-queue/${id}/reject`,
+    payload,
+  );
 
   return data;
 };
 
 export const returnApprovalQueueRequestForRevision = async (
-  id: number,
+  id: number | string,
   payload: ApprovalQueueDecisionReq,
 ): Promise<ApprovalQueueDecisionRes> => {
   const { data } = await API.post(
@@ -68,19 +74,25 @@ export const returnApprovalQueueRequestForRevision = async (
 };
 
 export const terminateApprovalQueueRequest = async (
-  id: number,
+  id: number | string,
   payload: ApprovalQueueDecisionReq,
 ): Promise<ApprovalQueueDecisionRes> => {
-  const { data } = await API.post(`/admin/approval-queue/${id}/terminate`, payload);
+  const { data } = await API.post(
+    `/admin/approval-queue/${id}/terminate`,
+    payload,
+  );
 
   return data;
 };
 
 export const addApprovalQueueComment = async (
-  id: number,
+  id: number | string,
   payload: CreateApprovalQueueCommentReq,
 ): Promise<CreateApprovalQueueCommentRes> => {
-  const { data } = await API.post(`/admin/approval-queue/${id}/comments`, payload);
+  const { data } = await API.post(
+    `/admin/approval-queue/${id}/comments`,
+    payload,
+  );
 
   return data;
 };

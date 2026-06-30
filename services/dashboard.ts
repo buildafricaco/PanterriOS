@@ -1,5 +1,4 @@
 import {
-  AppStatusRes,
   RetrieveDashboardActivityQuery,
   RetrieveDashboardActivityRes,
   RetrieveDashboardAnalyticsQuery,

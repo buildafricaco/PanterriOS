@@ -153,7 +153,8 @@ export interface RetrieveDashboardActivityQuery {
 }
 
 export interface DashboardActivityTransaction {
-  id: number;
+  id?: number;
+  publicId: string;
   investorId: number;
   investorName: string;
   type: string;

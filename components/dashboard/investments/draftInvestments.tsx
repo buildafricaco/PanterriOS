@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { ReUseAbleTable } from "@/components/shared/reusableTable";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ConfirmationDialog } from "@/components/shared";
-import { DraftInvestmentItem } from "@/interface";
-import { ColumnDef } from "@tanstack/react-table";
-import { Clock, Edit, Eye, MapPin, Trash2 } from "lucide-react";
-import { InvestmentDetailsView } from "./details/investmentDetailsView";
-import { cn } from "@/lib/utils";
-import { useDeleteInvestment } from "@/hook/investment-management";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ReUseAbleTable } from '@/components/shared/reusableTable';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { ConfirmationDialog } from '@/components/shared';
+import { DraftInvestmentItem } from '@/interface';
+import { ColumnDef } from '@tanstack/react-table';
+import { Clock, Edit, Eye, MapPin, Trash2 } from 'lucide-react';
+import { InvestmentDetailsView } from './details/investmentDetailsView';
+import { cn } from '@/lib/utils';
+import { useDeleteInvestment } from '@/hook/investment-management';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface DraftInvestmentsProps {
   data: DraftInvestmentItem[];
@@ -26,21 +26,18 @@ interface DraftInvestmentsProps {
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
+  new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
     maximumFractionDigits: 0,
   }).format(value);
 
 const formatPropertyType = (value: string) =>
   value
     .toLowerCase()
-    .split("_")
+    .split('_')
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(" ");
-
-const formatDraftId = (value: number) =>
-  `D-${value.toString().padStart(3, "0")}`;
+    .join(' ');
 
 export function DraftInvestments({
   data,
@@ -52,7 +49,7 @@ export function DraftInvestments({
   const { mutate: deleteInvestment, isPending: isDeleting } =
     useDeleteInvestment();
   const [selectedInvestment, setSelectedInvestment] = useState<{
-    id: number;
+    id: string;
     name: string;
   } | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -64,7 +61,7 @@ export function DraftInvestments({
       onSuccess: () => {
         setIsDialogOpen(false);
         window.dispatchEvent(
-          new CustomEvent("investment-deleted", {
+          new CustomEvent('investment-deleted', {
             detail: { id: selectedInvestment.id },
           }),
         );
@@ -75,7 +72,7 @@ export function DraftInvestments({
 
   const columns: ColumnDef<DraftInvestmentItem>[] = [
     {
-      accessorKey: "id",
+      accessorKey: 'id',
       header: () => (
         <span className="block max-w-[90px] truncate text-xs sm:text-sm">
           draft id
@@ -84,12 +81,12 @@ export function DraftInvestments({
       cell: ({ row }) => (
         <div className="flex items-center gap-2 font-semibold text-xs sm:text-sm">
           <Clock className="h-4 w-4 flex-shrink-0 text-orange-400" />
-          <span className="break-all">{formatDraftId(row.original.id)}</span>
+          <span className="break-all">{row.original.publicId}</span>
         </div>
       ),
     },
     {
-      accessorKey: "name",
+      accessorKey: 'name',
       header: () => (
         <span className="block max-w-[140px] truncate text-xs sm:text-sm">
           investment name
@@ -104,7 +101,7 @@ export function DraftInvestments({
       ),
     },
     {
-      accessorKey: "location",
+      accessorKey: 'location',
       header: () => (
         <span className="block max-w-[100px] truncate text-xs sm:text-sm">
           location
@@ -120,8 +117,10 @@ export function DraftInvestments({
       ),
     },
     {
-      accessorKey: "propertyType",
-      header: () => <span className="block truncate text-xs sm:text-sm">type</span>,
+      accessorKey: 'propertyType',
+      header: () => (
+        <span className="block truncate text-xs sm:text-sm">type</span>
+      ),
       cell: ({ row }) => (
         <span className="inline-flex items-center gap-2 rounded-sm border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600 sm:px-3 sm:text-sm">
           {formatPropertyType(row.original.propertyType)}
@@ -129,7 +128,7 @@ export function DraftInvestments({
       ),
     },
     {
-      accessorKey: "targetedAmount",
+      accessorKey: 'targetedAmount',
       header: () => (
         <span className="block max-w-[120px] truncate text-xs sm:text-sm">
           target amount
@@ -142,7 +141,7 @@ export function DraftInvestments({
       ),
     },
     {
-      accessorKey: "completionPercentage",
+      accessorKey: 'completionPercentage',
       header: () => (
         <span className="block max-w-[100px] truncate text-xs sm:text-sm">
           completion
@@ -156,8 +155,8 @@ export function DraftInvestments({
             <Progress
               value={value}
               className={cn(
-                "h-2 rounded-sm bg-gray-200",
-                "[&>div]:bg-orange-500 [&>div]:transition-colors duration-300",
+                'h-2 rounded-sm bg-gray-200',
+                '[&>div]:bg-orange-500 [&>div]:transition-colors duration-300',
               )}
             />
             <span className="text-xs font-medium text-orange-600 sm:text-sm">
@@ -168,7 +167,7 @@ export function DraftInvestments({
       },
     },
     {
-      accessorKey: "lastEdited",
+      accessorKey: 'lastEdited',
       header: () => (
         <span className="block max-w-[100px] truncate text-xs sm:text-sm">
           last edited
@@ -181,20 +180,17 @@ export function DraftInvestments({
       ),
     },
     {
-      accessorKey: "action",
+      accessorKey: 'action',
       header: () => (
         <span className="block text-xs sm:text-sm truncate">actions</span>
       ),
       cell: ({ row }) => {
-        const rowId = row.original.id;
+        const rowId = row.original.publicId;
 
         return (
           <div className="flex flex-wrap items-center justify-center gap-2">
             <InvestmentDetailsView id={rowId}>
-              <Button
-                variant="outline"
-                className="h-9 w-9 p-0 sm:h-10 sm:w-10"
-              >
+              <Button variant="outline" className="h-9 w-9 p-0 sm:h-10 sm:w-10">
                 <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </InvestmentDetailsView>
@@ -255,7 +251,7 @@ export function DraftInvestments({
         description={
           selectedInvestment
             ? `Are you sure you want to delete ${selectedInvestment.name}? This action cannot be undone.`
-            : "Are you sure you want to delete this investment?"
+            : 'Are you sure you want to delete this investment?'
         }
         confirmText="Delete"
         onConfirm={handleDeleteConfirm}

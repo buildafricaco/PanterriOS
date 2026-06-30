@@ -8,7 +8,7 @@ export function useToggleInvestmentDocumentVisibility() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (documentId: number) =>
+    mutationFn: (documentId: number | string) =>
       toggleInvestmentDocumentVisibility(documentId),
     onSuccess: (data) => {
       toast.success(data.message || 'Document visibility updated successfully');

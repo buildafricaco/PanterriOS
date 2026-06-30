@@ -27,10 +27,6 @@ export function AccountInfoAndSummary({
           <span>Email </span>
           <span>{accountInformation.emailAddress}</span>
         </div>
-        <div className="flex text-sm justify-between border-b py-2">
-          <span>Investor ID </span>
-          <span>{accountInformation.investorId}</span>
-        </div>
         <div className="flex text-sm justify-between">
           <span>Account Status </span>
           <StatusBadge status={accountInformation.accountStatus} />

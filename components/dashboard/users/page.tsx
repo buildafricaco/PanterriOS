@@ -10,7 +10,7 @@ import { useRetrieveUserProfile } from '@/hook/user-management/useRetrieveUserPr
 import { useToggleUserTwoFactor } from '@/hook/auth/useToggleUserTwoFactor';
 
 export function UsersDetialsPage({ id }: { id: string | number }) {
-  const userId = Number(id);
+  const userId = id;
   const { data: profile, isLoading } = useRetrieveUserProfile(userId);
   const { mutateAsync: toggle2fa, isPending: isToggling } =
     useToggleUserTwoFactor();

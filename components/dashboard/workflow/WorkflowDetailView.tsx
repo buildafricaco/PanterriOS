@@ -12,7 +12,7 @@ export function WorkflowDetailView({ id }: { id: string }) {
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { data: workflowDetails, isLoading } = useRetrieveWorkflowDetails(
-    Number(id),
+    id,
   );
   const { mutateAsync: deleteWorkflowFn, isPending: isDeletingWorkflow } =
     useDeleteWorkflow();
@@ -22,7 +22,7 @@ export function WorkflowDetailView({ id }: { id: string }) {
   }
 
   const handleDeleteWorkflow = async () => {
-    await deleteWorkflowFn(workflow.id);
+    await deleteWorkflowFn(workflow.publicId ?? id);
     setIsDeleteDialogOpen(false);
     router.push('/workflow');
   };
@@ -83,7 +83,7 @@ export function WorkflowDetailView({ id }: { id: string }) {
 
           <div className="mt-10 space-y-10">
             {workflow.steps.map((step) => (
-              <div key={step.id}>
+              <div key={step.publicId ?? step.id ?? step.stepNumber}>
                 <h3 className=" font-semibold text-[#111827]">
                   Step {step.stepNumber}
                 </h3>
@@ -120,7 +120,9 @@ export function WorkflowDetailView({ id }: { id: string }) {
 
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           <Button variant="outline" className="h-12 " asChild>
-            <Link href={`/workflow/create-workflow/${workflow.id}`}>Edit</Link>
+            <Link href={`/workflow/create-workflow/${workflow.publicId ?? id}`}>
+              Edit
+            </Link>
           </Button>
           <Button
             className="h-12 bg-[#111111]  hover:bg-[#111111]/90"

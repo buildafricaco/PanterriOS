@@ -14,7 +14,11 @@ function formatCompactNaira(value: number) {
   }).format(value);
 }
 
-export function InvestorAudit({ investorId }: { investorId: number }) {
+export function InvestorAudit({
+  investorId,
+}: {
+  investorId: number | string;
+}) {
   const { data, isLoading, error } =
     useRetrieveInvestorWalletDetails(investorId);
 
@@ -153,7 +157,7 @@ export function InvestorAudit({ investorId }: { investorId: number }) {
           <div className="space-y-2">
             {(walletDetails?.recentActivity || []).map((event) => (
               <div
-                key={event.id}
+                key={event.publicId}
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 rounded-lg border bg-[#F8FAFC] px-3 sm:px-4 py-3"
               >
                 <div className="flex-1 min-w-0">

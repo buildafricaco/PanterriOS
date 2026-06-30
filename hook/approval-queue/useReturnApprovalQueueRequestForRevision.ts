@@ -6,7 +6,7 @@ import { returnApprovalQueueRequestForRevision } from '@/services/approval-queue
 import { toast } from 'sonner';
 
 interface ReturnApprovalQueueRequestForRevisionPayload {
-  id: number;
+  id: number | string;
   payload: ApprovalQueueDecisionReq;
 }
 

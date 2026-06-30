@@ -91,7 +91,7 @@ export const transactionColumns: ColumnDef<WalletFinanceTransaction>[] = [
           subtitle={transaction.reference}
           width="md"
         >
-          <TransactionAudit transactionId={transaction.id} />
+          <TransactionAudit transactionId={transaction.publicId} />
         </SlideInPanelDrawer>
       );
     },

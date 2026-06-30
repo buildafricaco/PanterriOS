@@ -8,7 +8,7 @@ export function useUpdateInvestmentPublicationStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => updateInvestmentPublicationStatus(id),
+    mutationFn: (id: number | string) => updateInvestmentPublicationStatus(id),
     onSuccess: (data) => {
       toast.success(data.message || 'Investment publication status updated');
       queryClient.invalidateQueries({ queryKey: ['investments', 'list'] });

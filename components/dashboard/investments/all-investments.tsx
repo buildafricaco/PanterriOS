@@ -1,17 +1,17 @@
-"use client";
-import { ReUseAbleTable } from "@/components/shared/reusableTable";
-import { Button } from "@/components/ui/button";
-import { type ColumnDef } from "@tanstack/react-table";
-import { Edit, Eye, Trash2 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
-import { InvestmentDetailsView } from "./details/investmentDetailsView";
-import { ConfirmationDialog, StatusBadge } from "@/components/shared";
-import { InvestmentListItem } from "@/interface";
-import { useDeleteInvestment } from "@/hook/investment-management";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { formatDisplayValue } from "@/utils/helpers";
+'use client';
+import { ReUseAbleTable } from '@/components/shared/reusableTable';
+import { Button } from '@/components/ui/button';
+import { type ColumnDef } from '@tanstack/react-table';
+import { Edit, Eye, Trash2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+import { InvestmentDetailsView } from './details/investmentDetailsView';
+import { ConfirmationDialog, StatusBadge } from '@/components/shared';
+import { InvestmentListItem } from '@/interface';
+import { useDeleteInvestment } from '@/hook/investment-management';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { formatDisplayValue } from '@/utils/helpers';
 
 interface AllInvestmentsProps {
   data: InvestmentListItem[];
@@ -35,15 +35,15 @@ export function AllInvestments({
   const { mutate: deleteInvestment, isPending: isDeleting } =
     useDeleteInvestment();
   const [selectedInvestment, setSelectedInvestment] = useState<{
-    id: number;
+    id: number | string;
     name: string;
   } | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const formatCurrency = (value: number) =>
-    new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
+    new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
       maximumFractionDigits: 0,
     }).format(value);
 
@@ -54,7 +54,7 @@ export function AllInvestments({
       onSuccess: () => {
         setIsDialogOpen(false);
         window.dispatchEvent(
-          new CustomEvent("investment-deleted", {
+          new CustomEvent('investment-deleted', {
             detail: { id: selectedInvestment.id },
           }),
         );
@@ -65,23 +65,23 @@ export function AllInvestments({
 
   const columns: ColumnDef<InvestmentListItem>[] = [
     {
-      accessorKey: "propertyName",
-      header: "property",
+      accessorKey: 'propertyName',
+      header: 'property',
       cell: ({ row }) => (
         <div className="max-w-[10rem] sm:max-w-none">
           <p className="text-xs sm:text-sm break-words">
-            {row.original.propertyName}{" "}
+            {row.original.propertyName}{' '}
           </p>
           <small className="text-[11px] sm:text-xs text-gray-500 flex items-center gap-1 break-words">
-            {" "}
+            {' '}
             {/* <MapPin className="w-3 h-3" /> <span> {row.original.location}</span> */}
           </small>
         </div>
       ),
     },
     {
-      accessorKey: "propertyType",
-      header: "type",
+      accessorKey: 'propertyType',
+      header: 'type',
       cell: ({ row }) => (
         <div className="text-xs sm:text-sm  reak-words">
           {formatDisplayValue(row.original.propertyType)}
@@ -89,16 +89,16 @@ export function AllInvestments({
       ),
     },
     {
-      accessorKey: "investmentStatus",
-      header: " status",
+      accessorKey: 'investmentStatus',
+      header: ' status',
       cell: ({ row }) => {
         const status = row.original.investmentStatus;
         return <StatusBadge status={status} />;
       },
     },
     {
-      accessorKey: "funding",
-      header: "funding",
+      accessorKey: 'funding',
+      header: 'funding',
       cell: ({ row }) => {
         const value = row.original.funding;
         return (
@@ -106,11 +106,11 @@ export function AllInvestments({
             <Progress
               value={value}
               className={cn(
-                "rounded-sm bg-gray-200 h-2",
-                value > 85 && "[&>div]:bg-green-500",
-                value <= 85 && value > 75 && "[&>div]:bg-blue-500",
-                value <= 75 && "[&>div]:bg-red-500",
-                "[&>div]:transition-colors duration-300",
+                'rounded-sm bg-gray-200 h-2',
+                value > 85 && '[&>div]:bg-green-500',
+                value <= 85 && value > 75 && '[&>div]:bg-blue-500',
+                value <= 75 && '[&>div]:bg-red-500',
+                '[&>div]:transition-colors duration-300',
               )}
             />
             <span className="text-xs sm:text-sm whitespace-nowrap">
@@ -121,8 +121,8 @@ export function AllInvestments({
       },
     },
     {
-      accessorKey: "targetAmount",
-      header: "target",
+      accessorKey: 'targetAmount',
+      header: 'target',
       cell: ({ row }) => (
         <div className="text-xs sm:text-sm whitespace-nowrap">
           {formatCurrency(row.original.targetAmount)}
@@ -130,8 +130,8 @@ export function AllInvestments({
       ),
     },
     {
-      accessorKey: "amountRaised",
-      header: "raised",
+      accessorKey: 'amountRaised',
+      header: 'raised',
       cell: ({ row }) => (
         <div className="text-xs sm:text-sm whitespace-nowrap">
           {formatCurrency(row.original.amountRaised)}
@@ -139,8 +139,8 @@ export function AllInvestments({
       ),
     },
     {
-      accessorKey: "returns",
-      header: "returns",
+      accessorKey: 'returns',
+      header: 'returns',
       cell: ({ row }) => (
         <div className="text-xs sm:text-sm text-blue-600 whitespace-nowrap">
           {row.original.returns}%
@@ -148,8 +148,8 @@ export function AllInvestments({
       ),
     },
     {
-      accessorKey: "totalNumberOfInvestors",
-      header: "investors",
+      accessorKey: 'totalNumberOfInvestors',
+      header: 'investors',
       cell: ({ row }) => (
         <div className="text-xs sm:text-sm whitespace-nowrap">
           {row.original.totalNumberOfInvestors}
@@ -157,10 +157,10 @@ export function AllInvestments({
       ),
     },
     {
-      accessorKey: "action",
-      header: "action",
+      accessorKey: 'action',
+      header: 'action',
       cell: ({ row }) => {
-        const rowId = row.original.id;
+        const rowId = row.original.publicId;
 
         return (
           <div className="flex items-center justify-center gap-2">
@@ -229,7 +229,7 @@ export function AllInvestments({
         description={
           selectedInvestment
             ? `Are you sure you want to delete "${selectedInvestment.name}"?. This action cannot be undone.`
-            : "Are you sure you want to delete this investment?"
+            : 'Are you sure you want to delete this investment?'
         }
         confirmText="Delete"
         onConfirm={handleDeleteConfirm}

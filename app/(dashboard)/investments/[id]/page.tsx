@@ -6,24 +6,17 @@ import {
 } from "@/components/dashboard/investments";
 import { ChevronLeft } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export default function InvestmentByIdPage() {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [step, setStep] = useState(1);
-
-  const investmentId = Number(params.id);
   const isEditMode =
     searchParams.get("edit") === "true" || searchParams.has("edit");
 
-  const isValidId = useMemo(
-    () => Number.isFinite(investmentId),
-    [investmentId],
-  );
-
-  if (!isValidId || !isEditMode) {
+  if (!params.id || !isEditMode) {
     return (
       <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-amber-700">
         Invalid edit route. Use <code>/investments/[id]?edit=true</code>.
@@ -49,7 +42,7 @@ export default function InvestmentByIdPage() {
           <p>Return Back</p>
         </div>
         <CreateInvestmentForm
-          id={investmentId}
+          id={params.id}
           step={step}
           setStep={(nextStep) => setStep(nextStep)}
         />

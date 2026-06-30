@@ -72,11 +72,11 @@ interface Prop {
 }
 
 export function CreateUserForm({ closeModal, id }: Prop) {
-  const userId = id ? Number(id) : undefined;
+  const userId = id;
   const isEditMode = Boolean(userId);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>();
-  const { data: editProfile, isLoading } = useRetrieveUserProfile(userId || 0);
+  const { data: editProfile, isLoading } = useRetrieveUserProfile(userId!);
   const { mutateAsync: createUserFn, isPending: isCreating } = useCreateUser();
   const { mutateAsync: updateUserFn, isPending: isUpdating } = useUpdateUser();
 

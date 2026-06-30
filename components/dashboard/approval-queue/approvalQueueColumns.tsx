@@ -15,7 +15,7 @@ export const approvalQueueColumns = (
             id: 'submittedBy',
             header: 'Submitted By',
             cell: ({ row }) => (
-              <Link href={`/approval-queue/${row.original.id}`}>
+              <Link href={`/approval-queue/${row.original.publicId}`}>
                 <span className="text-base text-[#526581]">
                   {row.original.submittedBy?.name ?? '-'}
                 </span>
@@ -30,7 +30,7 @@ export const approvalQueueColumns = (
       accessorKey: 'reference',
       header: 'ID',
       cell: ({ row }) => (
-        <Link href={`/approval-queue/${row.original.id}`}>
+        <Link href={`/approval-queue/${row.original.publicId}`}>
           <span className="text-base font-semibold text-[#0F172A]">
             {row.original.reference}
           </span>
@@ -42,7 +42,7 @@ export const approvalQueueColumns = (
       header: 'Workflow Name',
       cell: ({ row }) => (
         <Link
-          href={`/approval-queue/${row.original.id}`}
+          href={`/approval-queue/${row.original.publicId}`}
           className="text-base text-[#111827] hover:text-[#2563EB]"
         >
           {row.original.workflowName}
@@ -53,7 +53,7 @@ export const approvalQueueColumns = (
       accessorKey: 'module',
       header: 'Module',
       cell: ({ row }) => (
-        <Link href={`/approval-queue/${row.original.id}`}>
+        <Link href={`/approval-queue/${row.original.publicId}`}>
           <span className="text-base text-[#111827]">
             {row.original.module}
           </span>
@@ -64,7 +64,7 @@ export const approvalQueueColumns = (
       accessorKey: 'action',
       header: 'Action',
       cell: ({ row }) => (
-        <Link href={`/approval-queue/${row.original.id}`}>
+        <Link href={`/approval-queue/${row.original.publicId}`}>
           <span className="text-base text-[#111827]">
             {row.original.action}
           </span>
@@ -76,7 +76,7 @@ export const approvalQueueColumns = (
       accessorKey: 'requestStatus',
       header: 'Status',
       cell: ({ row }) => (
-        <Link href={`/approval-queue/${row.original.id}`}>
+        <Link href={`/approval-queue/${row.original.publicId}`}>
           {' '}
           <StatusBadge status={row.original.requestStatus} />
         </Link>
@@ -86,7 +86,7 @@ export const approvalQueueColumns = (
       accessorKey: 'createdAt',
       header: 'Date Submitted',
       cell: ({ row }) => (
-        <Link href={`/approval-queue/${row.original.id}`}>
+        <Link href={`/approval-queue/${row.original.publicId}`}>
           <span className="text-base whitespace-nowrap text-[#526581]">
             {row.original.createdAt}
           </span>

@@ -6,7 +6,7 @@ import { addApprovalQueueComment } from '@/services/approval-queue';
 import { toast } from 'sonner';
 
 interface AddApprovalQueueCommentPayload {
-  id: number;
+  id: number | string;
   payload: CreateApprovalQueueCommentReq;
 }
 

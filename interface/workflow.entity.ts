@@ -57,7 +57,8 @@ export interface RetrieveWorkflowsQuery {
 }
 
 export interface WorkflowDefinitionListItem {
-  id: number;
+  id?: number;
+  publicId?: string;
   reference: string;
   name: string;
   module: string;
@@ -71,7 +72,8 @@ export interface WorkflowDefinitionListItem {
 }
 
 export interface WorkflowDefinitionStep {
-  id: number;
+  id?: number;
+  publicId?: string;
   stepNumber: number;
   approvalType: 'role' | 'user';
   role: string | null;
@@ -81,7 +83,8 @@ export interface WorkflowDefinitionStep {
 }
 
 export interface WorkflowDefinitionDetails {
-  id: number;
+  id?: number;
+  publicId?: string;
   reference: string;
   name: string;
   description: string;
@@ -127,7 +130,8 @@ export interface UpdateWorkflowRes {
 export interface UpdateWorkflowStatusRes {
   message: string;
   data: {
-    id: number;
+    id?: number;
+    publicId?: string;
     status: string;
   };
 }

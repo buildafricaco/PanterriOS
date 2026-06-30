@@ -24,8 +24,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 
-interface ExistingUploadItem {
-  id: number;
+export interface ExistingUploadItem {
+  id: number | string;
   name: string;
   url: string;
   type?: string;
@@ -42,7 +42,7 @@ interface FileUploadProps {
   enableDrag?: boolean;
   single?: boolean;
   existingFiles?: ExistingUploadItem[];
-  onRemoveExisting?: (id: number) => void;
+  onRemoveExisting?: (id: number | string) => void;
 }
 
 /* ================= SORTABLE ITEM ================= */

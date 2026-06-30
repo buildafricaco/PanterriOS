@@ -1,28 +1,20 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { X, ChevronDown, ChevronRight, LogOut } from "lucide-react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { X, ChevronDown, ChevronRight } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import dashboardLogo from "@/assets/logo.png";
-import collapsLogo from "@/assets/icon.png";
-import { useAuthStore } from "@/store/authStore";
-import { useEffect, useState } from "react";
-import { ChildMenu, MenuItem } from "@/interface";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+} from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import dashboardLogo from '@/assets/logo.png';
+import collapsLogo from '@/assets/icon.png';
+import { useEffect, useState } from 'react';
+import { ChildMenu, MenuItem } from '@/interface';
 
 interface DashboardSidebarProps {
   navigationItems: MenuItem[];
@@ -40,12 +32,9 @@ export function DashboardSidebar({
   onClose,
   isMobile = false,
   isCollapsed = false,
-  accountMenuItems,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const [openItems, setOpenItems] = useState<string[]>([]);
-  const { clearAuth } = useAuthStore();
 
   // Initialize open items based on active routes
   useEffect(() => {
@@ -55,7 +44,7 @@ export function DashboardSidebar({
       return item.children.some(
         (child) =>
           child.link &&
-          (pathname === child.link || pathname.startsWith(child.link + "/")),
+          (pathname === child.link || pathname.startsWith(child.link + '/')),
       );
     };
 
@@ -74,17 +63,12 @@ export function DashboardSidebar({
     );
   };
 
-  const handleLogout = async () => {
-    await clearAuth();
-    router.push("/login");
-  };
-
   const NavItem = ({ item, level = 0 }: { item: MenuItem; level?: number }) => {
     const Icon = item.icon;
     const hasChildren = item.children && item.children.length > 0;
     const isOpen = openItems.includes(item.name);
     const isActive = item.link
-      ? pathname === item.link || pathname.startsWith(item.link + "/")
+      ? pathname === item.link || pathname.startsWith(item.link + '/')
       : false;
 
     // Check if this parent has any active children
@@ -93,7 +77,7 @@ export function DashboardSidebar({
       item.children?.some(
         (child) =>
           child.link &&
-          (pathname === child.link || pathname.startsWith(child.link + "/")),
+          (pathname === child.link || pathname.startsWith(child.link + '/')),
       );
 
     if (hasChildren) {
@@ -102,11 +86,11 @@ export function DashboardSidebar({
           <CollapsibleTrigger asChild>
             <button
               className={cn(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ease-out",
+                'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ease-out',
                 hasActiveChild
-                  ? "text-primary-blue font-medium"
-                  : "text-[#6B7280] hover:bg-accent hover:translate-x-0.5",
-                isCollapsed && !isMobile && "justify-center px-2",
+                  ? 'text-primary-blue font-medium'
+                  : 'text-[#6B7280] hover:bg-accent hover:translate-x-0.5',
+                isCollapsed && !isMobile && 'justify-center px-2',
               )}
               title={isCollapsed && !isMobile ? item.name : undefined}
             >
@@ -138,19 +122,19 @@ export function DashboardSidebar({
     if (level > 0) {
       return (
         <Link
-          href={item.link || "#"}
+          href={item.link || '#'}
           onClick={isMobile ? onClose : undefined}
           className={cn(
-            "relative overflow-hidden flex items-center gap-3 rounded-lg p-3 pl-9 text-sm transition-all duration-200 ease-out",
+            'relative overflow-hidden flex items-center gap-3 rounded-lg p-3 pl-9 text-sm transition-all duration-200 ease-out',
             isActive
-              ? "bg-blue-100 text-[#155DFC]"
-              : "text-gray-500 hover:bg-blue-50 hover:translate-x-0.5",
+              ? 'bg-blue-100 text-[#155DFC]'
+              : 'text-gray-500 hover:bg-blue-50 hover:translate-x-0.5',
           )}
         >
           {isActive && (
             <span
               className={cn(
-                "h-[80%] rounded-2xl w-4 -left-2 absolute bg-[#155DFC] py-4 transition-all duration-300 ease-out",
+                'h-[80%] rounded-2xl w-4 -left-2 absolute bg-[#155DFC] py-4 transition-all duration-300 ease-out',
               )}
             ></span>
           )}
@@ -163,28 +147,28 @@ export function DashboardSidebar({
     // Single item (no children, level 0)
     return (
       <Link
-        href={item.link || "#"}
+        href={item.link || '#'}
         onClick={isMobile ? onClose : undefined}
         className={cn(
-          "group flex items-center gap-3 rounded-md p-3 transition-all duration-200 ease-out relative overflow-hidden",
-          level > 0 && "pl-9",
+          'group flex items-center gap-3 rounded-md p-3 transition-all duration-200 ease-out relative overflow-hidden',
+          level > 0 && 'pl-9',
           isActive
-            ? "bg-blue-100   py-4 text-[#155DFC] font-bold"
-            : "text-gray-500 hover:bg-blue-50 hover:translate-x-0.5",
-          isCollapsed && !isMobile && level === 0 && "justify-center px-2",
+            ? 'bg-blue-100   py-4 text-[#155DFC] font-bold'
+            : 'text-gray-500 hover:bg-blue-50 hover:translate-x-0.5',
+          isCollapsed && !isMobile && level === 0 && 'justify-center px-2',
         )}
         title={isCollapsed && !isMobile && level === 0 ? item.name : undefined}
       >
         {isActive && (
           <span
             className={cn(
-              "h-[80%] rounded-2xl w-4 -left-2 absolute bg-[#155DFC] py-4 transition-all duration-300 ease-out",
+              'h-[80%] rounded-2xl w-4 -left-2 absolute bg-[#155DFC] py-4 transition-all duration-300 ease-out',
             )}
           ></span>
         )}
         {Icon && (
           <Icon
-            className={`h-5 w-5 shrink-0 ${isActive ? "text-[#155DFC] font-bold" : "text-icon"} `}
+            className={`h-5 w-5 shrink-0 ${isActive ? 'text-[#155DFC] font-bold' : 'text-icon'} `}
           />
         )}
         {(!isCollapsed || isMobile || level > 0) && (
@@ -199,8 +183,8 @@ export function DashboardSidebar({
       {/* Logo/Brand */}
       <div
         className={cn(
-          "mx-4 flex h-16 items-center px-4 py-8 pt-12 border-b",
-          isCollapsed && !isMobile ? "justify-center" : "justify-between",
+          'mx-4 flex h-16 items-center px-4 py-8 pt-12 border-b',
+          isCollapsed && !isMobile ? 'justify-center' : 'justify-between',
         )}
       >
         {!isCollapsed || isMobile ? (
@@ -332,8 +316,8 @@ export function DashboardSidebar({
     <aside className="hidden md:flex md:shrink-0">
       <div
         className={cn(
-          "flex flex-col border rounded-lg bg-white transition-all duration-300",
-          isCollapsed ? "w-20" : "w-64",
+          'flex flex-col border rounded-lg bg-white transition-all duration-300',
+          isCollapsed ? 'w-20' : 'w-64',
         )}
       >
         <SidebarContent />
