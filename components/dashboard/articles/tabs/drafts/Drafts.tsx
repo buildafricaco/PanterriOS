@@ -1,22 +1,18 @@
 import { ReUseAbleTable } from '@/components/shared';
 import { PaginationControls } from '@/components/shared/PaginationControls';
-import { useRetrieveArticles } from '@/hook/articles/useRetrieveArticles';
-import { CrwalerArticle } from '@/interface';
+import { CrawlerArticlesResponse, CrwalerArticle } from '@/interface';
 import { dateAndTimeFormatter } from '@/utils/helpers';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilLine, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-export function Drafts() {
-  const [page, setPage] = useState(1);
-  const { data: crawledArticles, isLoading: isFetchingCrawledArticles } =
-    useRetrieveArticles({
-      page: page,
-      status: 'draft',
-    });
+interface draftProp {
+  draftArticles: CrawlerArticlesResponse;
+  setPage: (page: number) => void;
+}
+export function Drafts({ draftArticles, setPage }: draftProp) {
   const router = useRouter();
-  const pagination = crawledArticles && crawledArticles.meta.pagination;
+  const pagination = draftArticles && draftArticles.meta.pagination;
   const draftColumns: ColumnDef<CrwalerArticle>[] = [
     {
       accessorKey: 'title',
@@ -54,11 +50,11 @@ export function Drafts() {
       cell: ({ row }) => <CategoryPill label={row.original.categories[0]} />,
     },
     {
-      accessorKey: 'publishedDate',
+      accessorKey: 'createdAt',
       header: 'Created',
       cell: ({ row }) => (
         <span className="text-sm text-[#45556C] sm:text-base">
-          {dateAndTimeFormatter(row.original.publishedAt)}
+          {dateAndTimeFormatter(row.original.createdAt)}
         </span>
       ),
     },
@@ -96,9 +92,9 @@ export function Drafts() {
       <div>
         <h3 className="text-xl font-semibold text-[#0F172A]">Draft Queue</h3>
       </div>
-      {crawledArticles && crawledArticles.data.length > 0 ? (
+      {draftArticles && draftArticles.data.length > 0 ? (
         <ReUseAbleTable
-          data={crawledArticles.data}
+          data={draftArticles.data}
           columns={draftColumns}
           entityName="drafts"
         />
