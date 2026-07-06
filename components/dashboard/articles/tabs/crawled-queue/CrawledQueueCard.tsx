@@ -29,7 +29,7 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
   const { user } = useAuthStore();
   const { mutateAsync: updateStatusFn, isPending: isLoading } =
     useUpdateArticleStatus();
-  const publishedDate = article.publishedAt ?? '2026-02-18';
+  const publishedDate = article.createdAt;
   // const readTime = article.readTime ?? '6 min';
   const handleStatusUpdate = async (id: string, status: string) => {
     await updateStatusFn({ id, status });
@@ -112,7 +112,8 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   <XCircle className="h-4 w-4" />
                   {isLoading ? 'rejecting...' : 'Reject'}
                 </Button>
-              ) : user?.data.roles.includes('Admin.Officer') ? (
+              ) : user?.data.roles.includes('Admin.Officer') &&
+                article.status !== 'published' ? (
                 <Button
                   type="button"
                   className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
@@ -122,7 +123,8 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   <CheckCircle2 className="h-4 w-4" />
                   {isLoading ? 'publsishing...' : 'Approve & Publish'}
                 </Button>
-              ) : (
+              ) : article.status !== 'published' &&
+                article.status !== 'draft' ? (
                 <Button
                   type="button"
                   variant={'outline'}
@@ -132,6 +134,8 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   <CheckCircle2 className="h-4 w-4" />
                   {isLoading ? 'Saving...' : 'Save to Draft'}
                 </Button>
+              ) : (
+                <div />
               )}
               <Link href={article.url}>
                 <button
