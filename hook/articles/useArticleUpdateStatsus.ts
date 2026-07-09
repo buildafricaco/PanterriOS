@@ -16,6 +16,8 @@ export function useUpdateArticleStatus() {
     onSuccess: (data) => {
       toast.success(data.meta.message);
       queryClient.invalidateQueries({ queryKey: ['articles'] });
+      queryClient.invalidateQueries({ queryKey: ['published-articles'] });
+      queryClient.invalidateQueries({ queryKey: ['article-stats'] });
     },
   });
 }
