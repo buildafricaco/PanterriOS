@@ -7,6 +7,7 @@ export interface LoginReq {
   email: string;
   password: string;
   userDevice?: string;
+  platform?: string;
 }
 
 export interface LoginRes {

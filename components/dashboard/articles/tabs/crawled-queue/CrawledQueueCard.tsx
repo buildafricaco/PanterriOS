@@ -29,6 +29,7 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
   const { user } = useAuthStore();
   const { mutateAsync: updateStatusFn, isPending: isLoading } =
     useUpdateArticleStatus();
+  const isAdmin = user?.data.roles.includes('Admin.Officer');
   const publishedDate = article.createdAt;
   // const readTime = article.readTime ?? '6 min';
   const handleStatusUpdate = async (id: string, status: string) => {
@@ -112,30 +113,31 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   <XCircle className="h-4 w-4" />
                   {isLoading ? 'rejecting...' : 'Reject'}
                 </Button>
-              ) : user?.data.roles.includes('Admin.Officer') &&
-                article.status !== 'published' ? (
-                <Button
-                  type="button"
-                  className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
-                  onClick={() => handleStatusUpdate(article._id, 'published')}
-                  disabled={isLoading}
-                >
-                  <CheckCircle2 className="h-4 w-4" />
-                  {isLoading ? 'publsishing...' : 'Approve & Publish'}
-                </Button>
-              ) : article.status !== 'published' &&
-                article.status !== 'draft' ? (
-                <Button
-                  type="button"
-                  variant={'outline'}
-                  onClick={() => handleStatusUpdate(article._id, 'draft')}
-                  disabled={isLoading}
-                >
-                  <CheckCircle2 className="h-4 w-4" />
-                  {isLoading ? 'Saving...' : 'Save to Draft'}
-                </Button>
               ) : (
-                <div />
+                isAdmin && article.status !== 'draft' && (
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant={'outline'}
+                      onClick={() => handleStatusUpdate(article._id, 'draft')}
+                      disabled={isLoading}
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {isLoading ? 'Saving...' : 'Save to Draft'}
+                    </Button>
+                    <Button
+                      type="button"
+                      className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
+                      onClick={() =>
+                        handleStatusUpdate(article._id, 'published')
+                      }
+                      disabled={isLoading}
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {isLoading ? 'publishing...' : 'Approve & Publish'}
+                    </Button>
+                  </div>
+                )
               )}
               <Link href={article.url}>
                 <button

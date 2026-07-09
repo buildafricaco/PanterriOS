@@ -35,10 +35,12 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
+    const platfomKey = process.env.NEXT_PUBLIC_PLATFORM_KEY || 'panterrios';
     await loginFn({
       ...data,
       email: data.email.toLowerCase().trim(),
       userDevice: navigator.userAgent,
+      platform: platfomKey,
     });
   };
 
