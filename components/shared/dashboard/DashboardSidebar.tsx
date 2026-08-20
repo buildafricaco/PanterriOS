@@ -14,7 +14,7 @@ import Image from 'next/image';
 import dashboardLogo from '@/assets/logo.png';
 import collapsLogo from '@/assets/icon.png';
 import { useEffect, useState } from 'react';
-import { ChildMenu, MenuItem } from '@/interface';
+import { ChildMenu, MenuItem } from '@/types/dashboard';
 
 interface DashboardSidebarProps {
   navigationItems: MenuItem[];

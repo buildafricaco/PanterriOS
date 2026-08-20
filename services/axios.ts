@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/store/authStore';
 import { tokenStore } from '@/store/tokenStore';
 import { handleAxiosError } from '@/utils/error';
 import axios, {
@@ -18,6 +19,38 @@ type QueuedRequest = {
 
 let isRefreshing = false;
 let failedQueue: QueuedRequest[] = [];
+
+const clearClientAuthState = () => {
+  tokenStore.clear();
+  useAuthStore.setState({
+    user: null,
+    isAuthenticated: false,
+    isLoading: false,
+    avatarUrl: null,
+  });
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  localStorage.removeItem('auth-store');
+  localStorage.removeItem('user');
+  localStorage.removeItem('tokens');
+  localStorage.removeItem('twoFactorTemporaryToken');
+};
+
+const redirectToLogin = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const isAlreadyOnAuthRoute =
+    window.location.pathname === '/login' ||
+    window.location.pathname.startsWith('/login/');
+
+  if (!isAlreadyOnAuthRoute) {
+    window.location.replace('/login');
+  }
+};
 
 // Axios instance
 const API = axios.create({
@@ -101,6 +134,14 @@ export const getTwoFactorTemporaryToken = async (): Promise<string | null> => {
 
 export const deleteTwoFactorTemporaryToken = async () => {
   localStorage.removeItem('twoFactorTemporaryToken');
+};
+const handleRefreshAuthFailure = (error: unknown) => {
+  if (!isAuthFailure(error)) {
+    return;
+  }
+
+  clearClientAuthState();
+  redirectToLogin();
 };
 
 // Request interceptor
@@ -188,7 +229,7 @@ function attachRefreshInterceptor(instance: AxiosInstance) {
           return instance.request(originalRequest);
         } catch (refreshError) {
           processQueue(refreshError);
-
+          handleRefreshAuthFailure(refreshError);
           if (isAuthFailure(refreshError)) {
             tokenStore.clear();
             localStorage.removeItem('auth-store');
@@ -199,7 +240,12 @@ function attachRefreshInterceptor(instance: AxiosInstance) {
           isRefreshing = false;
         }
       }
-
+      if (
+        status === 401 &&
+        String(originalRequest?.url ?? '').includes('/api/auth/refresh')
+      ) {
+        handleRefreshAuthFailure(error);
+      }
       handleAxiosError(error);
       return Promise.reject(error);
     },

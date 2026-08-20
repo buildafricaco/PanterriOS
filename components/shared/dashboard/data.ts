@@ -1,4 +1,4 @@
-import { ChildMenu, MenuItem } from '@/interface';
+import { ChildMenu, MenuItem } from '@/types/dashboard';
 import {
   Activity,
   ArrowLeftRight,

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useResetPassword } from '@/hook/auth/useResetPassword';
-import { Button } from '@/components/ui/button';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useResetPassword } from "@/hook/auth/useResetPassword";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,20 +12,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 const resetPasswordSchema = z
   .object({
-    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmNewPassword: z
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z
       .string()
-      .min(8, 'Password must be at least 8 characters'),
+      .min(8, "Password must be at least 8 characters"),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmNewPassword'],
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
   });
 
 type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
@@ -36,19 +37,22 @@ export default function ResetPasswordForm() {
   const form = useForm<ResetPasswordSchema>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      newPassword: '',
-      confirmNewPassword: '',
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: ResetPasswordSchema) => {
-    const resetToken = localStorage.getItem('passwordResetToken');
-    if (!resetToken) return;
-
+    const storedResetToken = localStorage.getItem("otp");
+    if (!storedResetToken) {
+      toast.error("no reset token.");
+      return;
+    }
+    const resetToken = storedResetToken.replace(/^"|"$/g, "");
     await resetPasswordFn({
       resetToken,
       newPassword: data.newPassword,
-      confirmNewPassword: data.confirmNewPassword,
+      confirmPassword: data.confirmPassword,
     });
   };
 
@@ -77,7 +81,7 @@ export default function ResetPasswordForm() {
 
         <FormField
           control={form.control}
-          name="confirmNewPassword"
+          name="confirmPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
