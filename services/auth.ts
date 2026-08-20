@@ -13,10 +13,10 @@ import {
   UpdateUserReq,
   VerifyOtpReq,
   VerifyOtpRes,
-} from '@/interface';
-import { API, AUTH, getTwoFactorTemporaryToken } from '@/services/axios';
-import { UserProfileRes } from '@/interface/user-profile.entity';
-import { tokenStore } from '@/store/tokenStore';
+} from "@/interface";
+import { API, AUTH, getTwoFactorTemporaryToken } from "@/services/axios";
+import { UserProfileRes } from "@/interface/user-profile.entity";
+import { tokenStore } from "@/store/tokenStore";
 
 const getSetupTwoFactorAuthContext = async () => {
   const accessToken = tokenStore.get();
@@ -26,7 +26,7 @@ const getSetupTwoFactorAuthContext = async () => {
   const headers = bearerToken
     ? {
         Authorization: `Bearer ${bearerToken}`,
-        ...(temporaryToken ? { 'x-temporary-token': temporaryToken } : {}),
+        ...(temporaryToken ? { "x-temporary-token": temporaryToken } : {}),
       }
     : undefined;
 
@@ -37,59 +37,59 @@ const getSetupTwoFactorAuthContext = async () => {
 };
 
 export const getAppStatus = async (): Promise<CommonRes> => {
-  const { data } = await API.get('/');
+  const { data } = await API.get("/");
   return data;
 };
 
 export const createUser = async (
   payload: CreateUserReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/auth/admin/create-user', payload);
+  const { data } = await API.post("/auth/admin/create-user", payload);
   return data;
 };
 
 export const login = async (payload: LoginReq): Promise<LoginRes> => {
-  const { data } = await AUTH.post('/api/auth/login', payload);
+  const { data } = await AUTH.post("/api/auth/login", payload);
   return data;
 };
 
 export const refreshAccessToken = async (): Promise<RefreshTokenRes> => {
-  const { data } = await AUTH.post('/api/auth/refresh');
+  const { data } = await AUTH.post("/api/auth/refresh");
   return data;
 };
 
 export const sendResetPasswordOtp = async (
   payload: SendOtpReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/auth/send-reset-password-otp', payload);
+  const { data } = await API.post("/auth/send-reset-password-otp", payload);
   return data;
 };
 
 export const resendResetPasswordOtp = async (
   payload: SendOtpReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/auth/resend-reset-password-otp', payload);
+  const { data } = await API.post("/auth/resend-reset-password-otp", payload);
   return data;
 };
 
 export const verifyResetPasswordOtp = async (
   payload: VerifyOtpReq,
 ): Promise<VerifyOtpRes> => {
-  const { data } = await API.post('/auth/verify-reset-password-otp', payload);
-  return data;
+  const { data } = await API.post("/auth/verify-reset-password-otp", payload);
+  return data.data;
 };
 
 export const resetPassword = async (
   payload: ResetPasswordReq,
 ): Promise<CommonRes> => {
-  const { data } = await API.post('/auth/reset-password', payload);
+  const { data } = await API.post("/auth/reset-password", payload);
   return data;
 };
 
 export const getCurrentUser = async (
   accessToken?: string,
 ): Promise<UserProfileRes> => {
-  const { data } = await API.get('/auth/current-user', {
+  const { data } = await API.get("/auth/current-user", {
     headers: accessToken
       ? {
           Authorization: `Bearer ${accessToken}`,
@@ -103,7 +103,7 @@ export const generateTwoFactorSecret =
   async (): Promise<GenerateTwoFactorRes> => {
     const { headers, temporaryToken } = await getSetupTwoFactorAuthContext();
     const { data } = await AUTH.post(
-      '/api/auth/generate-2fa-secret',
+      "/api/auth/generate-2fa-secret",
       temporaryToken ? { temporaryToken } : undefined,
       {
         headers,
@@ -117,7 +117,7 @@ export const enableTwoFactor = async (
 ): Promise<LoginRes> => {
   const { headers } = await getSetupTwoFactorAuthContext();
   const { data } = await AUTH.post(
-    '/api/auth/enable-2fa',
+    "/api/auth/enable-2fa",
     {
       ...payload,
     },
@@ -131,12 +131,12 @@ export const enableTwoFactor = async (
 export const loginWithTwoFactor = async (
   payload: Login2FaReq,
 ): Promise<LoginRes> => {
-  const { data } = await AUTH.post('/api/auth/verify-2fa', payload);
+  const { data } = await AUTH.post("/api/auth/verify-2fa", payload);
   return data;
 };
 
 export const logout = async (): Promise<CommonRes> => {
-  const { data } = await AUTH.post('/api/auth/logout');
+  const { data } = await AUTH.post("/api/auth/logout");
   return data;
 };
 
@@ -152,7 +152,7 @@ export const toggleUserTwoFactor = async (
 };
 
 export const updateUserDetails = async (
-  userId: number|string,
+  userId: number | string,
   payload: UpdateUserReq,
 ): Promise<CommonRes> => {
   const { data } = await API.put(

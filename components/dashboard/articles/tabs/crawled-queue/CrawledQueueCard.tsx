@@ -114,7 +114,7 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                   {isLoading ? 'rejecting...' : 'Reject'}
                 </Button>
               ) : (
-                isAdmin && article.status !== 'draft' && (
+                article.status !== 'draft' && (
                   <div className="flex gap-4">
                     <Button
                       type="button"
@@ -125,17 +125,19 @@ export function CrawledQueueCard({ article }: CrawledQueueCardProps) {
                       <CheckCircle2 className="h-4 w-4" />
                       {isLoading ? 'Saving...' : 'Save to Draft'}
                     </Button>
-                    <Button
-                      type="button"
-                      className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
-                      onClick={() =>
-                        handleStatusUpdate(article._id, 'published')
-                      }
-                      disabled={isLoading}
-                    >
-                      <CheckCircle2 className="h-4 w-4" />
-                      {isLoading ? 'publishing...' : 'Approve & Publish'}
-                    </Button>
+                    {isAdmin && (
+                      <Button
+                        type="button"
+                        className="inline-flex items-center gap-2 cursor-pointer rounded-sm bg-[#0AA84F] px-3 py-1.5 text-sm font-medium text-white transition hover:bg-[#098a42]"
+                        onClick={() =>
+                          handleStatusUpdate(article._id, 'published')
+                        }
+                        disabled={isLoading}
+                      >
+                        <CheckCircle2 className="h-4 w-4" />
+                        {isLoading ? 'publishing...' : 'Approve & Publish'}
+                      </Button>
+                    )}
                   </div>
                 )
               )}

@@ -1,6 +1,4 @@
-export * from '../types/dashboard';
 export * from './dashboardOverview.entity';
-export * from '../types/navigation';
 export * from './auth.entity';
 export * from './user-profile.entity';
 export * from './investor-management.entity';

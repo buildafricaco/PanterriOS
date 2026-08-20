@@ -55,12 +55,12 @@ export interface NormalizedLoginRes {
 }
 
 const asRecord = (value: unknown): Record<string, unknown> | null => {
-  if (typeof value !== 'object' || value === null) return null;
+  if (typeof value !== "object" || value === null) return null;
   return value as Record<string, unknown>;
 };
 
 const toStringOrUndefined = (value: unknown): string | undefined => {
-  return typeof value === 'string' && value.trim() ? value : undefined;
+  return typeof value === "string" && value.trim() ? value : undefined;
 };
 
 const toNullableString = (value: unknown): string | null | undefined => {
@@ -69,7 +69,7 @@ const toNullableString = (value: unknown): string | null | undefined => {
 };
 
 const toBoolean = (value: unknown, fallback = false): boolean => {
-  return typeof value === 'boolean' ? value : fallback;
+  return typeof value === "boolean" ? value : fallback;
 };
 
 export function normalizeLoginRes(payload: LoginRes): NormalizedLoginRes {
@@ -94,7 +94,7 @@ export function normalizeLoginRes(payload: LoginRes): NormalizedLoginRes {
     message:
       toStringOrUndefined(root.message) ??
       toStringOrUndefined(nested.message) ??
-      'Login successful',
+      "Login successful",
     isTwoFactorEnabled: toBoolean(
       root.isTwoFactorEnabled,
       toBoolean(nested.isTwoFactorEnabled),
@@ -143,7 +143,7 @@ export interface VerifyOtpRes {
 export interface ResetPasswordReq {
   resetToken: string;
   newPassword: string;
-  confirmNewPassword: string;
+  confirmPassword: string;
 }
 
 export interface Login2FaReq {
@@ -180,12 +180,12 @@ export interface CreateUserReq {
   lastName: string;
   email: string;
   userStatus:
-    | 'activated'
-    | 'deactivated'
-    | 'pending'
-    | 'banned'
-    | 'suspended'
-    | 'archived';
+    | "activated"
+    | "deactivated"
+    | "pending"
+    | "banned"
+    | "suspended"
+    | "archived";
   roles: string[];
   gender: string;
   department: string;

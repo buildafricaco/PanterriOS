@@ -48,7 +48,7 @@ export default function CreatePasswordForm() {
     await resetPasswordFn({
       resetToken,
       newPassword: data.newPassword,
-      confirmNewPassword: data.confirmNewPassword,
+      confirmPassword: data.confirmNewPassword,
     });
   };
 
