@@ -37,7 +37,7 @@ export function Providers({ children }: ProvidersProps) {
     <TooltipProvider>
       <QueryClientProvider client={queryClient}>
         {children}
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" theme={'light'} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </TooltipProvider>
