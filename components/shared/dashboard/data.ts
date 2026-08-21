@@ -24,6 +24,7 @@ export const USER_ROLES = [
   { value: 'Admin.Officer', title: 'Admin Officer' },
   { value: 'Real.Estate.Analyst', title: 'Real Estate Analyst' },
   { value: 'Content.Editor', title: 'Content Editor' },
+  { value: 'Legal', title: 'Legal' },
 ];
 export const ACCOUNT_STATUS = [
   { value: 'activated', title: 'Activated' },
@@ -36,13 +37,18 @@ export const DEPARTMENTS = [
   { value: 'Human.Resource', title: 'Human Resource/Admin' },
   { value: 'Real.Estate.Analyst', title: 'Real Estate Research' },
   { value: 'Information.Technology', title: 'Information Technology' },
+  { value: 'Legal', title: 'Legal' },
 ];
 export const APP_ACCESS = [
   { value: 'Panterrios', title: 'PantteriOs' },
   { value: 'Buildcore', title: 'BuildCore' },
   { value: 'All', title: 'All' },
 ];
-export type Role = 'Admin.Officer' | 'Real.Estate.Analyst' | 'Content.Editor';
+export type Role =
+  | 'Admin.Officer'
+  | 'Real.Estate.Analyst'
+  | 'Content.Editor'
+  | 'Legal';
 
 // | 'Community.Manager';
 
@@ -94,6 +100,48 @@ export const ROLE_SPECIFIC_MENUS: Record<Role, MenuItem[]> = {
     { name: 'Events', icon: Calendar, link: '/events' },
     { name: 'Ai Agents', icon: Bot, link: '/ai-agents' },
     { name: 'Users & Roles', icon: Shield, link: '/users' },
+    { name: 'Audit Log', icon: FileSearchCorner, link: '/audit-log' },
+    { name: 'Workflow', icon: Workflow, link: '/workflow' },
+  ],
+  Legal: [
+    { name: 'Investors', icon: Users2, link: '/investors' },
+    { name: 'Investments', icon: TrendingUp, link: '/investments' },
+    {
+      name: 'Wallet & Finance',
+      icon: Wallet,
+      children: [
+        {
+          name: 'Transactions',
+          link: '/finance/transactions',
+          icon: ArrowLeftRight,
+        },
+        {
+          name: 'Withdrawal Request',
+          link: '/finance/withdrawal-request',
+          icon: HandCoins,
+        },
+        {
+          name: 'Reconciliations',
+          link: '/finance/reconciliations',
+          icon: Scale,
+        },
+        {
+          name: 'Yield Events',
+          link: '/finance/yield-events',
+          icon: Activity,
+        },
+        {
+          name: 'Investors Wallet',
+          link: '/finance/investors-wallet',
+          icon: Wallet,
+        },
+      ],
+    },
+    { name: 'Market Data', icon: MapPin, link: '/market-data' },
+    { name: 'Analytics', icon: ChartColumn, link: '/analytics' },
+    { name: 'Articles', icon: FileText, link: '/articles' },
+    { name: 'Events', icon: Calendar, link: '/events' },
+    { name: 'Ai Agents', icon: Bot, link: '/ai-agents' },
     { name: 'Audit Log', icon: FileSearchCorner, link: '/audit-log' },
     { name: 'Workflow', icon: Workflow, link: '/workflow' },
   ],
