@@ -24,7 +24,7 @@ export const USER_ROLES = [
   { value: 'Admin.Officer', title: 'Admin Officer' },
   { value: 'Real.Estate.Analyst', title: 'Real Estate Analyst' },
   { value: 'Content.Editor', title: 'Content Editor' },
-  { value: 'Legal', title: 'Legal' },
+  { value: 'Compliance', title: 'Compliance' },
 ];
 export const ACCOUNT_STATUS = [
   { value: 'activated', title: 'Activated' },
@@ -48,7 +48,7 @@ export type Role =
   | 'Admin.Officer'
   | 'Real.Estate.Analyst'
   | 'Content.Editor'
-  | 'Legal';
+  | 'Compliance';
 
 // | 'Community.Manager';
 
@@ -103,7 +103,7 @@ export const ROLE_SPECIFIC_MENUS: Record<Role, MenuItem[]> = {
     { name: 'Audit Log', icon: FileSearchCorner, link: '/audit-log' },
     { name: 'Workflow', icon: Workflow, link: '/workflow' },
   ],
-  Legal: [
+  Compliance: [
     { name: 'Investors', icon: Users2, link: '/investors' },
     { name: 'Investments', icon: TrendingUp, link: '/investments' },
     {
