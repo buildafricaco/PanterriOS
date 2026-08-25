@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import {
   getTransactionTypeConfig,
   normalizeTransactionType,
@@ -11,7 +11,7 @@ import { TransactionAudit } from "./TransactionAudit";
 import { WalletFinanceTransaction } from "@/interface";
 import { formatCurrency } from "@/utils/helpers";
 
-export const transactionColumns: ColumnDef<WalletFinanceTransaction>[] = [
+export const transactionColumns: ReusableTableColumnDef<WalletFinanceTransaction>[] = [
   {
     accessorKey: "reference",
     header: "Reference",

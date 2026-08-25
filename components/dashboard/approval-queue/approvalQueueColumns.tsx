@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { type ApprovalQueueItem } from '@/interface';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 
 export const approvalQueueColumns = (
   activeTab: 'submitted' | 'assigned',
-): ColumnDef<ApprovalQueueItem>[] => {
-  const submittedByColumn: ColumnDef<ApprovalQueueItem>[] =
+): ReusableTableColumnDef<ApprovalQueueItem>[] => {
+  const submittedByColumn: ReusableTableColumnDef<ApprovalQueueItem>[] =
     activeTab === 'assigned'
       ? [
           {

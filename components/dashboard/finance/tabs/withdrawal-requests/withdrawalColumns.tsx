@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { WithdrawalRequestItem } from "@/interface";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -14,7 +14,7 @@ const getRiskColor = (riskProfileLabel: string) => {
   return colors[riskProfileLabel] || "bg-gray-50 text-gray-700 border-gray-200";
 };
 
-export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
+export const withdrawalColumns: ReusableTableColumnDef<WithdrawalRequestItem>[] = [
   {
     accessorKey: "requestId",
     header: "REQUEST ID",

@@ -1,7 +1,7 @@
 import { ReUseAbleTable } from '@/components/shared/reusableTable';
 import { InvestorOverviewRes } from '@/interface';
 import { formatPrice } from '@/utils/formatPrice';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 
 type InvestmentItem = InvestorOverviewRes['data']['investmentDetails']['data'][number];
 
@@ -10,7 +10,7 @@ interface InvestmentsTableProps {
 }
 
 export function InvestmentsTable({ investments }: InvestmentsTableProps) {
-  const columns: ColumnDef<InvestmentItem>[] = [
+  const columns: ReusableTableColumnDef<InvestmentItem>[] = [
     {
       accessorKey: 'propertyName',
       header: 'Property',
