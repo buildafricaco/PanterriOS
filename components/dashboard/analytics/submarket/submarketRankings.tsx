@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { Pencil, Trash2 } from 'lucide-react';
 
 import { TableSkeleton } from '@/components/shared/loader/TableSkeleton';
@@ -136,7 +136,7 @@ export function SubmarketRankings() {
     10,
   );
 
-  const columns = useMemo<ColumnDef<SubmarketRankingRow>[]>(
+  const columns = useMemo<ReusableTableColumnDef<SubmarketRankingRow>[]>(
     () => [
       {
         accessorKey: 'rank',

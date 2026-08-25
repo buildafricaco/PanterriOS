@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ConfirmationDialog } from '@/components/shared';
 import { DraftInvestmentItem } from '@/interface';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { Clock, Edit, Eye, MapPin, Trash2 } from 'lucide-react';
 import { InvestmentDetailsView } from './details/investmentDetailsView';
 import { cn } from '@/lib/utils';
@@ -70,7 +70,7 @@ export function DraftInvestments({
     });
   };
 
-  const columns: ColumnDef<DraftInvestmentItem>[] = [
+  const columns: ReusableTableColumnDef<DraftInvestmentItem>[] = [
     {
       accessorKey: 'id',
       header: () => (

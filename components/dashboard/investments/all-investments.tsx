@@ -1,7 +1,7 @@
 'use client';
 import { ReUseAbleTable } from '@/components/shared/reusableTable';
 import { Button } from '@/components/ui/button';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { Edit, Eye, Trash2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
@@ -63,7 +63,7 @@ export function AllInvestments({
     });
   };
 
-  const columns: ColumnDef<InvestmentListItem>[] = [
+  const columns: ReusableTableColumnDef<InvestmentListItem>[] = [
     {
       accessorKey: 'propertyName',
       header: 'property',

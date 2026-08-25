@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -7,18 +7,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Inbox } from "lucide-react";
-import { PaginationControls } from "@/components/shared/PaginationControls";
+  columnVisibilityFeature,
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table';
+
+import { Inbox } from 'lucide-react';
+import { PaginationControls } from './PaginationControls';
 
 interface PaginationConfig {
   currentPage: number;
@@ -28,48 +28,75 @@ interface PaginationConfig {
   onPageChange: (page: number) => void;
 }
 
+interface PaginationRenderProps {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+  entityName: string;
+}
+
+const reusableTableFeatures = tableFeatures({
+  columnVisibilityFeature,
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+});
+
+export type ReusableTableColumnDef<TData extends object> = ColumnDef<
+  typeof reusableTableFeatures,
+  TData
+>;
+
 interface TableProp<TData extends object> {
   data: TData[];
-  columns: ColumnDef<TData, unknown>[];
+  columns: ReusableTableColumnDef<TData>[];
   entityName?: string;
   pagination?: PaginationConfig;
+  pageSize?: number;
+  renderPagination?: (props: PaginationRenderProps) => React.ReactNode;
+  hidePagination?: boolean;
 }
 export function ReUseAbleTable<TData extends object>({
   data,
   columns,
-  entityName = "results",
+  entityName = 'results',
   pagination,
+  pageSize = 10,
+  renderPagination,
+  hidePagination = false,
 }: TableProp<TData>) {
-  const table = useReactTable({
+  const table = useTable({
+    features: reusableTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: pagination ? undefined : getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize,
+      },
+    },
+    manualPagination: Boolean(pagination),
   });
 
   const hasData = data?.length > 0;
 
   return (
     <div className="w-full">
-      <div className="overflow-hidden rounded-lg border border-[#E2E2E2] bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border border-[#E2E2E2] bg-white">
         <div className="w-full overflow-x-auto">
           <Table>
-            <TableHeader className="bg-white">
+            <TableHeader className="bg-[#FAFAFA] ">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="hover:bg-[#F9FAFB]">
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="h-14 whitespace-nowrap px-4 py-3 font-medium uppercase text-[#62748E] sm:px-4"
+                      className="h-14 whitespace-nowrap px-4 py-3 font-medium uppercase text-[#737373] sm:px-4"
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <table.FlexRender header={header} />
+                      )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -85,12 +112,9 @@ export function ReUseAbleTable<TData extends object>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="px-4 text-sm font-normal  capitalize whitespace-normal break-words [overflow-wrap:anywhere] sm:px-4"
+                        className="px-4 text-sm font-normal  capitalize whitespace-normal wrap-break-word sm:px-4"
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <table.FlexRender cell={cell} />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -116,9 +140,29 @@ export function ReUseAbleTable<TData extends object>({
             </TableBody>
           </Table>
         </div>
-        {hasData && (
+        {hasData && !hidePagination && (
           <div className="px-4 py-4 sm:px-6">
-            {pagination ? (
+            {renderPagination ? (
+              renderPagination(
+                pagination
+                  ? {
+                      currentPage: pagination.currentPage,
+                      totalPages: pagination.totalPages,
+                      totalItems: pagination.totalItems,
+                      itemsPerPage: pagination.limit,
+                      onPageChange: pagination.onPageChange,
+                      entityName,
+                    }
+                  : {
+                      currentPage: table.state.pagination.pageIndex + 1,
+                      totalPages: table.getPageCount(),
+                      totalItems: data.length,
+                      itemsPerPage: table.state.pagination.pageSize,
+                      onPageChange: (page) => table.setPageIndex(page - 1),
+                      entityName,
+                    },
+              )
+            ) : pagination ? (
               <PaginationControls
                 currentPage={pagination.currentPage}
                 totalPages={pagination.totalPages}
@@ -126,17 +170,17 @@ export function ReUseAbleTable<TData extends object>({
                 itemsPerPage={pagination.limit}
                 onPageChange={pagination.onPageChange}
                 entityName={entityName}
-                className="border-t-0 pt-0"
+                className="pt-0"
               />
             ) : (
               <PaginationControls
-                currentPage={table.getState().pagination.pageIndex + 1}
+                currentPage={table.state.pagination.pageIndex + 1}
                 totalPages={table.getPageCount()}
-                totalItems={table.getFilteredRowModel().rows.length}
-                itemsPerPage={table.getState().pagination.pageSize}
+                totalItems={data.length}
+                itemsPerPage={table.state.pagination.pageSize}
                 onPageChange={(page) => table.setPageIndex(page - 1)}
                 entityName={entityName}
-                className="border-t-0 pt-0"
+                className="pt-0"
               />
             )}
           </div>

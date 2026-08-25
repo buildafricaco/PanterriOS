@@ -5,7 +5,7 @@ import {
   type InvestmentInvestorItem,
   type InvestmentInvestors,
 } from "@/interface";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 
 interface PropertyInvestorsProps {
   investors: InvestmentInvestors;
@@ -39,7 +39,7 @@ const mapInvestorRow = (investor: InvestmentInvestorItem, index: number): Invest
 export default function PropertyInvestors({ investors }: PropertyInvestorsProps) {
   const tableData = investors.data.map(mapInvestorRow);
 
-  const columns: ColumnDef<InvestorTableRow>[] = [
+  const columns: ReusableTableColumnDef<InvestorTableRow>[] = [
     {
       accessorKey: "name",
       header: "Investor",

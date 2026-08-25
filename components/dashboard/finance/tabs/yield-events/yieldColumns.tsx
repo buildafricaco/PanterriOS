@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import type { ReactNode } from "react";
 import { StatusBadge } from "@/components/shared";
 import { SlideInPanelDrawer } from "@/components/shared/SlideInPanel";
@@ -48,7 +48,7 @@ function renderStatusBreakdown(
   return badges;
 }
 
-export const yieldColumns: ColumnDef<YieldDisbursementItem>[] = [
+export const yieldColumns: ReusableTableColumnDef<YieldDisbursementItem>[] = [
   {
     accessorKey: "eventId",
     header: "Event ID",

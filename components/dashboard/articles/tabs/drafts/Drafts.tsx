@@ -2,7 +2,7 @@ import { ReUseAbleTable } from '@/components/shared';
 import { PaginationControls } from '@/components/shared/PaginationControls';
 import { CrawlerArticlesResponse, CrwalerArticle } from '@/interface';
 import { dateAndTimeFormatter } from '@/utils/helpers';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { CheckCheck, Eye, PencilLine, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SlideInPanelDrawer } from '@/components/shared';
@@ -22,7 +22,7 @@ export function Drafts({ draftArticles, setPage }: draftProp) {
   const handleStatusUpdate = async (id: string, status: string) => {
     await updateStatusFn({ id, status });
   };
-  const draftColumns: ColumnDef<CrwalerArticle>[] = [
+  const draftColumns: ReusableTableColumnDef<CrwalerArticle>[] = [
     {
       accessorKey: 'title',
       header: 'Article',
