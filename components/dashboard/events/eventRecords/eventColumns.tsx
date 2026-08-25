@@ -1,6 +1,6 @@
 import { EventEntity } from '@/interface';
 import { dateAndTimeFormatter, formatCurrency } from '@/utils/helpers';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { Eye, Trash2, Star } from 'lucide-react';
 
 function BadgePill({
@@ -32,7 +32,7 @@ function BadgePill({
   );
 }
 
-export const eventRecordColumns: ColumnDef<EventEntity>[] = [
+export const eventRecordColumns: ReusableTableColumnDef<EventEntity>[] = [
   {
     accessorKey: 'name',
     header: 'Event Name',

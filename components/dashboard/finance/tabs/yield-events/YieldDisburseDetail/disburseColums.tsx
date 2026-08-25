@@ -1,6 +1,6 @@
 import { YieldDisbursementLedgerInvestor } from "@/interface";
 import { formatCurrency } from "@/utils/helpers";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,7 +56,7 @@ export const getDisburseColumns = ({
   eventId,
   isFlagging = false,
   onFlagDisbursement,
-}: DisburseColumnsOptions): ColumnDef<YieldDisbursementLedgerInvestor>[] => [
+}: DisburseColumnsOptions): ReusableTableColumnDef<YieldDisbursementLedgerInvestor>[] => [
   {
     accessorKey: "investorName",
     header: "INVESTOR NAME",

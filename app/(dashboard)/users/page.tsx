@@ -8,7 +8,7 @@ import {
 } from '@/components/shared';
 import { ReUseAbleTable } from '@/components/shared/reusableTable';
 import { Button } from '@/components/ui/button';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { Eye, Plus, Shield, SquarePen, User, Users, X } from 'lucide-react';
 import {
   Drawer,
@@ -71,7 +71,7 @@ export default function UsersPage() {
     },
   ];
 
-  const columns: ColumnDef<UsersRow>[] = [
+  const columns: ReusableTableColumnDef<UsersRow>[] = [
     {
       accessorKey: 'name',
       header: 'name',

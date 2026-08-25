@@ -1,11 +1,11 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { YieldDisbursementLedgerInvestor } from "@/interface";
 import { StatusBadge } from "@/components/shared";
 // import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { formatCurrency } from "@/utils/helpers";
 
-export const yieldDetailsColumns: ColumnDef<YieldDisbursementLedgerInvestor>[] =
+export const yieldDetailsColumns: ReusableTableColumnDef<YieldDisbursementLedgerInvestor>[] =
   [
     {
       accessorKey: "disbursementCode",

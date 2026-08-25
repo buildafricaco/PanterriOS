@@ -14,7 +14,7 @@ import { TableFilters } from '@/components/shared/TableFilters';
 import { Button } from '@/components/ui/button';
 import { useRetrieveInvestors } from '@/hook/investor-management';
 import { formatPrice } from '@/utils/formatPrice';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import {
   Banknote,
   Calendar,
@@ -108,7 +108,7 @@ export default function Investorspage() {
     ];
   }, [data]);
 
-  const columns: ColumnDef<InvestorsDataTableProp>[] = [
+  const columns: ReusableTableColumnDef<InvestorsDataTableProp>[] = [
     {
       accessorKey: 'name',
       header: 'name',

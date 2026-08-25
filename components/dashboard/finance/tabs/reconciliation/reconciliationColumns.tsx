@@ -1,9 +1,9 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { ReconciliationRecord } from "./types";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 
-export const reconciliationColumns: ColumnDef<ReconciliationRecord>[] = [
+export const reconciliationColumns: ReusableTableColumnDef<ReconciliationRecord>[] = [
   {
     accessorKey: "auditId",
     header: "Audit ID/Created",
