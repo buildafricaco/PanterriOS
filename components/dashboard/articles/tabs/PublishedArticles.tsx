@@ -5,7 +5,7 @@ import { ReUseAbleTable, SlideInPanelDrawer } from '@/components/shared';
 // import { articlesDashboardData } from '../data';
 import { BadgePill } from '../articleColumns';
 import { CrawlerArticlesResponse, CrwalerArticle } from '@/interface';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import Image from 'next/image';
 import { dateAndTimeFormatter } from '@/utils/helpers';
 import { Eye, Trash2 } from 'lucide-react';
@@ -38,7 +38,7 @@ export function PublishedArticles({
   //       article.tags.some((tag) => tag.toLowerCase() === category),
   //   );
   // }, [category]);
-  const publishedArticleColumns: ColumnDef<CrwalerArticle>[] = [
+  const publishedArticleColumns: ReusableTableColumnDef<CrwalerArticle>[] = [
     {
       accessorKey: 'title',
       header: 'Article',

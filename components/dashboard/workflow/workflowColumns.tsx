@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 
 import { WorkflowDefinitionListItem } from '@/interface';
 import { ConfirmationDialog } from '@/components/shared';
@@ -53,7 +53,7 @@ function WorkflowActionsCell({
   );
 }
 
-export const workflowColumns: ColumnDef<WorkflowDefinitionListItem>[] = [
+export const workflowColumns: ReusableTableColumnDef<WorkflowDefinitionListItem>[] = [
   {
     accessorKey: 'name',
     header: 'Workflow Name',

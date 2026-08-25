@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table';
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { type InvestorWalletItem } from '@/interface';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { SlideInPanelDrawer } from '@/components/shared/SlideInPanel';
@@ -13,7 +13,7 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
-export const investorsWalletColumns: ColumnDef<InvestorWalletItem>[] = [
+export const investorsWalletColumns: ReusableTableColumnDef<InvestorWalletItem>[] = [
   {
     accessorKey: 'investorName',
     header: 'INVESTOR',

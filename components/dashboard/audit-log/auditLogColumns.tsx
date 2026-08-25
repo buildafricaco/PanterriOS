@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import type { AuditLogRecord } from "@/interface";
 import { AuditLogDetailsDrawer } from "./AuditLogDetailsDrawer";
 import { normalizeIdentifierLabel } from "@/utils/helpers";
@@ -29,7 +29,7 @@ function getInitials(name?: string) {
   const initials = parts.map((part) => part[0]).join("");
   return initials.toUpperCase();
 }
-export const auditLogColumns: ColumnDef<AuditLogRecord>[] = [
+export const auditLogColumns: ReusableTableColumnDef<AuditLogRecord>[] = [
   {
     accessorKey: "reference",
     header: "Log ID",

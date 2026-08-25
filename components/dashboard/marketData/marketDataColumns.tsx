@@ -1,9 +1,9 @@
-import { type ColumnDef } from "@tanstack/react-table";
+import type { ReusableTableColumnDef } from '@/components/shared/reusableTable';
 import { PencilLine } from "lucide-react";
 import type { MarketData } from "@/interface/marketData.entity";
 import { formatCurrency } from "@/utils/helpers";
 
-export const marketDataColumns: ColumnDef<MarketData>[] = [
+export const marketDataColumns: ReusableTableColumnDef<MarketData>[] = [
   {
     accessorKey: "subMarket",
     header: "Sub Market",
