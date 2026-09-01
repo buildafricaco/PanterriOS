@@ -8,6 +8,7 @@ export interface RetrieveAuditLogsQuery {
   actorUserId?: number;
   startDate?: string;
   endDate?: string;
+  platform: string;
 }
 
 export interface AuditLogActor {

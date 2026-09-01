@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(body),
       cache: 'no-store',
     });
-    console.log(backendRes);
+    // console.log(backendRes);
 
     const data = await parseBackendPayload(backendRes, 'Login failed');
 
