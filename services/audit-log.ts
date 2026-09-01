@@ -1,24 +1,24 @@
 import {
-	type RetrieveAuditLogRecordRes,
-	type RetrieveAuditLogsQuery,
-	type RetrieveAuditLogsRes,
-} from "@/interface";
-import { API } from "@/services/axios";
+  type RetrieveAuditLogRecordRes,
+  type RetrieveAuditLogsQuery,
+  type RetrieveAuditLogsRes,
+} from '@/interface';
+import { API } from '@/services/axios';
 
 export const retrieveAuditLogs = async (
-	params: RetrieveAuditLogsQuery,
+  params: RetrieveAuditLogsQuery,
 ): Promise<RetrieveAuditLogsRes> => {
-	const { data } = await API.get("/admin/audit-logs", {
-		params,
-	});
+  const { data } = await API.get('/admin/audit-logs', {
+    params,
+  });
 
-	return data;
+  return data;
 };
 
 export const retrieveAuditLogRecord = async (
-	referenceOrId: string,
+  referenceOrId: string,
 ): Promise<RetrieveAuditLogRecordRes> => {
-	const { data } = await API.get(`/admin/audit-logs/${referenceOrId}`);
+  const { data } = await API.get(`/admin/audit-logs/${referenceOrId}`);
 
-	return data;
+  return data;
 };
