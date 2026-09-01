@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { Activity, Check, Layers3, Shield, User2 } from "lucide-react";
+import { Activity, Check, Layers3, Shield, User2 } from 'lucide-react';
 import {
   PageHead,
   ReUseAbleTable,
   StatCard,
   TableFilters2,
   TableSkeleton,
-} from "@/components/shared";
-import { auditLogColumns } from "./auditLogColumns";
-import { useRetrieveAuditLogs } from "@/hook/audit-log";
-import { useMemo, useState } from "react";
-import { debounce } from "@/utils/helpers";
+} from '@/components/shared';
+import { auditLogColumns } from './auditLogColumns';
+import { useRetrieveAuditLogs } from '@/hook/audit-log';
+import { useMemo, useState } from 'react';
+import { debounce } from '@/utils/helpers';
 
 export function AuditLogsContainer() {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [filterModule, setFilterModule] = useState("all");
-  const [filterAction, setFilterAction] = useState("all");
-  const [filterEntityType, setFilterEntityType] = useState("all");
-  const [filterCritical, setFilterCritical] = useState("all");
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filterModule, setFilterModule] = useState('all');
+  const [filterAction, setFilterAction] = useState('all');
+  const [filterEntityType, setFilterEntityType] = useState('all');
+  const [filterCritical, setFilterCritical] = useState('all');
   const [page, setPage] = useState(1);
-
+  const platformKey = process.env.NEXT_PUBLIC_PLATFORM_KEY;
   const debouncedSetSearch = useMemo(
     () => debounce((val: string) => setDebouncedSearch(val), 600),
     [],
@@ -40,13 +40,14 @@ export function AuditLogsContainer() {
     page,
     limit: 10,
     actorUserId,
-    module: filterModule === "all" ? undefined : filterModule,
-    action: filterAction === "all" ? undefined : filterAction,
-    entityType: filterEntityType === "all" ? undefined : filterEntityType,
+    module: filterModule === 'all' ? undefined : filterModule,
+    action: filterAction === 'all' ? undefined : filterAction,
+    entityType: filterEntityType === 'all' ? undefined : filterEntityType,
+    platform: platformKey!,
     critical:
-      filterCritical === "all"
+      filterCritical === 'all'
         ? undefined
-        : filterCritical === "true"
+        : filterCritical === 'true'
           ? true
           : false,
   });
@@ -111,8 +112,8 @@ export function AuditLogsContainer() {
         onSearchChange={handleSearchChange}
         filters={[
           {
-            id: "module",
-            label: "All Modules",
+            id: 'module',
+            label: 'All Modules',
             value: filterModule,
             onChange: (value) => {
               setFilterModule(value);
@@ -120,16 +121,16 @@ export function AuditLogsContainer() {
             },
             icon: <Layers3 className="h-4 w-4 text-[#6B7280]" />,
             options: [
-              { label: "All Modules", value: "all" },
-              { label: "Investments", value: "investments" },
-              { label: "Auth", value: "auth" },
-              { label: "Wallet", value: "wallet" },
-              { label: "Finance", value: "finance" },
+              { label: 'All Modules', value: 'all' },
+              { label: 'Investments', value: 'investments' },
+              { label: 'Auth', value: 'auth' },
+              { label: 'Wallet', value: 'wallet' },
+              { label: 'Finance', value: 'finance' },
             ],
           },
           {
-            id: "action",
-            label: "All Actions",
+            id: 'action',
+            label: 'All Actions',
             value: filterAction,
             onChange: (value) => {
               setFilterAction(value);
@@ -137,18 +138,18 @@ export function AuditLogsContainer() {
             },
             icon: <Activity className="h-4 w-4 text-[#6B7280]" />,
             options: [
-              { label: "All Actions", value: "all" },
-              { label: "Create", value: "create" },
-              { label: "Update", value: "update" },
-              { label: "Delete", value: "delete" },
-              { label: "Login", value: "login" },
-              { label: "Approve", value: "approve" },
-              { label: "Reject", value: "reject" },
+              { label: 'All Actions', value: 'all' },
+              { label: 'Create', value: 'create' },
+              { label: 'Update', value: 'update' },
+              { label: 'Delete', value: 'delete' },
+              { label: 'Login', value: 'login' },
+              { label: 'Approve', value: 'approve' },
+              { label: 'Reject', value: 'reject' },
             ],
           },
           {
-            id: "entityType",
-            label: "All Entity Types",
+            id: 'entityType',
+            label: 'All Entity Types',
             value: filterEntityType,
             onChange: (value) => {
               setFilterEntityType(value);
@@ -156,17 +157,17 @@ export function AuditLogsContainer() {
             },
             icon: <User2 className="h-4 w-4 text-[#6B7280]" />,
             options: [
-              { label: "All Entity Types", value: "all" },
-              { label: "User", value: "user" },
-              { label: "Transaction", value: "transaction" },
-              { label: "Wallet", value: "wallet" },
-              { label: "Vault", value: "vault" },
-              { label: "Admin", value: "admin" },
+              { label: 'All Entity Types', value: 'all' },
+              { label: 'User', value: 'user' },
+              { label: 'Transaction', value: 'transaction' },
+              { label: 'Wallet', value: 'wallet' },
+              { label: 'Vault', value: 'vault' },
+              { label: 'Admin', value: 'admin' },
             ],
           },
           {
-            id: "critical",
-            label: "All Severity",
+            id: 'critical',
+            label: 'All Severity',
             value: filterCritical,
             onChange: (value) => {
               setFilterCritical(value);
@@ -174,9 +175,9 @@ export function AuditLogsContainer() {
             },
             icon: <Check className="h-4 w-4 text-[#6B7280]" />,
             options: [
-              { label: "All Severity", value: "all" },
-              { label: "Critical", value: "true" },
-              { label: "Non-Critical", value: "false" },
+              { label: 'All Severity', value: 'all' },
+              { label: 'Critical', value: 'true' },
+              { label: 'Non-Critical', value: 'false' },
             ],
           },
         ]}
