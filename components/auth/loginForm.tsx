@@ -35,7 +35,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    const platfomKey = process.env.NEXT_PUBLIC_PLATFORM_KEY || 'panterrios';
+    const platfomKey = process.env.NEXT_PUBLIC_PLATFORM_KEY;
     await loginFn({
       ...data,
       email: data.email.toLowerCase().trim(),
